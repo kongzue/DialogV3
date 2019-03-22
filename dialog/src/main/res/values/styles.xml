@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="BaseDialog" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">@color/dark</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.4</item>
+    </style>
+
+    <declare-styleable name="CircularProgressBar">
+        <attr name="cpbStyle" format="reference"/>
+        <attr name="cpb_color" format="color"/>
+        <attr name="cpb_colors" format="reference"/>
+        <attr name="cpb_stroke_width" format="dimension"/>
+        <attr name="cpb_min_sweep_angle" format="integer"/>
+        <attr name="cpb_max_sweep_angle" format="integer"/>
+        <attr name="cpb_sweep_speed" format="float"/>
+        <attr name="cpb_rotation_speed" format="float"/>
+        <attr name="cpb_cap_round" format="boolean"/>
+    </declare-styleable>
+
+
+    <attr name="pv_progressMode" format="integer">
+        <enum name="determinate" value="0x00000000" />
+        <enum name="indeterminate" value="0x00000001" />
+        <enum name="buffer" value="0x00000002" />
+        <enum name="query" value="0x00000003" />
+    </attr>
+
+    <declare-styleable name="CircularProgressDrawable">
+        <attr name="cpd_padding" format="reference|dimension"/>
+        <attr name="cpd_initialAngle" format="reference|integer"/>
+        <attr name="cpd_maxSweepAngle" format="reference|integer"/>
+        <attr name="cpd_minSweepAngle" format="reference|integer"/>
+        <attr name="cpd_strokeSize" format="reference|dimension"/>
+        <attr name="cpd_strokeColor" format="reference|color"/>
+        <attr name="cpd_strokeSecondaryColor" format="reference|color"/>
+        <attr name="cpd_strokeColors" format="reference"/>
+        <attr name="cpd_reverse" format="boolean"/>
+        <attr name="cpd_rotateDuration" format="reference|integer"/>
+        <attr name="cpd_transformDuration" format="reference|integer"/>
+        <attr name="cpd_keepDuration" format="reference|integer"/>
+        <attr name="cpd_transformInterpolator" format="reference"/>
+        <attr name="cpd_inAnimDuration" format="reference|integer"/>
+        <attr name="cpd_outAnimDuration" format="reference|integer"/>
+        <attr name="cpd_inStepColors" format="reference"/>
+        <attr name="cpd_inStepPercent" format="float"/>
+        <attr name="pv_progressMode"/>
+    </declare-styleable>
+
+    <style name="CircularProgress">
+        <item name="cpd_padding">7dp</item>
+        <item name="cpd_initialAngle">0</item>
+        <item name="cpd_maxSweepAngle">270</item>
+        <item name="cpd_minSweepAngle">1</item>
+        <item name="cpd_strokeSize">2dp</item>
+        <item name="cpd_strokeColor">#fff</item>
+        <item name="cpd_strokeSecondaryColor">@android:color/transparent</item>
+        <item name="cpd_reverse">false</item>
+        <item name="cpd_rotateDuration">1000</item>
+        <item name="cpd_transformDuration">600</item>
+        <item name="cpd_keepDuration">200</item>
+        <item name="cpd_transformInterpolator">@android:anim/decelerate_interpolator</item>
+        <item name="pv_progressMode">indeterminate</item>
+        <item name="cpd_inAnimDuration">0</item>
+        <item name="cpd_outAnimDuration">@android:integer/config_mediumAnimTime</item>
+    </style>
+
+</resources>
