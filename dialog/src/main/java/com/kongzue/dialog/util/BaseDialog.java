@@ -1,5 +1,6 @@
 package com.kongzue.dialog.util;
 
+import android.content.DialogInterface;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -34,6 +35,8 @@ public abstract class BaseDialog {
     
     private BaseDialog baseDialog;
     private int layoutId;
+    private int styleId;
+    private boolean isShow;
     
     protected DialogSettings.STYLE style;
     protected DialogSettings.THEME theme;
@@ -41,6 +44,7 @@ public abstract class BaseDialog {
     
     private DialogLifeCycleListener dialogLifeCycleListener;
     private OnDismissListener onDismissListener;
+    protected OnDismissListener dismissEvent;
     
     public void log(Object o) {
         if (DialogSettings.DEBUGMODE) Log.i(">>>", "DialogSDK:" + o.toString());
@@ -53,22 +57,59 @@ public abstract class BaseDialog {
     }
     
     public void showDialog() {
-        addDialogList(this);
-        
+        showDialog(R.style.BaseDialog);
+    }
+    
+    protected void showDialog(int style) {
+        styleId = style;
+        if (baseDialog instanceof WaitDialog){
+            showNow();
+        }else{
+            showNext();
+        }
+        dismissEvent = new OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                isShow = false;
+                dialogList.remove(baseDialog);
+                showNext();
+                getOnDismissListener().onDismiss();
+            }
+        };
+        dialogList.add(this);
+    }
+    
+    private void showNext() {
+        for (BaseDialog dialog:dialogList){
+            if (!(dialog instanceof WaitDialog)){
+                if (dialog.isShow){
+                    return;
+                }
+            }
+        }
+        for (BaseDialog dialog:dialogList){
+            if (!(dialog instanceof WaitDialog)){
+                dialog.showNow();
+                return;
+            }
+        }
+    }
+    
+    private void showNow(){
+        isShow = true;
         FragmentManager fragmentManager = context.getSupportFragmentManager();
         dialog = new DialogHelper().setLayoutId(baseDialog, layoutId);
-        dialog.setStyle(DialogFragment.STYLE_NORMAL, R.style.BaseDialog);
+        dialog.setStyle(DialogFragment.STYLE_NORMAL, styleId);
         dialog.show(fragmentManager, "kongzueDialog");
-        
+        dialog.setOnDismissListener(dismissEvent);
+    
         initDefaultSettings();
     }
     
     public abstract void bindView(View rootView);
     
-    public abstract void dismiss();
-    
-    public void addDialogList(BaseDialog dialog) {
-        dialogList.add(dialog);
+    public void dismiss(){
+        dialog.dismiss();
     }
     
     public DialogLifeCycleListener getDialogLifeCycleListener() {
@@ -90,11 +131,7 @@ public abstract class BaseDialog {
         } : dialogLifeCycleListener;
     }
     
-    public void bindEvent() {
-        initDefaultSettings();
-    }
-    
-    private void initDefaultSettings() {
+    protected void initDefaultSettings() {
         if (theme == null) theme = DialogSettings.theme;
         if (style == null) style = DialogSettings.style;
         
@@ -155,5 +192,13 @@ public abstract class BaseDialog {
     public BaseDialog setCancelable(boolean enable) {
         this.cancelable = enable ? BOOLEAN.TRUE : BOOLEAN.FALSE;
         return this;
+    }
+    
+    //网络传输文本判空规则
+    public boolean isNull(String s) {
+        if (s == null || s.trim().isEmpty() || s.equals("null") || s.equals("(null)")) {
+            return true;
+        }
+        return false;
     }
 }

@@ -13,6 +13,10 @@
         <item name="android:backgroundDimAmount">0.4</item>
     </style>
 
+    <style name="DialogWithShadow" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="colorAccent">@color/dark</item>
+    </style>
+
     <declare-styleable name="CircularProgressBar">
         <attr name="cpbStyle" format="reference"/>
         <attr name="cpb_color" format="color"/>

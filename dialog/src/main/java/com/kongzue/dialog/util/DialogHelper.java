@@ -1,15 +1,19 @@
 package com.kongzue.dialog.util;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.kongzue.dialog.interfaces.OnDismissListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +26,9 @@ import java.util.List;
  * CreateTime: 2019/3/22 16:24
  */
 public class DialogHelper extends DialogFragment {
+    
+    private OnDismissListener onDismissListener;
+    private boolean isRestartDialog = false;
     
     private int layoutId;
     private View rootView;
@@ -62,6 +69,7 @@ public class DialogHelper extends DialogFragment {
         if (savedInstanceState != null) {
             layoutId = savedInstanceState.getInt("layoutId");
             parentId = savedInstanceState.getString("parentId");
+            isRestartDialog = false;
         }
         super.onCreate(savedInstanceState);
     }
@@ -70,6 +78,7 @@ public class DialogHelper extends DialogFragment {
     public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putInt("layoutId", layoutId);
         outState.putString("parentId", parentId);
+        isRestartDialog = true;
         super.onSaveInstanceState(outState);
     }
     
@@ -78,12 +87,20 @@ public class DialogHelper extends DialogFragment {
         List<BaseDialog> cache = new ArrayList<>();
         cache.addAll(BaseDialog.dialogList);
         for (BaseDialog baseDialog : cache) {
+            baseDialog.context = (AppCompatActivity) getContext();
             if (baseDialog.toString().equals(parentId)) {
                 baseDialog.dialog = this;
                 baseDialog.bindView(rootView);
-                baseDialog.bindEvent();
+                baseDialog.initDefaultSettings();
+                setOnDismissListener(baseDialog.dismissEvent);
             }
         }
+    }
+    
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+        if (onDismissListener != null && !isRestartDialog) onDismissListener.onDismiss();
     }
     
     public int getLayoutId() {
@@ -94,5 +111,13 @@ public class DialogHelper extends DialogFragment {
         this.layoutId = layoutId;
         this.parentId = baseDialog.toString();
         return this;
+    }
+    
+    public OnDismissListener getOnDismissListener() {
+        return onDismissListener;
+    }
+    
+    public void setOnDismissListener(OnDismissListener onDismissListener) {
+        this.onDismissListener = onDismissListener;
     }
 }

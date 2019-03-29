@@ -3,6 +3,12 @@
 
     <color name="white">#ffffff</color>
     <color name="dark">#353535</color>
+    <color name="black">#000</color>
+    <color name="empty">#00000000</color>
     <color name="waitDialogBackgroundDark">#D9000000</color>
     <color name="waitDialogBackgroundLight">#E6FFFFFF</color>
+    <color name="dialogButtonBlueLight">#DCE9F7</color>
+    <color name="dialogButtonBlueLightPress">#C7DFF7</color>
+    <color name="dialogButtonGrayLight">#f2f2f2</color>
+    <color name="dialogButtonGrayLightPress">#dfdfdf</color>
 </resources>

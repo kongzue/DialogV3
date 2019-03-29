@@ -63,7 +63,7 @@ public class WaitDialog extends BaseDialog {
     public static WaitDialog build(AppCompatActivity context) {
         synchronized (WaitDialog.class) {
             WaitDialog waitDialog = new WaitDialog();
-            waitDialog.log("装载等待对话框 -> ");
+            waitDialog.log("装载等待对话框");
             waitDialog.context = context;
             waitDialog.build(waitDialog, R.layout.dialog_wait);
             return waitDialog;
