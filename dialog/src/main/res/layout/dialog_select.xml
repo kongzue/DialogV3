@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/bkg"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/bkg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -52,6 +52,7 @@
             android:layout_marginLeft="15dp"
             android:layout_marginTop="10dp"
             android:layout_marginRight="15dp"
+            android:background="@drawable/editbox_dialog_bkg"
             android:gravity="center"
             android:singleLine="true"
             android:text=""

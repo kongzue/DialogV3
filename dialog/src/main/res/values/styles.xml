@@ -17,6 +17,11 @@
         <item name="colorAccent">@color/dark</item>
     </style>
 
+    <style name="iOSDialogAnimStyle">
+        <item name="android:windowEnterAnimation">@anim/enter_ios_anim</item>
+        <item name="android:windowExitAnimation">@anim/exit_ios_anim</item>
+    </style>
+
     <declare-styleable name="CircularProgressBar">
         <attr name="cpbStyle" format="reference"/>
         <attr name="cpb_color" format="color"/>

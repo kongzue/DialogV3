@@ -54,4 +54,7 @@ public class DialogSettings {
     
     //日志
     public static boolean DEBUGMODE = false;
+    
+    //模糊透明度(0~255)
+    public static int blurAlpha = 180;
 }

@@ -11,4 +11,10 @@
     <color name="dialogButtonBlueLightPress">#C7DFF7</color>
     <color name="dialogButtonGrayLight">#f2f2f2</color>
     <color name="dialogButtonGrayLightPress">#dfdfdf</color>
+    <color name="dialogButtonIOSLightPress">#0f000000</color>
+    <color name="dialogSplitIOSLight">#2c000000</color>
+    <color name="dialogButtonIOSNormal">#007aff</color>
+
+    <color name="dialogBkgIOSLight">#e6ffffff</color>
+    <color name="dialogBkgIOSDark">#f0181818</color>
 </resources>

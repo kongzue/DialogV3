@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.kongzue.dialog.interfaces.OnDialogShowListener;
 import com.kongzue.dialog.interfaces.OnDismissListener;
 
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ import java.util.List;
 public class DialogHelper extends DialogFragment {
     
     private OnDismissListener onDismissListener;
+    private OnDialogShowListener onDialogShowListener;
     private boolean isRestartDialog = false;
     
     private int layoutId;
@@ -40,6 +42,7 @@ public class DialogHelper extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(layoutId, null);
+        if (onDialogShowListener!=null)onDialogShowListener.onShow(getDialog());
         findMyParentAndBindView(rootView);
         return rootView;
     }
@@ -119,5 +122,20 @@ public class DialogHelper extends DialogFragment {
     
     public void setOnDismissListener(OnDismissListener onDismissListener) {
         this.onDismissListener = onDismissListener;
+    }
+    
+    public OnDialogShowListener getOnDialogShowListener() {
+        return onDialogShowListener;
+    }
+    
+    public void setOnDialogShowListener(OnDialogShowListener onDialogShowListener) {
+        this.onDialogShowListener = onDialogShowListener;
+    }
+    
+    @Override
+    public void dismiss() {
+        try{
+            super.dismiss();
+        }catch (Exception e){}
     }
 }

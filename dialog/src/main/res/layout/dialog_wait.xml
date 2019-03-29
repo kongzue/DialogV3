@@ -12,8 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:minWidth="125dp"
-        android:minHeight="125dp"
-        android:background="@drawable/rect_dark">
+        android:minHeight="125dp">
 
         <RelativeLayout
             android:id="@+id/box_blur"
