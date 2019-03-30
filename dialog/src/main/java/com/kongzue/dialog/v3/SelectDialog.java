@@ -1,6 +1,7 @@
 package com.kongzue.dialog.v3;
 
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.DrawableRes;
@@ -8,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutCompat;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -22,6 +24,7 @@ import com.kongzue.dialog.interfaces.OnDialogButtonClickListener;
 import com.kongzue.dialog.interfaces.OnDismissListener;
 import com.kongzue.dialog.util.BaseDialog;
 import com.kongzue.dialog.util.DialogSettings;
+import com.kongzue.dialog.util.TextInfo;
 import com.kongzue.dialog.util.view.BlurView;
 
 import static com.kongzue.dialog.util.DialogSettings.blurAlpha;
@@ -80,7 +83,7 @@ public class SelectDialog extends BaseDialog {
                     selectDialog.build(selectDialog, R.layout.dialog_select);
                     break;
                 case STYLE_MATERIAL:
-            
+                    
                     break;
             }
             return selectDialog;
@@ -105,11 +108,11 @@ public class SelectDialog extends BaseDialog {
         synchronized (WaitDialog.class) {
             SelectDialog selectDialog = build(context);
             
-            if (content!=null)selectDialog.content = content;
-            if (title!=null)selectDialog.title = title;
-            if (okButton!=null)selectDialog.okButton = okButton;
-            if (cancelButton!=null)selectDialog.cancelButton = cancelButton;
-            if (otherButton!=null)selectDialog.otherButton = otherButton;
+            if (content != null) selectDialog.content = content;
+            if (title != null) selectDialog.title = title;
+            if (okButton != null) selectDialog.okButton = okButton;
+            if (cancelButton != null) selectDialog.cancelButton = cancelButton;
+            if (otherButton != null) selectDialog.otherButton = otherButton;
             
             selectDialog.showDialog();
             return selectDialog;
@@ -131,16 +134,17 @@ public class SelectDialog extends BaseDialog {
         splitVertical2 = rootView.findViewById(R.id.split_vertical2);
         btnSelectPositive = rootView.findViewById(R.id.btn_selectPositive);
         
+        final int bkgResId, blurFrontColor;
         switch (style) {
             case STYLE_IOS:
-                final int bkgResId, blurFrontColor;
                 if (theme == DialogSettings.THEME.LIGHT) {
-                    
                     bkgResId = R.drawable.rect_selectdialog_ios_bkg_light;
                     blurFrontColor = Color.argb(blurAlpha, 255, 255, 255);
                 } else {
                     bkgResId = R.drawable.rect_selectdialog_ios_bkg_dark;
                     blurFrontColor = Color.argb((blurAlpha + 20) > 255 ? 255 : (blurAlpha + 20), 0, 0, 0);
+                    txtDialogTitle.setTextColor(Color.WHITE);
+                    txtDialogTip.setTextColor(Color.WHITE);
                 }
                 if (DialogSettings.isUseBlur) {
                     bkg.post(new Runnable() {
@@ -157,12 +161,38 @@ public class SelectDialog extends BaseDialog {
                 }
                 break;
             case STYLE_KONGZUE:
+                if (theme == DialogSettings.THEME.DARK) {
+                    bkg.setBackgroundResource(R.color.dialogBkgDark);
+                    boxButton.setBackgroundColor(Color.TRANSPARENT);
+                    btnSelectNegative.setBackgroundResource(R.drawable.button_selectdialog_kongzue_gray_dark);
+                    btnSelectOther.setBackgroundResource(R.drawable.button_selectdialog_kongzue_gray_dark);
+                    btnSelectPositive.setBackgroundResource(R.drawable.button_selectdialog_kongzue_blue_dark);
+                    btnSelectNegative.setTextColor(Color.rgb(255, 255, 255));
+                    btnSelectPositive.setTextColor(Color.rgb(255, 255, 255));
+                    btnSelectOther.setTextColor(Color.rgb(255, 255, 255));
+                    txtDialogTitle.setTextColor(Color.WHITE);
+                    txtDialogTip.setTextColor(Color.WHITE);
+                } else {
+                    bkg.setBackgroundResource(R.color.white);
+                    txtDialogTitle.setTextColor(Color.BLACK);
+                    txtDialogTip.setTextColor(Color.BLACK);
+                }
                 
+                if (backgroundColor != 0) {
+                    bkg.setBackgroundColor(backgroundColor);
+                }
                 break;
             case STYLE_MATERIAL:
                 
                 break;
         }
+    
+        useTextInfo(txtDialogTitle, titleTextInfo);
+        useTextInfo(txtDialogTip, contentTextInfo);
+        useTextInfo(btnSelectNegative, buttonTextInfo);
+        useTextInfo(btnSelectOther, buttonTextInfo);
+        useTextInfo(btnSelectPositive, buttonPositiveTextInfo);
+        
         refreshView();
     }
     
@@ -218,6 +248,7 @@ public class SelectDialog extends BaseDialog {
         }
         if (btnSelectOther != null) {
             if (!isNull(otherButton)) {
+                if (splitVertical1 != null) splitVertical1.setVisibility(View.VISIBLE);
                 btnSelectOther.setVisibility(View.VISIBLE);
                 btnSelectOther.setText(otherButton);
             }
@@ -249,17 +280,19 @@ public class SelectDialog extends BaseDialog {
                 
                 if (style == DialogSettings.STYLE.STYLE_IOS) {
                     boxButton.addView(btnSelectPositive);
-                    boxButton.addView(splitVertical1);
-                    boxButton.addView(btnSelectNegative);
                     boxButton.addView(splitVertical2);
+                    boxButton.addView(btnSelectNegative);
+                    boxButton.addView(splitVertical1);
                     boxButton.addView(btnSelectOther);
-                    
-                    splitVertical1.setVisibility(View.VISIBLE);
                     
                     if (okButtonDrawable == null && cancelButtonDrawable == null && otherButtonDrawable == null) {
                         btnSelectPositive.setBackgroundResource(R.drawable.button_menu_ios_center);
-                        btnSelectNegative.setBackgroundResource(R.drawable.button_menu_ios_center);
-                        btnSelectOther.setBackgroundResource(R.drawable.button_menu_ios_bottom);
+                        if (btnSelectOther.getVisibility() == View.GONE) {
+                            btnSelectNegative.setBackgroundResource(R.drawable.button_menu_ios_bottom);
+                        } else {
+                            btnSelectNegative.setBackgroundResource(R.drawable.button_menu_ios_center);
+                            btnSelectOther.setBackgroundResource(R.drawable.button_menu_ios_bottom);
+                        }
                     }
                     
                     LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1);
@@ -270,10 +303,10 @@ public class SelectDialog extends BaseDialog {
                     boxButton.addView(btnSelectNegative);
                     boxButton.addView(btnSelectOther);
                     
-                    if (okButtonDrawable == null && cancelButtonDrawable == null && otherButtonDrawable == null) {
-                        btnSelectPositive.setBackgroundResource(R.drawable.button_selectdialog_white);
-                        btnSelectNegative.setBackgroundResource(R.drawable.button_selectdialog_white);
-                        btnSelectOther.setBackgroundResource(R.drawable.button_selectdialog_white);
+                    if (okButtonDrawable == null && cancelButtonDrawable == null && otherButtonDrawable == null && theme == DialogSettings.THEME.LIGHT) {
+                        btnSelectPositive.setBackgroundResource(R.drawable.button_selectdialog_kongzue_white);
+                        btnSelectNegative.setBackgroundResource(R.drawable.button_selectdialog_kongzue_white);
+                        btnSelectOther.setBackgroundResource(R.drawable.button_selectdialog_kongzue_white);
                     }
                     
                     LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) btnSelectOther.getLayoutParams();
@@ -485,11 +518,11 @@ public class SelectDialog extends BaseDialog {
     }
     
     public SelectDialog setStyle(DialogSettings.STYLE style) {
-        if (isAlreadyShown){
+        if (isAlreadyShown) {
             error("必须使用 build(...) 方法创建时，才可以使用 setStyle(...) 来修改对话框主题或风格。");
             return this;
         }
-    
+        
         this.style = style;
         switch (this.style) {
             case STYLE_IOS:
@@ -499,7 +532,7 @@ public class SelectDialog extends BaseDialog {
                 build(this, R.layout.dialog_select);
                 break;
             case STYLE_MATERIAL:
-            
+                
                 break;
         }
         
@@ -512,7 +545,7 @@ public class SelectDialog extends BaseDialog {
     
     public SelectDialog setTheme(DialogSettings.THEME theme) {
         
-        if (isAlreadyShown){
+        if (isAlreadyShown) {
             error("必须使用 build(...) 方法创建时，才可以使用 setTheme(...) 来修改对话框主题或风格。");
             return this;
         }
@@ -529,6 +562,52 @@ public class SelectDialog extends BaseDialog {
     public SelectDialog setCancelable(boolean enable) {
         this.cancelable = enable ? BOOLEAN.TRUE : BOOLEAN.FALSE;
         if (dialog != null) dialog.setCancelable(cancelable == BOOLEAN.TRUE);
+        return this;
+    }
+    
+    
+    public TextInfo getTitleTextInfo() {
+        return titleTextInfo;
+    }
+    
+    public SelectDialog setTitleTextInfo(TextInfo titleTextInfo) {
+        this.titleTextInfo = titleTextInfo;
+        return this;
+    }
+    
+    public TextInfo getContentTextInfo() {
+        return contentTextInfo;
+    }
+    
+    public SelectDialog setContentTextInfo(TextInfo contentTextInfo) {
+        this.contentTextInfo = contentTextInfo;
+        return this;
+    }
+    
+    public TextInfo getButtonTextInfo() {
+        return buttonTextInfo;
+    }
+    
+    public SelectDialog setButtonTextInfo(TextInfo buttonTextInfo) {
+        this.buttonTextInfo = buttonTextInfo;
+        return this;
+    }
+    
+    public TextInfo getButtonPositiveTextInfo() {
+        return buttonPositiveTextInfo;
+    }
+    
+    public SelectDialog setButtonPositiveTextInfo(TextInfo buttonPositiveTextInfo) {
+        this.buttonPositiveTextInfo = buttonPositiveTextInfo;
+        return this;
+    }
+    
+    public int getBackgroundColor() {
+        return backgroundColor;
+    }
+    
+    public SelectDialog setBackgroundColor(int backgroundColor) {
+        this.backgroundColor = backgroundColor;
         return this;
     }
 }

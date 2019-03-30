@@ -10,7 +10,6 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:background="#ffffff"
         android:orientation="vertical">
 
         <TextView
@@ -74,7 +73,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_weight="1"
-                android:background="@drawable/button_selectdialog_gray"
+                android:background="@drawable/button_selectdialog_kongzue_gray"
                 android:clickable="true"
                 android:gravity="center"
                 android:text="negative"
@@ -87,7 +86,7 @@
                 android:layout_height="50dp"
                 android:layout_marginLeft="1px"
                 android:layout_weight="1"
-                android:background="@drawable/button_selectdialog_gray"
+                android:background="@drawable/button_selectdialog_kongzue_gray"
                 android:clickable="true"
                 android:gravity="center"
                 android:text="other"
@@ -99,8 +98,9 @@
                 android:id="@+id/btn_selectPositive"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
+                android:layout_marginLeft="1px"
                 android:layout_weight="1"
-                android:background="@drawable/button_selectdialog_blue"
+                android:background="@drawable/button_selectdialog_kongzue_blue"
                 android:clickable="true"
                 android:gravity="center"
                 android:text="positive"

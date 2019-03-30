@@ -30,8 +30,8 @@ public class MainActivity extends AppCompatActivity {
         
         DialogSettings.DEBUGMODE = true;
         DialogSettings.isUseBlur = true;
-        DialogSettings.style = DialogSettings.STYLE.STYLE_KONGZUE;
-        DialogSettings.theme = DialogSettings.THEME.DARK;
+        DialogSettings.style = DialogSettings.STYLE.STYLE_IOS;
+        DialogSettings.theme = DialogSettings.THEME.LIGHT;
         
         btnWaitDialog = findViewById(R.id.btn_waitDialog);
         btnWaitDialog.setOnClickListener(new View.OnClickListener() {
@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 
                 //WaitDialog.show(me,"请稍候");
-                SelectDialog.build(me).setTitle("哈哈").setStyle(DialogSettings.STYLE.STYLE_IOS).showDialog();
+                SelectDialog.build(me).setButtonOrientation(LinearLayout.VERTICAL).setTitle("哈哈").showDialog();
                 SelectDialog.show(me, "标题2", "测试2", "ok", "no", "miss")
                         .setButtonOrientation(LinearLayout.VERTICAL)
                         .setOnOtherButtonClickListener(new OnDialogButtonClickListener() {
@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onDismiss() {
                     
                     }
-                }).setStyle(DialogSettings.STYLE.STYLE_IOS);
+                });
             }
         });
     }

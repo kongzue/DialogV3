@@ -3,11 +3,14 @@ package com.kongzue.dialog.util;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
+import android.widget.TextView;
 
 import com.kongzue.dialog.R;
 import com.kongzue.dialog.interfaces.DialogLifeCycleListener;
@@ -54,7 +57,7 @@ public abstract class BaseDialog {
     protected TextInfo contentTextInfo;
     protected TextInfo buttonTextInfo;
     protected TextInfo buttonPositiveTextInfo;
-    protected Color backgroundColor;
+    protected int backgroundColor = 0;
     
     protected DialogLifeCycleListener dialogLifeCycleListener;
     protected OnDismissListener onDismissListener;
@@ -151,6 +154,26 @@ public abstract class BaseDialog {
     protected void initDefaultSettings() {
         if (theme == null) theme = DialogSettings.theme;
         if (style == null) style = DialogSettings.style;
+        if (backgroundColor==0)backgroundColor = DialogSettings.backgroundColor;
+        if (titleTextInfo==null)titleTextInfo=DialogSettings.titleTextInfo;
+        if (contentTextInfo==null)contentTextInfo=DialogSettings.contentTextInfo;
+        if (buttonTextInfo==null)buttonTextInfo = DialogSettings.buttonTextInfo;
+        if (buttonPositiveTextInfo==null)buttonPositiveTextInfo=DialogSettings.buttonPositiveTextInfo;
+    }
+    
+    protected void useTextInfo(TextView textView, TextInfo textInfo) {
+        if (textInfo == null) return;
+        if (textInfo.getFontSize() > 0) {
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textInfo.getFontSize());
+        }
+        if (textInfo.getFontColor() != 1) {
+            textView.setTextColor(textInfo.getFontColor());
+        }
+        if (textInfo.getGravity() != -1) {
+            textView.setGravity(textInfo.getGravity());
+        }
+        Typeface font = Typeface.create(Typeface.SANS_SERIF, textInfo.isBold() ? Typeface.BOLD : Typeface.NORMAL);
+        textView.setTypeface(font);
     }
     
     //网络传输文本判空规则
