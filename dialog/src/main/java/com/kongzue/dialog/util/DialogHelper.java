@@ -1,5 +1,6 @@
 package com.kongzue.dialog.util;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -7,14 +8,16 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.kongzue.dialog.R;
 import com.kongzue.dialog.interfaces.OnDialogShowListener;
 import com.kongzue.dialog.interfaces.OnDismissListener;
+import com.kongzue.dialog.v3.WaitDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,16 +38,39 @@ public class DialogHelper extends DialogFragment {
     private int layoutId;
     private View rootView;
     private String parentId;
+    private int styleId;
     
     public DialogHelper() {
     }
     
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        if (layoutId == -1) {
+            if (onDialogShowListener != null) onDialogShowListener.onShow(getDialog());
+            findMyParentAndBindView(null);
+            return super.onCreateView(inflater, container, savedInstanceState);
+        }
         rootView = inflater.inflate(layoutId, null);
-        if (onDialogShowListener!=null)onDialogShowListener.onShow(getDialog());
+        if (onDialogShowListener != null) onDialogShowListener.onShow(getDialog());
         findMyParentAndBindView(rootView);
         return rootView;
+    }
+    
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        if (layoutId == -1) {
+            return new AlertDialog.Builder(getActivity(), styleId).setTitle("Title").setMessage("are you ok?")
+                    .setPositiveButton("Sure", new DialogInterface.OnClickListener() {
+                        
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dismiss();
+                        }
+                    }).setNegativeButton("cancel", null)
+                    .create();
+        }
+        return super.onCreateDialog(savedInstanceState);
     }
     
     @Override
@@ -72,6 +98,7 @@ public class DialogHelper extends DialogFragment {
         if (savedInstanceState != null) {
             layoutId = savedInstanceState.getInt("layoutId");
             parentId = savedInstanceState.getString("parentId");
+            
             isRestartDialog = false;
         }
         super.onCreate(savedInstanceState);
@@ -89,6 +116,7 @@ public class DialogHelper extends DialogFragment {
     private void findMyParentAndBindView(View rootView) {
         List<BaseDialog> cache = new ArrayList<>();
         cache.addAll(BaseDialog.dialogList);
+        BaseDialog.newContext = (AppCompatActivity) getContext();
         for (BaseDialog baseDialog : cache) {
             baseDialog.context = (AppCompatActivity) getContext();
             if (baseDialog.toString().equals(parentId)) {
@@ -134,8 +162,15 @@ public class DialogHelper extends DialogFragment {
     
     @Override
     public void dismiss() {
-        try{
+        try {
             super.dismiss();
-        }catch (Exception e){}
+        } catch (Exception e) {
+        }
+    }
+    
+    @Override
+    public void setStyle(int style, int theme) {
+        styleId = theme;
+        super.setStyle(style, theme);
     }
 }

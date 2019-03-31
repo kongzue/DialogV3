@@ -1,6 +1,7 @@
 package com.kongzue.dialog.util;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -30,6 +31,8 @@ import java.util.List;
  */
 public abstract class BaseDialog {
     
+    public static AppCompatActivity newContext;
+    
     public BaseDialog() {
         initDefaultSettings();
     }
@@ -40,7 +43,7 @@ public abstract class BaseDialog {
     
     protected static List<BaseDialog> dialogList = new ArrayList<>();           //对话框队列
     
-    protected AppCompatActivity context;
+    public AppCompatActivity context;
     public DialogHelper dialog;                                              //我才是本体！
     
     private BaseDialog baseDialog;
@@ -54,7 +57,7 @@ public abstract class BaseDialog {
     protected BOOLEAN cancelable;
     
     protected TextInfo titleTextInfo;
-    protected TextInfo contentTextInfo;
+    protected TextInfo messageTextInfo;
     protected TextInfo buttonTextInfo;
     protected TextInfo buttonPositiveTextInfo;
     protected int backgroundColor = 0;
@@ -77,6 +80,13 @@ public abstract class BaseDialog {
         return baseDialog;
     }
     
+    public BaseDialog build(BaseDialog baseDialog) {
+        this.baseDialog = baseDialog;
+        this.layoutId = -1;
+        return baseDialog;
+    }
+    
+    
     public void showDialog() {
         showDialog(R.style.BaseDialog);
     }
@@ -95,13 +105,20 @@ public abstract class BaseDialog {
                 isShow = false;
                 dialogList.remove(baseDialog);
                 showNext();
-                if (onDismissListener!=null)onDismissListener.onDismiss();
+                if (onDismissListener != null) onDismissListener.onDismiss();
             }
         };
         dialogList.add(this);
     }
     
     private void showNext() {
+        List<BaseDialog> cache = new ArrayList<>();
+        cache.addAll(BaseDialog.dialogList);
+        for (BaseDialog dialog : cache) {
+            if (dialog.context.isDestroyed()){
+                dialogList.remove(dialog);
+            }
+        }
         for (BaseDialog dialog : dialogList) {
             if (!(dialog instanceof WaitDialog)) {
                 if (dialog.isShow) {
@@ -119,11 +136,14 @@ public abstract class BaseDialog {
     
     private void showNow() {
         isShow = true;
+        if (context.isDestroyed()) {
+            context = newContext;
+        }
         FragmentManager fragmentManager = context.getSupportFragmentManager();
         dialog = new DialogHelper().setLayoutId(baseDialog, layoutId);
         dialog.setStyle(DialogFragment.STYLE_NORMAL, styleId);
         dialog.show(fragmentManager, "kongzueDialog");
-        if (style == DialogSettings.STYLE.STYLE_IOS) {
+        if (style == DialogSettings.STYLE.STYLE_IOS && !(baseDialog instanceof WaitDialog)) {
             dialog.setOnDialogShowListener(new OnDialogShowListener() {
                 @Override
                 public void onShow(Dialog dialog) {
@@ -154,11 +174,12 @@ public abstract class BaseDialog {
     protected void initDefaultSettings() {
         if (theme == null) theme = DialogSettings.theme;
         if (style == null) style = DialogSettings.style;
-        if (backgroundColor==0)backgroundColor = DialogSettings.backgroundColor;
-        if (titleTextInfo==null)titleTextInfo=DialogSettings.titleTextInfo;
-        if (contentTextInfo==null)contentTextInfo=DialogSettings.contentTextInfo;
-        if (buttonTextInfo==null)buttonTextInfo = DialogSettings.buttonTextInfo;
-        if (buttonPositiveTextInfo==null)buttonPositiveTextInfo=DialogSettings.buttonPositiveTextInfo;
+        if (backgroundColor == 0) backgroundColor = DialogSettings.backgroundColor;
+        if (titleTextInfo == null) titleTextInfo = DialogSettings.titleTextInfo;
+        if (messageTextInfo == null) messageTextInfo = DialogSettings.contentTextInfo;
+        if (buttonTextInfo == null) buttonTextInfo = DialogSettings.buttonTextInfo;
+        if (buttonPositiveTextInfo == null)
+            buttonPositiveTextInfo = DialogSettings.buttonPositiveTextInfo;
     }
     
     protected void useTextInfo(TextView textView, TextInfo textInfo) {

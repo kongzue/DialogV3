@@ -1,17 +1,21 @@
 package com.kongzue.dialog.v3;
 
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -27,6 +31,11 @@ import com.kongzue.dialog.util.DialogSettings;
 import com.kongzue.dialog.util.TextInfo;
 import com.kongzue.dialog.util.view.BlurView;
 
+import java.lang.reflect.Field;
+
+import static android.content.DialogInterface.BUTTON_NEGATIVE;
+import static android.content.DialogInterface.BUTTON_NEUTRAL;
+import static android.content.DialogInterface.BUTTON_POSITIVE;
 import static com.kongzue.dialog.util.DialogSettings.blurAlpha;
 
 /**
@@ -49,7 +58,7 @@ public class SelectDialog extends BaseDialog {
     private Drawable otherButtonDrawable;
     
     private String title = "提示";
-    private String content = "提示信息";
+    private String message = "提示信息";
     private String okButton = "确定";
     private String cancelButton = "取消";
     private String otherButton;
@@ -83,32 +92,32 @@ public class SelectDialog extends BaseDialog {
                     selectDialog.build(selectDialog, R.layout.dialog_select);
                     break;
                 case STYLE_MATERIAL:
-                    
+                    selectDialog.build(selectDialog);
                     break;
             }
             return selectDialog;
         }
     }
     
-    public static SelectDialog show(@NonNull AppCompatActivity context, String title, String content) {
+    public static SelectDialog show(@NonNull AppCompatActivity context, String title, String message) {
         synchronized (WaitDialog.class) {
-            SelectDialog selectDialog = show(context, title, content, null, null, null);
+            SelectDialog selectDialog = show(context, title, message, null, null, null);
             return selectDialog;
         }
     }
     
-    public static SelectDialog show(@NonNull AppCompatActivity context, String title, String content, String okButton, String cancelButton) {
+    public static SelectDialog show(@NonNull AppCompatActivity context, String title, String message, String okButton, String cancelButton) {
         synchronized (WaitDialog.class) {
-            SelectDialog selectDialog = show(context, title, content, okButton, cancelButton, null);
+            SelectDialog selectDialog = show(context, title, message, okButton, cancelButton, null);
             return selectDialog;
         }
     }
     
-    public static SelectDialog show(@NonNull AppCompatActivity context, String title, String content, String okButton, String cancelButton, String otherButton) {
+    public static SelectDialog show(@NonNull AppCompatActivity context, String title, String message, String okButton, String cancelButton, String otherButton) {
         synchronized (WaitDialog.class) {
             SelectDialog selectDialog = build(context);
             
-            if (content != null) selectDialog.content = content;
+            if (message != null) selectDialog.message = message;
             if (title != null) selectDialog.title = title;
             if (okButton != null) selectDialog.okButton = okButton;
             if (cancelButton != null) selectDialog.cancelButton = cancelButton;
@@ -119,86 +128,184 @@ public class SelectDialog extends BaseDialog {
         }
     }
     
+    private AlertDialog materialAlertDialog;
+    private boolean isBindView;
+    
     @Override
     public void bindView(View rootView) {
-        bkg = rootView.findViewById(R.id.bkg);
-        txtDialogTitle = rootView.findViewById(R.id.txt_dialog_title);
-        txtDialogTip = rootView.findViewById(R.id.txt_dialog_tip);
-        boxCustom = rootView.findViewById(R.id.box_custom);
-        txtInput = rootView.findViewById(R.id.txt_input);
-        splitHorizontal = rootView.findViewById(R.id.split_horizontal);
-        boxButton = rootView.findViewById(R.id.box_button);
-        btnSelectNegative = rootView.findViewById(R.id.btn_selectNegative);
-        splitVertical1 = rootView.findViewById(R.id.split_vertical1);
-        btnSelectOther = rootView.findViewById(R.id.btn_selectOther);
-        splitVertical2 = rootView.findViewById(R.id.split_vertical2);
-        btnSelectPositive = rootView.findViewById(R.id.btn_selectPositive);
-        
-        final int bkgResId, blurFrontColor;
-        switch (style) {
-            case STYLE_IOS:
-                if (theme == DialogSettings.THEME.LIGHT) {
-                    bkgResId = R.drawable.rect_selectdialog_ios_bkg_light;
-                    blurFrontColor = Color.argb(blurAlpha, 255, 255, 255);
-                } else {
-                    bkgResId = R.drawable.rect_selectdialog_ios_bkg_dark;
-                    blurFrontColor = Color.argb((blurAlpha + 20) > 255 ? 255 : (blurAlpha + 20), 0, 0, 0);
-                    txtDialogTitle.setTextColor(Color.WHITE);
-                    txtDialogTip.setTextColor(Color.WHITE);
-                }
-                if (DialogSettings.isUseBlur) {
-                    bkg.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            blurView = new BlurView(context, null);
-                            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, bkg.getHeight());
-                            blurView.setOverlayColor(blurFrontColor);
-                            bkg.addView(blurView, 0, params);
-                        }
-                    });
-                } else {
-                    bkg.setBackgroundResource(bkgResId);
-                }
-                break;
-            case STYLE_KONGZUE:
-                if (theme == DialogSettings.THEME.DARK) {
-                    bkg.setBackgroundResource(R.color.dialogBkgDark);
-                    boxButton.setBackgroundColor(Color.TRANSPARENT);
-                    btnSelectNegative.setBackgroundResource(R.drawable.button_selectdialog_kongzue_gray_dark);
-                    btnSelectOther.setBackgroundResource(R.drawable.button_selectdialog_kongzue_gray_dark);
-                    btnSelectPositive.setBackgroundResource(R.drawable.button_selectdialog_kongzue_blue_dark);
-                    btnSelectNegative.setTextColor(Color.rgb(255, 255, 255));
-                    btnSelectPositive.setTextColor(Color.rgb(255, 255, 255));
-                    btnSelectOther.setTextColor(Color.rgb(255, 255, 255));
-                    txtDialogTitle.setTextColor(Color.WHITE);
-                    txtDialogTip.setTextColor(Color.WHITE);
-                } else {
-                    bkg.setBackgroundResource(R.color.white);
-                    txtDialogTitle.setTextColor(Color.BLACK);
-                    txtDialogTip.setTextColor(Color.BLACK);
-                }
-                
-                if (backgroundColor != 0) {
-                    bkg.setBackgroundColor(backgroundColor);
-                }
-                break;
-            case STYLE_MATERIAL:
-                
-                break;
+        isBindView = true;
+        if (rootView != null) {
+            bkg = rootView.findViewById(R.id.bkg);
+            txtDialogTitle = rootView.findViewById(R.id.txt_dialog_title);
+            txtDialogTip = rootView.findViewById(R.id.txt_dialog_tip);
+            boxCustom = rootView.findViewById(R.id.box_custom);
+            txtInput = rootView.findViewById(R.id.txt_input);
+            splitHorizontal = rootView.findViewById(R.id.split_horizontal);
+            boxButton = rootView.findViewById(R.id.box_button);
+            btnSelectNegative = rootView.findViewById(R.id.btn_selectNegative);
+            splitVertical1 = rootView.findViewById(R.id.split_vertical1);
+            btnSelectOther = rootView.findViewById(R.id.btn_selectOther);
+            splitVertical2 = rootView.findViewById(R.id.split_vertical2);
+            btnSelectPositive = rootView.findViewById(R.id.btn_selectPositive);
         }
-    
-        useTextInfo(txtDialogTitle, titleTextInfo);
-        useTextInfo(txtDialogTip, contentTextInfo);
-        useTextInfo(btnSelectNegative, buttonTextInfo);
-        useTextInfo(btnSelectOther, buttonTextInfo);
-        useTextInfo(btnSelectPositive, buttonPositiveTextInfo);
         
         refreshView();
     }
     
     private void refreshView() {
         if (txtDialogTitle != null) txtDialogTitle.setText(title);
-        if (txtDialogTip != null) txtDialogTip.setText(content);
+        if (txtDialogTip != null) txtDialogTip.setText(message);
+        
+        if (isBindView) {
+            final int bkgResId, blurFrontColor;
+            switch (style) {
+                case STYLE_IOS:
+                    if (theme == DialogSettings.THEME.LIGHT) {
+                        bkgResId = R.drawable.rect_selectdialog_ios_bkg_light;
+                        blurFrontColor = Color.argb(blurAlpha, 255, 255, 255);
+                    } else {
+                        bkgResId = R.drawable.rect_selectdialog_ios_bkg_dark;
+                        blurFrontColor = Color.argb((blurAlpha + 20) > 255 ? 255 : (blurAlpha + 20), 0, 0, 0);
+                        txtDialogTitle.setTextColor(Color.WHITE);
+                        txtDialogTip.setTextColor(Color.WHITE);
+                    }
+                    if (DialogSettings.isUseBlur) {
+                        bkg.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                blurView = new BlurView(context, null);
+                                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, bkg.getHeight());
+                                blurView.setOverlayColor(blurFrontColor);
+                                bkg.addView(blurView, 0, params);
+                            }
+                        });
+                    } else {
+                        bkg.setBackgroundResource(bkgResId);
+                    }
+                    refreshTextViews();
+                    break;
+                case STYLE_KONGZUE:
+                    if (theme == DialogSettings.THEME.DARK) {
+                        bkg.setBackgroundResource(R.color.dialogBkgDark);
+                        boxButton.setBackgroundColor(Color.TRANSPARENT);
+                        btnSelectNegative.setBackgroundResource(R.drawable.button_selectdialog_kongzue_gray_dark);
+                        btnSelectOther.setBackgroundResource(R.drawable.button_selectdialog_kongzue_gray_dark);
+                        btnSelectPositive.setBackgroundResource(R.drawable.button_selectdialog_kongzue_blue_dark);
+                        btnSelectNegative.setTextColor(Color.rgb(255, 255, 255));
+                        btnSelectPositive.setTextColor(Color.rgb(255, 255, 255));
+                        btnSelectOther.setTextColor(Color.rgb(255, 255, 255));
+                        txtDialogTitle.setTextColor(Color.WHITE);
+                        txtDialogTip.setTextColor(Color.WHITE);
+                    } else {
+                        bkg.setBackgroundResource(R.color.white);
+                        txtDialogTitle.setTextColor(Color.BLACK);
+                        txtDialogTip.setTextColor(Color.BLACK);
+                    }
+                    
+                    if (backgroundColor != 0) {
+                        bkg.setBackgroundColor(backgroundColor);
+                    }
+                    refreshTextViews();
+                    break;
+                case STYLE_MATERIAL:
+                    materialAlertDialog = (AlertDialog) dialog.getDialog();
+                    materialAlertDialog.setTitle(title);
+                    if (backgroundColor != 0)
+                        materialAlertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(backgroundColor));
+                    materialAlertDialog.setMessage(message);
+                    materialAlertDialog.setButton(BUTTON_POSITIVE, okButton, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        
+                        }
+                    });
+                    materialAlertDialog.setButton(BUTTON_NEGATIVE, cancelButton, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        
+                        }
+                    });
+                    if (otherButton != null) {
+                        materialAlertDialog.setButton(BUTTON_NEUTRAL, otherButton, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                            
+                            }
+                        });
+                    }
+                    materialAlertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                        @Override
+                        public void onShow(DialogInterface dialog) {
+                            Button positiveButton = materialAlertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                            positiveButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    if (onOkButtonClickListener != null) {
+                                        if (!onOkButtonClickListener.onClick(v))
+                                            materialAlertDialog.dismiss();
+                                    } else {
+                                        materialAlertDialog.dismiss();
+                                    }
+                                }
+                            });
+                            useTextInfo(positiveButton, buttonPositiveTextInfo);
+                            
+                            Button negativeButton = materialAlertDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+                            negativeButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    if (onCancelButtonClickListener != null) {
+                                        if (!onCancelButtonClickListener.onClick(v))
+                                            materialAlertDialog.dismiss();
+                                    } else {
+                                        materialAlertDialog.dismiss();
+                                    }
+                                }
+                            });
+                            useTextInfo(negativeButton, buttonTextInfo);
+                            
+                            if (otherButton != null) {
+                                Button otherButton = materialAlertDialog.getButton(AlertDialog.BUTTON_NEUTRAL);
+                                otherButton.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        if (onOtherButtonClickListener != null) {
+                                            if (!onOtherButtonClickListener.onClick(v))
+                                                materialAlertDialog.dismiss();
+                                        } else {
+                                            materialAlertDialog.dismiss();
+                                        }
+                                    }
+                                });
+                                useTextInfo(otherButton, buttonTextInfo);
+                            }
+                            try {
+                                Field mAlert = AlertDialog.class.getDeclaredField("mAlert");
+                                mAlert.setAccessible(true);
+                                Object mAlertController = mAlert.get(dialog);
+                                
+                                if (titleTextInfo != null) {
+                                    Field mTitle = mAlertController.getClass().getDeclaredField("mTitleView");
+                                    mTitle.setAccessible(true);
+                                    TextView titleTextView = (TextView) mTitle.get(mAlertController);
+                                    useTextInfo(titleTextView, titleTextInfo);
+                                }
+                                
+                                if (messageTextInfo != null) {
+                                    Field mMessage = mAlertController.getClass().getDeclaredField("mMessageView");
+                                    mMessage.setAccessible(true);
+                                    TextView messageTextView = (TextView) mMessage.get(mAlertController);
+                                    useTextInfo(messageTextView, messageTextInfo);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            
+                        }
+                    });
+                    break;
+            }
+        }
         
         if (btnSelectPositive != null) {
             btnSelectPositive.setText(okButton);
@@ -320,12 +427,26 @@ public class SelectDialog extends BaseDialog {
         }
     }
     
+    private void refreshTextViews() {
+        useTextInfo(txtDialogTitle, titleTextInfo);
+        useTextInfo(txtDialogTip, messageTextInfo);
+        useTextInfo(btnSelectNegative, buttonTextInfo);
+        useTextInfo(btnSelectOther, buttonTextInfo);
+        useTextInfo(btnSelectPositive, buttonPositiveTextInfo);
+    }
+    
     @Override
     public void showDialog() {
         if (style == DialogSettings.STYLE.STYLE_IOS) {
             super.showDialog();
+        } else if (style == DialogSettings.STYLE.STYLE_MATERIAL) {
+            if (theme == DialogSettings.THEME.LIGHT) {
+                super.showDialog(R.style.LightDialogWithShadow);
+            } else {
+                super.showDialog(R.style.DarkDialogWithShadow);
+            }
         } else {
-            super.showDialog(R.style.DialogWithShadow);
+            super.showDialog(R.style.LightDialogWithShadow);
         }
     }
     
@@ -338,12 +459,12 @@ public class SelectDialog extends BaseDialog {
         return this;
     }
     
-    public String getContent() {
-        return content;
+    public String getMessage() {
+        return message;
     }
     
-    public SelectDialog setContent(String content) {
-        this.content = content;
+    public SelectDialog setMessage(String content) {
+        this.message = content;
         return this;
     }
     
@@ -575,12 +696,12 @@ public class SelectDialog extends BaseDialog {
         return this;
     }
     
-    public TextInfo getContentTextInfo() {
-        return contentTextInfo;
+    public TextInfo getMessageTextInfo() {
+        return messageTextInfo;
     }
     
-    public SelectDialog setContentTextInfo(TextInfo contentTextInfo) {
-        this.contentTextInfo = contentTextInfo;
+    public SelectDialog setMessageTextInfo(TextInfo messageTextInfo) {
+        this.messageTextInfo = messageTextInfo;
         return this;
     }
     

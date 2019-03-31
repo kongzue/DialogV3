@@ -21,4 +21,5 @@
     <color name="dialogButtonBlueDarkPress">#1ec0d4f1</color>
     <color name="dialogButtonGrayDark">#14dfdfdf</color>
     <color name="dialogButtonGrayDarkPress">#1ec0d4f1</color>
+    <color name="dialogButtonBlue">#007aff</color>
 </resources>

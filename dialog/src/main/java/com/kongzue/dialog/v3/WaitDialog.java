@@ -1,5 +1,10 @@
 package com.kongzue.dialog.v3;
 
+import android.app.Activity;
+import android.app.ActivityManager;
+import android.app.Application;
+import android.app.Service;
+import android.content.ComponentName;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -22,6 +27,8 @@ import com.kongzue.dialog.util.DialogSettings;
 import com.kongzue.dialog.util.view.BlurView;
 import com.kongzue.dialog.util.view.ProgressView;
 
+import java.util.List;
+
 import static com.kongzue.dialog.util.DialogSettings.blurAlpha;
 
 /**
@@ -36,7 +43,7 @@ public class WaitDialog extends BaseDialog {
     private OnDismissListener dismissListener;
     
     public static WaitDialog waitDialogTemp;
-    private String content;
+    private String message;
     
     private BlurView blurView;
     
@@ -48,11 +55,13 @@ public class WaitDialog extends BaseDialog {
     public static WaitDialog build(AppCompatActivity context) {
         synchronized (WaitDialog.class) {
             WaitDialog waitDialog = new WaitDialog();
+    
             if (waitDialogTemp == null) {
                 waitDialogTemp = waitDialog;
             } else {
                 if (waitDialogTemp.context != context) {
                     dismiss();
+                    waitDialogTemp = waitDialog;
                 } else {
                     waitDialog = waitDialogTemp;
                     return null;
@@ -65,23 +74,24 @@ public class WaitDialog extends BaseDialog {
         }
     }
     
-    public static WaitDialog show(AppCompatActivity context, String content) {
+    public static WaitDialog show(AppCompatActivity context, String message) {
         synchronized (WaitDialog.class) {
             WaitDialog waitDialog = build(context);
-    
+            
             waitDialogTemp.onDismissListener = new OnDismissListener() {
                 @Override
                 public void onDismiss() {
-                    if (waitDialogTemp.dismissListener!=null)waitDialogTemp.dismissListener.onDismiss();
+                    if (waitDialogTemp.dismissListener != null)
+                        waitDialogTemp.dismissListener.onDismiss();
                     waitDialogTemp = null;
                 }
             };
             
             if (waitDialog == null) {
-                waitDialogTemp.setContent(content);
+                waitDialogTemp.setMessage(message);
                 return waitDialogTemp;
             } else {
-                waitDialog.content = content;
+                waitDialog.message = message;
                 waitDialog.showDialog();
                 return waitDialog;
             }
@@ -90,6 +100,7 @@ public class WaitDialog extends BaseDialog {
     
     @Override
     public void bindView(View rootView) {
+        log("WaitDialog: bindView");
         boxBody = rootView.findViewById(R.id.box_body);
         boxBlur = rootView.findViewById(R.id.box_blur);
         progress = rootView.findViewById(R.id.progress);
@@ -131,7 +142,7 @@ public class WaitDialog extends BaseDialog {
             boxBody.setBackgroundResource(bkgResId);
         }
         
-        txtInfo.setText(content);
+        txtInfo.setText(message);
     }
     
     public OnDismissListener getOnDismissListener() {
@@ -156,13 +167,13 @@ public class WaitDialog extends BaseDialog {
         }
     }
     
-    public String getContent() {
-        return content;
+    public String getMessage() {
+        return message;
     }
     
-    public WaitDialog setContent(String content) {
-        this.content = content;
-        if (txtInfo != null) txtInfo.setText(content);
+    public WaitDialog setMessage(String message) {
+        this.message = message;
+        if (txtInfo != null) txtInfo.setText(message);
         return this;
     }
 }

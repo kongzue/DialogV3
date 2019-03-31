@@ -13,8 +13,12 @@
         <item name="android:backgroundDimAmount">0.4</item>
     </style>
 
-    <style name="DialogWithShadow" parent="Theme.AppCompat.Dialog.Alert">
-        <item name="colorAccent">@color/dark</item>
+    <style name="LightDialogWithShadow" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">@color/dialogButtonBlue</item>
+    </style>
+
+    <style name="DarkDialogWithShadow" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="colorAccent">@color/white</item>
     </style>
 
     <style name="iOSDialogAnimStyle">
