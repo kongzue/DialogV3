@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         //DialogSettings.backgroundColor = Color.BLUE;
         //DialogSettings.titleTextInfo = new TextInfo().setFontSize(50);
         //DialogSettings.buttonPositiveTextInfo = new TextInfo().setFontColor(Color.GREEN);
-        DialogSettings.style = DialogSettings.STYLE.STYLE_MATERIAL;
+        DialogSettings.style = DialogSettings.STYLE.STYLE_IOS;
         DialogSettings.theme = DialogSettings.THEME.LIGHT;
         
         btnWaitDialog = findViewById(R.id.btn_waitDialog);

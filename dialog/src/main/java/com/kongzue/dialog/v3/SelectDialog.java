@@ -129,24 +129,28 @@ public class SelectDialog extends BaseDialog {
     }
     
     private AlertDialog materialAlertDialog;
-    private boolean isBindView;
+    private View rootView;
     
     @Override
     public void bindView(View rootView) {
-        isBindView = true;
-        if (rootView != null) {
-            bkg = rootView.findViewById(R.id.bkg);
-            txtDialogTitle = rootView.findViewById(R.id.txt_dialog_title);
-            txtDialogTip = rootView.findViewById(R.id.txt_dialog_tip);
-            boxCustom = rootView.findViewById(R.id.box_custom);
-            txtInput = rootView.findViewById(R.id.txt_input);
-            splitHorizontal = rootView.findViewById(R.id.split_horizontal);
-            boxButton = rootView.findViewById(R.id.box_button);
-            btnSelectNegative = rootView.findViewById(R.id.btn_selectNegative);
-            splitVertical1 = rootView.findViewById(R.id.split_vertical1);
-            btnSelectOther = rootView.findViewById(R.id.btn_selectOther);
-            splitVertical2 = rootView.findViewById(R.id.split_vertical2);
-            btnSelectPositive = rootView.findViewById(R.id.btn_selectPositive);
+        if (style == DialogSettings.STYLE.STYLE_MATERIAL) {
+            materialAlertDialog = (AlertDialog) dialog.getDialog();
+        } else {
+            if (rootView != null) {
+                this.rootView = rootView;
+                bkg = rootView.findViewById(R.id.bkg);
+                txtDialogTitle = rootView.findViewById(R.id.txt_dialog_title);
+                txtDialogTip = rootView.findViewById(R.id.txt_dialog_tip);
+                boxCustom = rootView.findViewById(R.id.box_custom);
+                txtInput = rootView.findViewById(R.id.txt_input);
+                splitHorizontal = rootView.findViewById(R.id.split_horizontal);
+                boxButton = rootView.findViewById(R.id.box_button);
+                btnSelectNegative = rootView.findViewById(R.id.btn_selectNegative);
+                splitVertical1 = rootView.findViewById(R.id.split_vertical1);
+                btnSelectOther = rootView.findViewById(R.id.btn_selectOther);
+                splitVertical2 = rootView.findViewById(R.id.split_vertical2);
+                btnSelectPositive = rootView.findViewById(R.id.btn_selectPositive);
+            }
         }
         
         refreshView();
@@ -156,7 +160,7 @@ public class SelectDialog extends BaseDialog {
         if (txtDialogTitle != null) txtDialogTitle.setText(title);
         if (txtDialogTip != null) txtDialogTip.setText(message);
         
-        if (isBindView) {
+        if (rootView != null || materialAlertDialog != null) {
             final int bkgResId, blurFrontColor;
             switch (style) {
                 case STYLE_IOS:
@@ -208,7 +212,6 @@ public class SelectDialog extends BaseDialog {
                     refreshTextViews();
                     break;
                 case STYLE_MATERIAL:
-                    materialAlertDialog = (AlertDialog) dialog.getDialog();
                     materialAlertDialog.setTitle(title);
                     if (backgroundColor != 0)
                         materialAlertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(backgroundColor));

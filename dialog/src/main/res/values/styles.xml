@@ -14,11 +14,11 @@
     </style>
 
     <style name="LightDialogWithShadow" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="colorAccent">@color/dialogButtonBlue</item>
+
     </style>
 
     <style name="DarkDialogWithShadow" parent="Theme.AppCompat.Dialog.Alert">
-        <item name="colorAccent">@color/white</item>
+
     </style>
 
     <style name="iOSDialogAnimStyle">

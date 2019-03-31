@@ -34,6 +34,7 @@ public class DialogHelper extends DialogFragment {
     private OnDismissListener onDismissListener;
     private OnDialogShowListener onDialogShowListener;
     private boolean isRestartDialog = false;
+    private AlertDialog materialDialog;
     
     private int layoutId;
     private View rootView;
@@ -60,15 +61,18 @@ public class DialogHelper extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         if (layoutId == -1) {
-            return new AlertDialog.Builder(getActivity(), styleId).setTitle("Title").setMessage("are you ok?")
+            materialDialog = new AlertDialog.Builder(getActivity(), styleId)
+                    .setTitle("Title")
+                    .setMessage("are you ok?")
                     .setPositiveButton("Sure", new DialogInterface.OnClickListener() {
-                        
+                
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dismiss();
                         }
                     }).setNegativeButton("cancel", null)
                     .create();
+            return materialDialog;
         }
         return super.onCreateDialog(savedInstanceState);
     }

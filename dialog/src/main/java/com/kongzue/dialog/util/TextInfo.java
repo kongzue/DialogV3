@@ -49,4 +49,14 @@ public class TextInfo {
         this.bold = bold;
         return this;
     }
+    
+    @Override
+    public String toString() {
+        return "TextInfo{" +
+                "fontSize=" + fontSize +
+                ", gravity=" + gravity +
+                ", fontColor=" + fontColor +
+                ", bold=" + bold +
+                '}';
+    }
 }
