@@ -11,7 +11,7 @@ import android.text.InputType;
  */
 public class InputInfo {
     
-    private int MAX_LENGTH = -1;    //最大长度
+    private int MAX_LENGTH = -1;    //最大长度,-1不生效
     private int inputType;          //类型详见 android.text.InputType
     private TextInfo textInfo;      //默认字体样式
     

@@ -1,8 +1,17 @@
 package com.kongzue.dialog.v3;
 
+import android.text.InputFilter;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
+
+import com.kongzue.dialog.interfaces.OnInputDialogButtonClickListener;
+import com.kongzue.dialog.util.BaseDialog;
+import com.kongzue.dialog.util.DialogSettings;
+import com.kongzue.dialog.util.InputInfo;
+
 import android.content.DialogInterface;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -12,11 +21,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutCompat;
-import android.util.TypedValue;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -24,10 +29,7 @@ import android.widget.TextView;
 
 import com.kongzue.dialog.R;
 import com.kongzue.dialog.interfaces.DialogLifeCycleListener;
-import com.kongzue.dialog.interfaces.OnDialogButtonClickListener;
 import com.kongzue.dialog.interfaces.OnDismissListener;
-import com.kongzue.dialog.util.BaseDialog;
-import com.kongzue.dialog.util.DialogSettings;
 import com.kongzue.dialog.util.TextInfo;
 import com.kongzue.dialog.util.view.BlurView;
 
@@ -43,15 +45,15 @@ import static com.kongzue.dialog.util.DialogSettings.blurAlpha;
  * Github: https://github.com/kongzue/
  * Homepage: http://kongzue.com/
  * Mail: myzcxhh@live.cn
- * CreateTime: 2019/3/29 16:43
+ * CreateTime: 2019/4/8 19:39
  */
-public class SelectDialog extends BaseDialog {
+public class InputDialog extends BaseDialog {
     
     private int buttonOrientation;
     
-    private OnDialogButtonClickListener onOkButtonClickListener;
-    private OnDialogButtonClickListener onCancelButtonClickListener;
-    private OnDialogButtonClickListener onOtherButtonClickListener;
+    private OnInputDialogButtonClickListener onOkButtonClickListener;
+    private OnInputDialogButtonClickListener onCancelButtonClickListener;
+    private OnInputDialogButtonClickListener onOtherButtonClickListener;
     
     private Drawable okButtonDrawable;
     private Drawable cancelButtonDrawable;
@@ -62,6 +64,8 @@ public class SelectDialog extends BaseDialog {
     private String okButton = "确定";
     private String cancelButton = "取消";
     private String otherButton;
+    private String inputText = "";
+    private String hintText;
     
     private BlurView blurView;
     
@@ -78,57 +82,64 @@ public class SelectDialog extends BaseDialog {
     private ImageView splitVertical2;
     private TextView btnSelectPositive;
     
-    public static SelectDialog build(@NonNull AppCompatActivity context) {
-        synchronized (WaitDialog.class) {
-            SelectDialog selectDialog = new SelectDialog();
-            selectDialog.log("装载选择对话框");
-            selectDialog.context = context;
+    public static InputDialog build(@NonNull AppCompatActivity context) {
+        synchronized (TipDialog.class) {
+            InputDialog inputDialog = new InputDialog();
+            inputDialog.log("装载输入对话框");
+            inputDialog.context = context;
             
-            switch (selectDialog.style) {
+            switch (inputDialog.style) {
                 case STYLE_IOS:
-                    selectDialog.build(selectDialog, R.layout.dialog_select_ios);
+                    inputDialog.build(inputDialog, R.layout.dialog_select_ios);
                     break;
                 case STYLE_KONGZUE:
-                    selectDialog.build(selectDialog, R.layout.dialog_select);
+                    inputDialog.build(inputDialog, R.layout.dialog_select);
                     break;
                 case STYLE_MATERIAL:
-                    selectDialog.build(selectDialog);
+                    inputDialog.build(inputDialog);
                     break;
             }
-            return selectDialog;
+            return inputDialog;
         }
     }
     
-    public static SelectDialog show(@NonNull AppCompatActivity context, String title, String message) {
-        synchronized (WaitDialog.class) {
-            SelectDialog selectDialog = show(context, title, message, null, null, null);
-            return selectDialog;
+    public static InputDialog show(@NonNull AppCompatActivity context, String title, String message) {
+        synchronized (TipDialog.class) {
+            InputDialog inputDialog = show(context, title, message, null, null, null);
+            return inputDialog;
         }
     }
     
-    public static SelectDialog show(@NonNull AppCompatActivity context, String title, String message, String okButton, String cancelButton) {
-        synchronized (WaitDialog.class) {
-            SelectDialog selectDialog = show(context, title, message, okButton, cancelButton, null);
-            return selectDialog;
+    public static InputDialog show(@NonNull AppCompatActivity context, String title, String message, String okButton) {
+        synchronized (TipDialog.class) {
+            InputDialog inputDialog = show(context, title, message, okButton, null, null);
+            return inputDialog;
         }
     }
     
-    public static SelectDialog show(@NonNull AppCompatActivity context, String title, String message, String okButton, String cancelButton, String otherButton) {
-        synchronized (WaitDialog.class) {
-            SelectDialog selectDialog = build(context);
+    public static InputDialog show(@NonNull AppCompatActivity context, String title, String message, String okButton, String cancelButton) {
+        synchronized (TipDialog.class) {
+            InputDialog inputDialog = show(context, title, message, okButton, cancelButton, null);
+            return inputDialog;
+        }
+    }
+    
+    public static InputDialog show(@NonNull AppCompatActivity context, String title, String message, String okButton, String cancelButton, String otherButton) {
+        synchronized (TipDialog.class) {
+            InputDialog inputDialog = build(context);
             
-            if (message != null) selectDialog.message = message;
-            if (title != null) selectDialog.title = title;
-            if (okButton != null) selectDialog.okButton = okButton;
-            if (cancelButton != null) selectDialog.cancelButton = cancelButton;
-            if (otherButton != null) selectDialog.otherButton = otherButton;
+            inputDialog.title = title;
+            if (okButton != null) inputDialog.okButton = okButton;
+            inputDialog.message = message;
+            inputDialog.cancelButton = cancelButton;
+            inputDialog.otherButton = otherButton;
             
-            selectDialog.showDialog();
-            return selectDialog;
+            inputDialog.showDialog();
+            return inputDialog;
         }
     }
     
-    private AlertDialog materialAlertDialog;
+    protected AlertDialog materialAlertDialog;
     private View rootView;
     
     @Override
@@ -156,9 +167,23 @@ public class SelectDialog extends BaseDialog {
         refreshView();
     }
     
-    private void refreshView() {
-        if (txtDialogTitle != null) txtDialogTitle.setText(title);
-        if (txtDialogTip != null) txtDialogTip.setText(message);
+    protected void refreshView() {
+        if (txtDialogTitle != null) {
+            if (title == null) {
+                txtDialogTitle.setVisibility(View.GONE);
+            } else {
+                txtDialogTitle.setVisibility(View.VISIBLE);
+                txtDialogTitle.setText(title);
+            }
+        }
+        if (txtDialogTip != null) {
+            if (message == null) {
+                txtDialogTip.setVisibility(View.GONE);
+            } else {
+                txtDialogTip.setVisibility(View.VISIBLE);
+                txtDialogTip.setText(message);
+            }
+        }
         
         if (rootView != null || materialAlertDialog != null) {
             final int bkgResId, blurFrontColor;
@@ -172,6 +197,10 @@ public class SelectDialog extends BaseDialog {
                         blurFrontColor = Color.argb((blurAlpha + 20) > 255 ? 255 : (blurAlpha + 20), 0, 0, 0);
                         txtDialogTitle.setTextColor(Color.WHITE);
                         txtDialogTip.setTextColor(Color.WHITE);
+                        splitHorizontal.setBackgroundColor(context.getResources().getColor(R.color.dialogSplitIOSDark));
+                        splitVertical1.setBackgroundColor(context.getResources().getColor(R.color.dialogSplitIOSDark));
+                        splitVertical2.setBackgroundColor(context.getResources().getColor(R.color.dialogSplitIOSDark));
+                        txtInput.setBackgroundResource(R.drawable.editbox_dialog_bkg_ios_dark);
                     }
                     if (DialogSettings.isUseBlur) {
                         bkg.post(new Runnable() {
@@ -186,6 +215,7 @@ public class SelectDialog extends BaseDialog {
                     } else {
                         bkg.setBackgroundResource(bkgResId);
                     }
+                    
                     refreshTextViews();
                     break;
                 case STYLE_KONGZUE:
@@ -219,23 +249,40 @@ public class SelectDialog extends BaseDialog {
                     materialAlertDialog.setButton(BUTTON_POSITIVE, okButton, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                        
+                            
                         }
                     });
-                    materialAlertDialog.setButton(BUTTON_NEGATIVE, cancelButton, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                        
-                        }
-                    });
-                    if (otherButton != null) {
-                        materialAlertDialog.setButton(BUTTON_NEUTRAL, otherButton, new DialogInterface.OnClickListener() {
+                    if (cancelButton != null) {
+                        materialAlertDialog.setButton(BUTTON_NEGATIVE, cancelButton, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                             
                             }
                         });
                     }
+                    if (otherButton != null) {
+                        materialAlertDialog.setButton(BUTTON_NEUTRAL, otherButton, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                
+                            }
+                        });
+                    }
+                    
+                    if (inputText != null) {
+                        txtInput = new EditText(context);
+                        txtInput.setSingleLine();
+                        txtInput.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) txtInput.getLayoutParams();
+                                p.setMargins(dip2px(20), 0, dip2px(20), 0);
+                                txtInput.requestLayout();
+                            }
+                        });
+                        materialAlertDialog.setView(txtInput);
+                    }
+                    
                     materialAlertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
                         @Override
                         public void onShow(DialogInterface dialog) {
@@ -244,7 +291,7 @@ public class SelectDialog extends BaseDialog {
                                 @Override
                                 public void onClick(View v) {
                                     if (onOkButtonClickListener != null) {
-                                        if (!onOkButtonClickListener.onClick(v))
+                                        if (!onOkButtonClickListener.onClick(v, getInputText()))
                                             materialAlertDialog.dismiss();
                                     } else {
                                         materialAlertDialog.dismiss();
@@ -258,7 +305,7 @@ public class SelectDialog extends BaseDialog {
                                 @Override
                                 public void onClick(View v) {
                                     if (onCancelButtonClickListener != null) {
-                                        if (!onCancelButtonClickListener.onClick(v))
+                                        if (!onCancelButtonClickListener.onClick(v, getInputText()))
                                             materialAlertDialog.dismiss();
                                     } else {
                                         materialAlertDialog.dismiss();
@@ -273,7 +320,7 @@ public class SelectDialog extends BaseDialog {
                                     @Override
                                     public void onClick(View v) {
                                         if (onOtherButtonClickListener != null) {
-                                            if (!onOtherButtonClickListener.onClick(v))
+                                            if (!onOtherButtonClickListener.onClick(v, getInputText()))
                                                 materialAlertDialog.dismiss();
                                         } else {
                                             materialAlertDialog.dismiss();
@@ -324,7 +371,7 @@ public class SelectDialog extends BaseDialog {
                 @Override
                 public void onClick(View v) {
                     if (onOkButtonClickListener != null) {
-                        if (!onOkButtonClickListener.onClick(v)) {
+                        if (!onOkButtonClickListener.onClick(v, getInputText())) {
                             doDismiss();
                         }
                     } else {
@@ -334,27 +381,34 @@ public class SelectDialog extends BaseDialog {
             });
         }
         if (btnSelectNegative != null) {
-            btnSelectNegative.setText(cancelButton);
-            if (cancelButtonDrawable != null) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    btnSelectNegative.setBackground(cancelButtonDrawable);
-                } else {
-                    btnSelectNegative.setBackgroundDrawable(cancelButtonDrawable);
+            if (isNull(cancelButton)) {
+                btnSelectNegative.setVisibility(View.GONE);
+                if (style == DialogSettings.STYLE.STYLE_IOS) {
+                    btnSelectPositive.setBackgroundResource(R.drawable.button_menu_ios_bottom);
                 }
-            }
-            
-            btnSelectNegative.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (onCancelButtonClickListener != null) {
-                        if (!onCancelButtonClickListener.onClick(v)) {
-                            doDismiss();
-                        }
+            } else {
+                btnSelectNegative.setText(cancelButton);
+                if (cancelButtonDrawable != null) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                        btnSelectNegative.setBackground(cancelButtonDrawable);
                     } else {
-                        doDismiss();
+                        btnSelectNegative.setBackgroundDrawable(cancelButtonDrawable);
                     }
                 }
-            });
+                
+                btnSelectNegative.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (onCancelButtonClickListener != null) {
+                            if (!onCancelButtonClickListener.onClick(v, getInputText())) {
+                                doDismiss();
+                            }
+                        } else {
+                            doDismiss();
+                        }
+                    }
+                });
+            }
         }
         if (btnSelectOther != null) {
             if (!isNull(otherButton)) {
@@ -374,7 +428,7 @@ public class SelectDialog extends BaseDialog {
                 @Override
                 public void onClick(View v) {
                     if (onOtherButtonClickListener != null) {
-                        if (!onOtherButtonClickListener.onClick(v)) {
+                        if (!onOtherButtonClickListener.onClick(v, getInputText())) {
                             doDismiss();
                         }
                     } else {
@@ -436,10 +490,31 @@ public class SelectDialog extends BaseDialog {
         useTextInfo(btnSelectNegative, buttonTextInfo);
         useTextInfo(btnSelectOther, buttonTextInfo);
         useTextInfo(btnSelectPositive, buttonPositiveTextInfo);
+        if (inputText != null) {
+            if (txtInput != null) {
+                if (theme == DialogSettings.THEME.DARK) {
+                    txtInput.setTextColor(Color.WHITE);
+                    txtInput.setHintTextColor(context.getResources().getColor(R.color.whiteAlpha30));
+                }
+                txtInput.setText(inputText);
+                txtInput.setHint(hintText);
+                if (inputInfo != null) {
+                    if (inputInfo.getMAX_LENGTH() != -1)
+                        txtInput.setFilters(new InputFilter[]{new InputFilter.LengthFilter(inputInfo.getMAX_LENGTH())});
+                    txtInput.setInputType(inputInfo.getInputType());
+                    if (inputInfo.getTextInfo() != null)
+                        useTextInfo(txtInput, inputInfo.getTextInfo());
+                }
+                txtInput.setVisibility(View.VISIBLE);
+            }
+        } else {
+            txtInput.setVisibility(View.GONE);
+        }
     }
     
     @Override
     public void showDialog() {
+        log("启动输入对话框");
         if (style == DialogSettings.STYLE.STYLE_IOS) {
             super.showDialog();
         } else if (style == DialogSettings.STYLE.STYLE_MATERIAL) {
@@ -457,7 +532,7 @@ public class SelectDialog extends BaseDialog {
         return title;
     }
     
-    public SelectDialog setTitle(String title) {
+    public InputDialog setTitle(String title) {
         this.title = title;
         return this;
     }
@@ -466,7 +541,7 @@ public class SelectDialog extends BaseDialog {
         return message;
     }
     
-    public SelectDialog setMessage(String content) {
+    public InputDialog setMessage(String content) {
         this.message = content;
         return this;
     }
@@ -475,13 +550,13 @@ public class SelectDialog extends BaseDialog {
         return okButton;
     }
     
-    public SelectDialog setOkButton(String okButton) {
+    public InputDialog setOkButton(String okButton) {
         this.okButton = okButton;
         refreshView();
         return this;
     }
     
-    public SelectDialog setOkButton(String okButton, OnDialogButtonClickListener onOkButtonClickListener) {
+    public InputDialog setOkButton(String okButton, OnInputDialogButtonClickListener onOkButtonClickListener) {
         this.okButton = okButton;
         this.onOkButtonClickListener = onOkButtonClickListener;
         refreshView();
@@ -492,13 +567,13 @@ public class SelectDialog extends BaseDialog {
         return cancelButton;
     }
     
-    public SelectDialog setCancelButton(String cancelButton) {
+    public InputDialog setCancelButton(String cancelButton) {
         this.cancelButton = cancelButton;
         refreshView();
         return this;
     }
     
-    public SelectDialog setCancelButton(String cancelButton, OnDialogButtonClickListener onCancelButtonClickListener) {
+    public InputDialog setCancelButton(String cancelButton, OnInputDialogButtonClickListener onCancelButtonClickListener) {
         this.cancelButton = cancelButton;
         this.onCancelButtonClickListener = onCancelButtonClickListener;
         refreshView();
@@ -509,80 +584,80 @@ public class SelectDialog extends BaseDialog {
         return otherButton;
     }
     
-    public SelectDialog setOtherButton(String otherButton) {
+    public InputDialog setOtherButton(String otherButton) {
         this.otherButton = otherButton;
         refreshView();
         return this;
     }
     
-    public SelectDialog setOtherButton(String otherButton, OnDialogButtonClickListener onOtherButtonClickListener) {
+    public InputDialog setOtherButton(String otherButton, OnInputDialogButtonClickListener onOtherButtonClickListener) {
         this.otherButton = otherButton;
         this.onOtherButtonClickListener = onOtherButtonClickListener;
         refreshView();
         return this;
     }
     
-    public OnDialogButtonClickListener getOnOkButtonClickListener() {
+    public OnInputDialogButtonClickListener getOnOkButtonClickListener() {
         return onOkButtonClickListener;
     }
     
-    public SelectDialog setOnOkButtonClickListener(OnDialogButtonClickListener onOkButtonClickListener) {
+    public InputDialog setOnOkButtonClickListener(OnInputDialogButtonClickListener onOkButtonClickListener) {
         this.onOkButtonClickListener = onOkButtonClickListener;
         refreshView();
         return this;
     }
     
-    public OnDialogButtonClickListener getOnCancelButtonClickListener() {
+    public OnInputDialogButtonClickListener getOnCancelButtonClickListener() {
         return onCancelButtonClickListener;
     }
     
-    public SelectDialog setOnCancelButtonClickListener(OnDialogButtonClickListener onCancelButtonClickListener) {
+    public InputDialog setOnCancelButtonClickListener(OnInputDialogButtonClickListener onCancelButtonClickListener) {
         this.onCancelButtonClickListener = onCancelButtonClickListener;
         refreshView();
         return this;
     }
     
-    public OnDialogButtonClickListener getOnOtherButtonClickListener() {
+    public OnInputDialogButtonClickListener getOnOtherButtonClickListener() {
         return onOtherButtonClickListener;
     }
     
-    public SelectDialog setOnOtherButtonClickListener(OnDialogButtonClickListener onOtherButtonClickListener) {
+    public InputDialog setOnOtherButtonClickListener(OnInputDialogButtonClickListener onOtherButtonClickListener) {
         this.onOtherButtonClickListener = onOtherButtonClickListener;
         refreshView();
         return this;
     }
     
-    public SelectDialog setOkButtonDrawable(@DrawableRes int okButtonDrawableResId) {
+    public InputDialog setOkButtonDrawable(@DrawableRes int okButtonDrawableResId) {
         this.okButtonDrawable = ContextCompat.getDrawable(context, okButtonDrawableResId);
         refreshView();
         return this;
     }
     
-    public SelectDialog setOkButtonDrawable(Drawable okButtonDrawable) {
+    public InputDialog setOkButtonDrawable(Drawable okButtonDrawable) {
         this.okButtonDrawable = okButtonDrawable;
         refreshView();
         return this;
     }
     
-    public SelectDialog setCancelButtonDrawable(@DrawableRes int okButtonDrawableResId) {
+    public InputDialog setCancelButtonDrawable(@DrawableRes int okButtonDrawableResId) {
         this.cancelButtonDrawable = ContextCompat.getDrawable(context, okButtonDrawableResId);
         refreshView();
         return this;
     }
     
-    public SelectDialog setCancelButtonDrawable(Drawable cancelButtonDrawable) {
+    public InputDialog setCancelButtonDrawable(Drawable cancelButtonDrawable) {
         this.cancelButtonDrawable = cancelButtonDrawable;
         refreshView();
         return this;
     }
     
-    public SelectDialog setOtherButtonDrawable(@DrawableRes int okButtonDrawableResId) {
+    public InputDialog setOtherButtonDrawable(@DrawableRes int okButtonDrawableResId) {
         this.otherButtonDrawable = ContextCompat.getDrawable(context, okButtonDrawableResId);
         refreshView();
         return this;
     }
     
-    public SelectDialog setOtherButtonDrawable(Drawable otherButtonDrawable) {
+    public InputDialog setOtherButtonDrawable(Drawable otherButtonDrawable) {
         this.otherButtonDrawable = otherButtonDrawable;
         refreshView();
         return this;
@@ -592,7 +667,7 @@ public class SelectDialog extends BaseDialog {
         return buttonOrientation;
     }
     
-    public SelectDialog setButtonOrientation(@LinearLayoutCompat.OrientationMode int buttonOrientation) {
+    public InputDialog setButtonOrientation(@LinearLayoutCompat.OrientationMode int buttonOrientation) {
         this.buttonOrientation = buttonOrientation;
         refreshView();
         return this;
@@ -603,22 +678,22 @@ public class SelectDialog extends BaseDialog {
         return dialogLifeCycleListener == null ? new DialogLifeCycleListener() {
             @Override
             public void onCreate(BaseDialog alertDialog) {
-            
+                
             }
             
             @Override
             public void onShow(BaseDialog alertDialog) {
-            
+                
             }
             
             @Override
             public void onDismiss() {
-            
+                
             }
         } : dialogLifeCycleListener;
     }
     
-    public SelectDialog setDialogLifeCycleListener(DialogLifeCycleListener listener) {
+    public InputDialog setDialogLifeCycleListener(DialogLifeCycleListener listener) {
         dialogLifeCycleListener = listener;
         return this;
     }
@@ -627,12 +702,12 @@ public class SelectDialog extends BaseDialog {
         return onDismissListener == null ? new OnDismissListener() {
             @Override
             public void onDismiss() {
-            
+                
             }
         } : onDismissListener;
     }
     
-    public SelectDialog setOnDismissListener(OnDismissListener onDismissListener) {
+    public InputDialog setOnDismissListener(OnDismissListener onDismissListener) {
         this.onDismissListener = onDismissListener;
         return this;
     }
@@ -641,7 +716,7 @@ public class SelectDialog extends BaseDialog {
         return style;
     }
     
-    public SelectDialog setStyle(DialogSettings.STYLE style) {
+    public InputDialog setStyle(DialogSettings.STYLE style) {
         if (isAlreadyShown) {
             error("必须使用 build(...) 方法创建时，才可以使用 setStyle(...) 来修改对话框主题或风格。");
             return this;
@@ -667,7 +742,7 @@ public class SelectDialog extends BaseDialog {
         return theme;
     }
     
-    public SelectDialog setTheme(DialogSettings.THEME theme) {
+    public InputDialog setTheme(DialogSettings.THEME theme) {
         
         if (isAlreadyShown) {
             error("必须使用 build(...) 方法创建时，才可以使用 setTheme(...) 来修改对话框主题或风格。");
@@ -683,7 +758,7 @@ public class SelectDialog extends BaseDialog {
         return cancelable == BOOLEAN.TRUE;
     }
     
-    public SelectDialog setCancelable(boolean enable) {
+    public InputDialog setCancelable(boolean enable) {
         this.cancelable = enable ? BOOLEAN.TRUE : BOOLEAN.FALSE;
         if (dialog != null) dialog.setCancelable(cancelable == BOOLEAN.TRUE);
         return this;
@@ -694,8 +769,9 @@ public class SelectDialog extends BaseDialog {
         return titleTextInfo;
     }
     
-    public SelectDialog setTitleTextInfo(TextInfo titleTextInfo) {
+    public InputDialog setTitleTextInfo(TextInfo titleTextInfo) {
         this.titleTextInfo = titleTextInfo;
+        refreshView();
         return this;
     }
     
@@ -703,8 +779,9 @@ public class SelectDialog extends BaseDialog {
         return messageTextInfo;
     }
     
-    public SelectDialog setMessageTextInfo(TextInfo messageTextInfo) {
+    public InputDialog setMessageTextInfo(TextInfo messageTextInfo) {
         this.messageTextInfo = messageTextInfo;
+        refreshView();
         return this;
     }
     
@@ -712,8 +789,9 @@ public class SelectDialog extends BaseDialog {
         return buttonTextInfo;
     }
     
-    public SelectDialog setButtonTextInfo(TextInfo buttonTextInfo) {
+    public InputDialog setButtonTextInfo(TextInfo buttonTextInfo) {
         this.buttonTextInfo = buttonTextInfo;
+        refreshView();
         return this;
     }
     
@@ -721,8 +799,9 @@ public class SelectDialog extends BaseDialog {
         return buttonPositiveTextInfo;
     }
     
-    public SelectDialog setButtonPositiveTextInfo(TextInfo buttonPositiveTextInfo) {
+    public InputDialog setButtonPositiveTextInfo(TextInfo buttonPositiveTextInfo) {
         this.buttonPositiveTextInfo = buttonPositiveTextInfo;
+        refreshView();
         return this;
     }
     
@@ -730,8 +809,43 @@ public class SelectDialog extends BaseDialog {
         return backgroundColor;
     }
     
-    public SelectDialog setBackgroundColor(int backgroundColor) {
+    public InputDialog setBackgroundColor(int backgroundColor) {
         this.backgroundColor = backgroundColor;
+        refreshView();
+        return this;
+    }
+    
+    public String getInputText() {
+        if (txtInput == null) {
+            return inputText;
+        } else {
+            return txtInput.getText().toString();
+        }
+    }
+    
+    public InputDialog setInputText(String inputText) {
+        this.inputText = inputText;
+        refreshView();
+        return this;
+    }
+    
+    public String getHintText() {
+        return hintText;
+    }
+    
+    public InputDialog setHintText(String hintText) {
+        this.hintText = hintText;
+        refreshView();
+        return this;
+    }
+    
+    public InputInfo getInputInfo() {
+        return inputInfo;
+    }
+    
+    public InputDialog setInputInfo(InputInfo inputInfo) {
+        this.inputInfo = inputInfo;
+        refreshView();
         return this;
     }
 }

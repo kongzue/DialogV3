@@ -40,16 +40,19 @@ public class DialogSettings {
     //全局焦点按钮文字样式
     public static TextInfo buttonPositiveTextInfo;
     
+    //全局输入框文本样式
+    public static InputInfo inputInfo;
+    
     //全局对话框背景颜色，值0时不生效
     public static int backgroundColor = 0;
     
-    //全局对话框默认是否可以点击外围遮罩区域或返回键关闭，此开关不影响提示框（TipDialog）以及等待框（WaitDialog）
+    //全局对话框默认是否可以点击外围遮罩区域或返回键关闭，此开关不影响提示框（TipDialog）以及等待框（TipDialog）
     public static boolean cancelable = true;
     
     //全局提示框（TipDialog）默认是否可以关闭
     public static boolean cancelableTipDialog = false;
     
-    //全局等待框（WaitDialog）默认是否可以关闭
+    //全局等待框（TipDialog）默认是否可以关闭
     public static boolean cancelableWaitDialog = false;
     
     //日志

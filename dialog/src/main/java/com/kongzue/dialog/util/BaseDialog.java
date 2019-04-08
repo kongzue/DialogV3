@@ -1,10 +1,9 @@
 package com.kongzue.dialog.util;
 
 import android.app.Dialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -17,7 +16,7 @@ import com.kongzue.dialog.R;
 import com.kongzue.dialog.interfaces.DialogLifeCycleListener;
 import com.kongzue.dialog.interfaces.OnDialogShowListener;
 import com.kongzue.dialog.interfaces.OnDismissListener;
-import com.kongzue.dialog.v3.WaitDialog;
+import com.kongzue.dialog.v3.TipDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +30,7 @@ import java.util.List;
  */
 public abstract class BaseDialog {
     
+    protected Handler mainHandler = new Handler(Looper.getMainLooper());
     public static AppCompatActivity newContext;
     
     public BaseDialog() {
@@ -60,6 +60,7 @@ public abstract class BaseDialog {
     protected TextInfo messageTextInfo;
     protected TextInfo buttonTextInfo;
     protected TextInfo buttonPositiveTextInfo;
+    protected InputInfo inputInfo;
     protected int backgroundColor = 0;
     
     protected DialogLifeCycleListener dialogLifeCycleListener;
@@ -67,11 +68,11 @@ public abstract class BaseDialog {
     protected OnDismissListener dismissEvent;
     
     public void log(Object o) {
-        if (DialogSettings.DEBUGMODE) Log.i(">>>", "Dialog:" + o.toString());
+        if (DialogSettings.DEBUGMODE) Log.i(">>>", "NormalDialog:" + o.toString());
     }
     
     public void error(Object o) {
-        if (DialogSettings.DEBUGMODE) Log.e(">>>", "Dialog 错误警告:" + o.toString());
+        if (DialogSettings.DEBUGMODE) Log.e(">>>", "NormalDialog 错误警告:" + o.toString());
     }
     
     public BaseDialog build(BaseDialog baseDialog, int layoutId) {
@@ -94,11 +95,6 @@ public abstract class BaseDialog {
     protected void showDialog(int style) {
         isAlreadyShown = true;
         styleId = style;
-        if (baseDialog instanceof WaitDialog) {
-            showNow();
-        } else {
-            showNext();
-        }
         dismissEvent = new OnDismissListener() {
             @Override
             public void onDismiss() {
@@ -109,6 +105,11 @@ public abstract class BaseDialog {
             }
         };
         dialogList.add(this);
+        if (baseDialog instanceof TipDialog) {
+            showNow();
+        } else {
+            showNext();
+        }
     }
     
     private void showNext() {
@@ -120,14 +121,14 @@ public abstract class BaseDialog {
             }
         }
         for (BaseDialog dialog : dialogList) {
-            if (!(dialog instanceof WaitDialog)) {
+            if (!(dialog instanceof TipDialog)) {
                 if (dialog.isShow) {
                     return;
                 }
             }
         }
         for (BaseDialog dialog : dialogList) {
-            if (!(dialog instanceof WaitDialog)) {
+            if (!(dialog instanceof TipDialog)) {
                 dialog.showNow();
                 return;
             }
@@ -135,6 +136,7 @@ public abstract class BaseDialog {
     }
     
     private void showNow() {
+        log("showNow");
         isShow = true;
         if (context.isDestroyed()) {
             context = newContext;
@@ -143,7 +145,7 @@ public abstract class BaseDialog {
         dialog = new DialogHelper().setLayoutId(baseDialog, layoutId);
         dialog.setStyle(DialogFragment.STYLE_NORMAL, styleId);
         dialog.show(fragmentManager, "kongzueDialog");
-        if (style == DialogSettings.STYLE.STYLE_IOS && !(baseDialog instanceof WaitDialog)) {
+        if (style == DialogSettings.STYLE.STYLE_IOS && !(baseDialog instanceof TipDialog)) {
             dialog.setOnDialogShowListener(new OnDialogShowListener() {
                 @Override
                 public void onShow(Dialog dialog) {
@@ -153,7 +155,7 @@ public abstract class BaseDialog {
         }
         dialog.setOnDismissListener(dismissEvent);
         
-        if (baseDialog instanceof WaitDialog) {
+        if (baseDialog instanceof TipDialog) {
             if (cancelable == null)
                 cancelable = DialogSettings.cancelableWaitDialog ? BOOLEAN.TRUE : BOOLEAN.FALSE;
         } else {
@@ -178,6 +180,7 @@ public abstract class BaseDialog {
         if (titleTextInfo == null) titleTextInfo = DialogSettings.titleTextInfo;
         if (messageTextInfo == null) messageTextInfo = DialogSettings.contentTextInfo;
         if (buttonTextInfo == null) buttonTextInfo = DialogSettings.buttonTextInfo;
+        if (inputInfo==null)inputInfo = DialogSettings.inputInfo;
         if (buttonPositiveTextInfo == null)
             buttonPositiveTextInfo = DialogSettings.buttonPositiveTextInfo;
     }
@@ -203,5 +206,10 @@ public abstract class BaseDialog {
             return true;
         }
         return false;
+    }
+    
+    public int dip2px(float dpValue) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dpValue * scale + 0.5f);
     }
 }

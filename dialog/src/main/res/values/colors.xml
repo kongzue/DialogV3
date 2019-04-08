@@ -13,6 +13,7 @@
     <color name="dialogButtonGrayLightPress">#dfdfdf</color>
     <color name="dialogButtonIOSLightPress">#0f000000</color>
     <color name="dialogSplitIOSLight">#2c000000</color>
+    <color name="dialogSplitIOSDark">#4e4e50</color>
     <color name="dialogButtonIOSNormal">#007aff</color>
 
     <color name="dialogBkgIOSLight">#e6ffffff</color>
@@ -22,4 +23,6 @@
     <color name="dialogButtonGrayDark">#14dfdfdf</color>
     <color name="dialogButtonGrayDarkPress">#1ec0d4f1</color>
     <color name="dialogButtonBlue">#007aff</color>
+    <color name="whiteAlpha50">#80FFFFFF</color>
+    <color name="whiteAlpha30">#4DFFFFFF</color>
 </resources>

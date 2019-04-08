@@ -14,10 +14,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.kongzue.dialog.R;
 import com.kongzue.dialog.interfaces.OnDialogShowListener;
 import com.kongzue.dialog.interfaces.OnDismissListener;
-import com.kongzue.dialog.v3.WaitDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,15 +60,15 @@ public class DialogHelper extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         if (layoutId == -1) {
             materialDialog = new AlertDialog.Builder(getActivity(), styleId)
-                    .setTitle("Title")
-                    .setMessage("are you ok?")
-                    .setPositiveButton("Sure", new DialogInterface.OnClickListener() {
+                    .setTitle("")
+                    .setMessage("")
+                    .setPositiveButton("", new DialogInterface.OnClickListener() {
                 
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dismiss();
                         }
-                    }).setNegativeButton("cancel", null)
+                    })
                     .create();
             return materialDialog;
         }
