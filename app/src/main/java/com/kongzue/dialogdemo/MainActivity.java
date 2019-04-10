@@ -113,6 +113,11 @@ public class MainActivity extends BaseActivity {
                     public void onClick() {
                         log("点击了消息");
                     }
+                }).setOnDismissListener(new OnDismissListener() {
+                    @Override
+                    public void onDismiss() {
+                        log("消息消失了");
+                    }
                 });
             }
         });

@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kongzue.dialog.R;
+import com.kongzue.dialog.interfaces.OnDismissListener;
 import com.kongzue.dialog.interfaces.OnNotificationClickListener;
 import com.kongzue.dialog.util.DialogSettings;
 import com.kongzue.dialog.util.view.NotifyToastShadowView;
@@ -45,10 +46,11 @@ public class Notification {
     }
     
     private OnNotificationClickListener onNotificationClickListener;
+    private OnDismissListener onDismissListener;
     
     private DialogSettings.STYLE style;
     private DURATION_TIME durationTime = DURATION_TIME.LONG;
-    private int backgroundColor = R.color.notificationNormal;
+    private int backgroundColor;
     
     private Toast toast;
     private Context context;
@@ -174,7 +176,10 @@ public class Notification {
         return notification;
     }
     
+    private boolean isShow;
+    
     public void showNotification() {
+        isShow = true;
         if (style == null) style = DialogSettings.style;
         switch (style) {
             case STYLE_IOS:
@@ -198,8 +203,8 @@ public class Notification {
         imgIcon = view.findViewById(R.id.img_icon);
         txtTitle = view.findViewById(R.id.txt_title);
         txtMessage = view.findViewById(R.id.txt_message);
-    
-        view.setActivity((Activity) context);
+        
+        view.setParent(context);
         view.setNotifyHeight(dip2px(80) + getStatusBarHeight());  //可触控区域高度
         view.setOnNotificationClickListener(new OnNotificationClickListener() {
             @Override
@@ -276,7 +281,7 @@ public class Notification {
         txtTitle = view.findViewById(R.id.txt_title);
         txtMessage = view.findViewById(R.id.txt_message);
         
-        view.setActivity((Activity) context);
+        view.setParent(context);
         view.setNotifyHeight(dip2px(100) + getStatusBarHeight());  //可触控区域高度
         view.setOnNotificationClickListener(new OnNotificationClickListener() {
             @Override
@@ -353,8 +358,8 @@ public class Notification {
         imgIcon = view.findViewById(R.id.img_icon);
         txtTitle = view.findViewById(R.id.txt_title);
         txtMessage = view.findViewById(R.id.txt_message);
-    
-        view.setActivity((Activity) context);
+        
+        view.setParent(context);
         view.setNotifyHeight(dip2px(50) + getStatusBarHeight());  //可触控区域高度
         view.setOnNotificationClickListener(new OnNotificationClickListener() {
             @Override
@@ -379,45 +384,62 @@ public class Notification {
             titleTextInfo = DialogSettings.titleTextInfo;
         }
         
-        useTextInfo(txtTitle, titleTextInfo);
-        useTextInfo(txtMessage, messageTextInfo);
-        
         btnNotic.setPadding(dip2px(10), getStatusBarHeight(), dip2px(10), 0);
         
-        if (isNull(title)) {
-            txtTitle.setVisibility(View.GONE);
-        } else {
-            txtTitle.setVisibility(View.VISIBLE);
-            txtTitle.setText(title);
-        }
-        
-        if (iconResId == 0) {
-            imgIcon.setVisibility(View.GONE);
-        } else {
-            imgIcon.setVisibility(View.VISIBLE);
-            if (iconResId != 0) {
-                imgIcon.setImageResource(iconResId);
-            }
-        }
-        
-        txtMessage.setText(message);
-        if (isNull(title)) {
-            txtMessage.setGravity(Gravity.CENTER);
-            TextPaint tp = txtMessage.getPaint();
-            tp.setFakeBoldText(true);
-        } else {
-            txtMessage.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
-            TextPaint tp = txtMessage.getPaint();
-            tp.setFakeBoldText(false);
-        }
-        
-        btnNotic.setBackgroundResource(backgroundColor);
+        refreshView();
         
         new kToast().show(context, view);
     }
     
+    private void refreshView() {
+        if (style != DialogSettings.STYLE.STYLE_IOS) {
+            if (btnNotic != null) {
+                if (backgroundColor == 0)
+                    backgroundColor = context.getResources().getColor(R.color.notificationNormal);
+                btnNotic.setBackgroundColor(backgroundColor);
+            }
+        }
+        if (txtTitle!=null){
+            if (isNull(title)) {
+                txtTitle.setVisibility(View.GONE);
+            } else {
+                txtTitle.setVisibility(View.VISIBLE);
+                txtTitle.setText(title);
+            }
+        }
+        if (txtMessage!=null){
+            txtMessage.setText(message);
+            if (isNull(title)) {
+                txtMessage.setGravity(Gravity.CENTER);
+                TextPaint tp = txtMessage.getPaint();
+                tp.setFakeBoldText(true);
+            } else {
+                txtMessage.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
+                TextPaint tp = txtMessage.getPaint();
+                tp.setFakeBoldText(false);
+            }
+        }
+        if (imgIcon!=null) {
+            if (iconResId == 0) {
+                imgIcon.setVisibility(View.GONE);
+            } else {
+                imgIcon.setVisibility(View.VISIBLE);
+                if (iconResId != 0) {
+                    imgIcon.setImageResource(iconResId);
+                }
+            }
+        }
+    
+        useTextInfo(txtTitle, titleTextInfo);
+        useTextInfo(txtMessage, messageTextInfo);
+    }
+    
     public void log(Object o) {
-        Log.i(">>>", o.toString());
+        if (DialogSettings.DEBUGMODE) Log.i(">>>", o.toString());
+    }
+    
+    public void error(Object o) {
+        if (DialogSettings.DEBUGMODE) Log.e(">>>", o.toString());
     }
     
     private int getStatusBarHeight() {
@@ -447,6 +469,19 @@ public class Notification {
             toast.setDuration(durationTime.ordinal());
             toast.setView(view);
             toast.getView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            
+            view.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+                @Override
+                public void onViewAttachedToWindow(View v) {
+                
+                }
+                
+                @Override
+                public void onViewDetachedFromWindow(View v) {
+                    isShow = false;
+                    if (onDismissListener != null) onDismissListener.onDismiss();
+                }
+            });
             
             hookHandler(toast);
             try {
@@ -556,71 +591,101 @@ public class Notification {
         return onNotificationClickListener;
     }
     
-    public void setOnNotificationClickListener(OnNotificationClickListener onNotificationClickListener) {
+    public Notification setOnNotificationClickListener(OnNotificationClickListener onNotificationClickListener) {
         this.onNotificationClickListener = onNotificationClickListener;
+        return this;
     }
     
     public DialogSettings.STYLE getStyle() {
         return style;
     }
     
-    public void setStyle(DialogSettings.STYLE style) {
+    public Notification setStyle(DialogSettings.STYLE style) {
         this.style = style;
+        if (isShow) {
+            error("必须使用 build(...) 方法创建时，才可以使用 setStyle(...) 来修改通知主题或风格。");
+        }
+        return this;
     }
     
     public DURATION_TIME getDurationTime() {
         return durationTime;
     }
     
-    public void setDurationTime(DURATION_TIME durationTime) {
+    public Notification setDurationTime(DURATION_TIME durationTime) {
         this.durationTime = durationTime;
+        if (isShow) {
+            error("必须使用 build(...) 方法创建时，才可以使用 setDurationTime(...) 来修改通知持续时间。");
+        }
+        return this;
     }
     
     public int getBackgroundColor() {
         return backgroundColor;
     }
     
-    public void setBackgroundColor(int backgroundColor) {
+    public Notification setBackgroundColor(int backgroundColor) {
         this.backgroundColor = backgroundColor;
+        refreshView();
+        return this;
     }
     
     public String getTitle() {
         return title;
     }
     
-    public void setTitle(String title) {
+    public Notification setTitle(String title) {
         this.title = title;
+        refreshView();
+        return this;
     }
     
     public String getMessage() {
         return message;
     }
     
-    public void setMessage(String message) {
+    public Notification setMessage(String message) {
         this.message = message;
+        refreshView();
+        return this;
     }
     
     public int getIconResId() {
         return iconResId;
     }
     
-    public void setIconResId(int iconResId) {
+    public Notification setIconResId(int iconResId) {
         this.iconResId = iconResId;
+        refreshView();
+        return this;
     }
     
     public TextInfo getTitleTextInfo() {
         return titleTextInfo;
     }
     
-    public void setTitleTextInfo(TextInfo titleTextInfo) {
+    public Notification setTitleTextInfo(TextInfo titleTextInfo) {
         this.titleTextInfo = titleTextInfo;
+        refreshView();
+        return this;
     }
     
     public TextInfo getMessageTextInfo() {
         return messageTextInfo;
     }
     
-    public void setMessageTextInfo(TextInfo messageTextInfo) {
+    public Notification setMessageTextInfo(TextInfo messageTextInfo) {
         this.messageTextInfo = messageTextInfo;
+        refreshView();
+        return this;
+    }
+    
+    public OnDismissListener getOnDismissListener() {
+        return onDismissListener;
+    }
+    
+    public Notification setOnDismissListener(OnDismissListener onDismissListener) {
+        this.onDismissListener = onDismissListener;
+        return this;
     }
 }

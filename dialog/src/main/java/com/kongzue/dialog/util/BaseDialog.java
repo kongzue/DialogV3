@@ -69,11 +69,11 @@ public abstract class BaseDialog {
     protected OnDismissListener dismissEvent;
     
     public void log(Object o) {
-        if (DialogSettings.DEBUGMODE) Log.i(">>>", "NormalDialog:" + o.toString());
+        if (DialogSettings.DEBUGMODE) Log.i(">>>",  o.toString());
     }
     
     public void error(Object o) {
-        if (DialogSettings.DEBUGMODE) Log.e(">>>", "NormalDialog 错误警告:" + o.toString());
+        if (DialogSettings.DEBUGMODE) Log.e(">>>",  o.toString());
     }
     
     public BaseDialog build(BaseDialog baseDialog, int layoutId) {

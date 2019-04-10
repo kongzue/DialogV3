@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -41,23 +42,22 @@ public class NotifyToastShadowView extends RelativeLayout {
     
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        if (ev.getAction()==MotionEvent.ACTION_CANCEL ||ev.getAction()==MotionEvent.ACTION_DOWN || ev.getAction()==MotionEvent.ACTION_UP) {
-            Log.i(">>>", "y: " + ev.getY() + "   "+notifyHeight);
+        if (ev.getAction() == MotionEvent.ACTION_CANCEL || ev.getAction() == MotionEvent.ACTION_DOWN || ev.getAction() == MotionEvent.ACTION_UP) {
             if (ev.getY() < notifyHeight) {
-                if (onNotificationClickListener!=null)onNotificationClickListener.onClick();
+                if (onNotificationClickListener != null) onNotificationClickListener.onClick();
                 onNotificationClickListener = null;
                 return super.dispatchTouchEvent(ev);
             } else {
                 if (activity != null) activity.dispatchTouchEvent(ev);
                 return false;
             }
-        }else{
+        } else {
             return super.dispatchTouchEvent(ev);
         }
     }
     
-    public void setActivity(Activity activity) {
-        this.activity = activity;
+    public void setParent(Context c) {
+        if (c instanceof Activity) this.activity = (Activity) c;
     }
     
     public void setNotifyHeight(int notifyHeight) {
