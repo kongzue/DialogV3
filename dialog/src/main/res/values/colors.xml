@@ -25,4 +25,11 @@
     <color name="dialogButtonBlue">#007aff</color>
     <color name="whiteAlpha50">#80FFFFFF</color>
     <color name="whiteAlpha30">#4DFFFFFF</color>
+    <color name="blackAlpha30">#4D000000</color>
+    <color name="blackAlpha10">#1A000000</color>
+    <color name="notificationNormal">#353535</color>
+    <color name="notificationError">#e74e63</color>
+    <color name="notificationWarning">#ef8e43</color>
+    <color name="notificationFinish">#53ae5d</color>
+    <color name="notificationTipTextColorMaterial">#757575</color>
 </resources>

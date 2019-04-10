@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.kongzue.dialog.util.view.NotifyToastShadowView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/box_body"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:background="@mipmap/img_notification_shadow_ios"
+        android:clickable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false">
+
+        <LinearLayout
+            android:id="@+id/btn_notic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/notificationNormal"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/img_icon"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:padding="5dp" />
+
+            <TextView
+                android:id="@+id/txt_title"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="10dp"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:textColor="@color/white"
+                android:textSize="16dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txt_message"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:textColor="@color/white"
+                android:textSize="16dp" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/btn_notic"
+            android:background="@mipmap/img_notification_shadow" />
+
+    </RelativeLayout>
+
+</com.kongzue.dialog.util.view.NotifyToastShadowView>

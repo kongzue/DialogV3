@@ -59,5 +59,5 @@ public class DialogSettings {
     public static boolean DEBUGMODE = false;
     
     //模糊透明度(0~255)
-    public static int blurAlpha = 180;
+    public static int blurAlpha = 200;
 }

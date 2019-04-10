@@ -104,7 +104,7 @@ public class TipDialog extends BaseDialog {
         }
     }
     
-    public static TipDialog showTip(AppCompatActivity context, String message, TYPE type) {
+    public static TipDialog show(AppCompatActivity context, String message, TYPE type) {
         synchronized (TipDialog.class) {
             TipDialog waitDialog = build(context);
             
@@ -132,7 +132,7 @@ public class TipDialog extends BaseDialog {
         }
     }
     
-    public static TipDialog showTip(AppCompatActivity context, String message, int resId) {
+    public static TipDialog show(AppCompatActivity context, String message, int resId) {
         synchronized (TipDialog.class) {
             TipDialog waitDialog = build(context);
             
@@ -231,7 +231,7 @@ public class TipDialog extends BaseDialog {
                 case LIGHT:
                     bkgResId = R.drawable.rect_dark;
                     int lightColor = Color.rgb(255, 255, 255);
-                    blurFrontColor = Color.argb((blurAlpha + 20) > 255 ? 255 : (blurAlpha + 20), 0, 0, 0);
+                    blurFrontColor = Color.argb(blurAlpha, 0, 0, 0);
                     progress.setStrokeColors(new int[]{lightColor});
                     txtInfo.setTextColor(lightColor);
                     if (type != null) {
@@ -258,7 +258,7 @@ public class TipDialog extends BaseDialog {
                     break;
                 default:
                     bkgResId = R.drawable.rect_dark;
-                    blurFrontColor = Color.argb((blurAlpha + 20) > 255 ? 255 : (blurAlpha + 20), 0, 0, 0);
+                    blurFrontColor = Color.argb(blurAlpha, 0, 0, 0);
                     break;
             }
             if (DialogSettings.isUseBlur) {

@@ -77,7 +77,7 @@ public class NormalDialog extends BaseDialog {
     private TextView btnSelectPositive;
     
     public static NormalDialog build(@NonNull AppCompatActivity context) {
-        synchronized (TipDialog.class) {
+        synchronized (NormalDialog.class) {
             NormalDialog normalDialog = new NormalDialog();
             normalDialog.log("装载对话框");
             normalDialog.context = context;
@@ -188,7 +188,7 @@ public class NormalDialog extends BaseDialog {
                         blurFrontColor = Color.argb(blurAlpha, 255, 255, 255);
                     } else {
                         bkgResId = R.drawable.rect_selectdialog_ios_bkg_dark;
-                        blurFrontColor = Color.argb((blurAlpha + 20) > 255 ? 255 : (blurAlpha + 20), 0, 0, 0);
+                        blurFrontColor = Color.argb(blurAlpha, 0, 0, 0);
                         txtDialogTitle.setTextColor(Color.WHITE);
                         txtDialogTip.setTextColor(Color.WHITE);
                         splitHorizontal.setBackgroundColor(context.getResources().getColor(R.color.dialogSplitIOSDark));

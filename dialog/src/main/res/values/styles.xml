@@ -85,4 +85,17 @@
         <item name="cpd_outAnimDuration">@android:integer/config_mediumAnimTime</item>
     </style>
 
+    <declare-styleable name="ShadowLayout">
+        <attr name="sl_cornerRadius" format="dimension"/>
+        <attr name="sl_shadowRadius" format="dimension"/>
+        <attr name="sl_shadowColor" format="color"/>
+        <attr name="sl_dx" format="dimension"/>
+        <attr name="sl_dy" format="dimension"/>
+    </declare-styleable>
+
+    <style name="toastAnim" parent="@android:style/Animation.Toast">
+        <item name="android:windowEnterAnimation">@anim/notification_enter_anim</item>
+        <item name="android:windowExitAnimation">@anim/notification_exit_anim</item>
+    </style>
+
 </resources>

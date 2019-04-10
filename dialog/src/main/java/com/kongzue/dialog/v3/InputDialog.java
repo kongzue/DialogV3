@@ -1,6 +1,7 @@
 package com.kongzue.dialog.v3;
 
 import android.text.InputFilter;
+import android.text.InputType;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -83,7 +84,7 @@ public class InputDialog extends BaseDialog {
     private TextView btnSelectPositive;
     
     public static InputDialog build(@NonNull AppCompatActivity context) {
-        synchronized (TipDialog.class) {
+        synchronized (InputDialog.class) {
             InputDialog inputDialog = new InputDialog();
             inputDialog.log("装载输入对话框");
             inputDialog.context = context;
@@ -194,7 +195,7 @@ public class InputDialog extends BaseDialog {
                         blurFrontColor = Color.argb(blurAlpha, 255, 255, 255);
                     } else {
                         bkgResId = R.drawable.rect_selectdialog_ios_bkg_dark;
-                        blurFrontColor = Color.argb((blurAlpha + 20) > 255 ? 255 : (blurAlpha + 20), 0, 0, 0);
+                        blurFrontColor = Color.argb(blurAlpha, 0, 0, 0);
                         txtDialogTitle.setTextColor(Color.WHITE);
                         txtDialogTip.setTextColor(Color.WHITE);
                         splitHorizontal.setBackgroundColor(context.getResources().getColor(R.color.dialogSplitIOSDark));
@@ -215,8 +216,6 @@ public class InputDialog extends BaseDialog {
                     } else {
                         bkg.setBackgroundResource(bkgResId);
                     }
-                    
-                    refreshTextViews();
                     break;
                 case STYLE_KONGZUE:
                     if (theme == DialogSettings.THEME.DARK) {
@@ -239,7 +238,6 @@ public class InputDialog extends BaseDialog {
                     if (backgroundColor != 0) {
                         bkg.setBackgroundColor(backgroundColor);
                     }
-                    refreshTextViews();
                     break;
                 case STYLE_MATERIAL:
                     materialAlertDialog.setTitle(title);
@@ -355,6 +353,7 @@ public class InputDialog extends BaseDialog {
                     });
                     break;
             }
+            refreshTextViews();
         }
         
         if (btnSelectPositive != null) {
@@ -501,7 +500,7 @@ public class InputDialog extends BaseDialog {
                 if (inputInfo != null) {
                     if (inputInfo.getMAX_LENGTH() != -1)
                         txtInput.setFilters(new InputFilter[]{new InputFilter.LengthFilter(inputInfo.getMAX_LENGTH())});
-                    txtInput.setInputType(inputInfo.getInputType());
+                    txtInput.setInputType(InputType.TYPE_CLASS_TEXT | inputInfo.getInputType());
                     if (inputInfo.getTextInfo() != null)
                         useTextInfo(txtInput, inputInfo.getTextInfo());
                 }

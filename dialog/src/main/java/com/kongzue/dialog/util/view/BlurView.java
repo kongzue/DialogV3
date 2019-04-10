@@ -57,7 +57,7 @@ public class BlurView extends View {
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.RealtimeBlurView);
         mBlurRadius = a.getDimension(
                 R.styleable.RealtimeBlurView_realtimeBlurRadius,
-                TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 29, context.getResources().getDisplayMetrics())
+                TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 30, context.getResources().getDisplayMetrics())
         );
         mDownsampleFactor = a.getFloat(R.styleable.RealtimeBlurView_realtimeDownsampleFactor, 4);
         mOverlayColor = a.getColor(R.styleable.RealtimeBlurView_realtimeOverlayColor, 0x00ffffff);

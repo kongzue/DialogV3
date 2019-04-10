@@ -1,0 +1,626 @@
+package com.kongzue.dialog.v3;
+
+import android.app.Activity;
+import android.content.Context;
+import android.graphics.Typeface;
+import android.os.Build;
+import android.os.Handler;
+import android.os.IBinder;
+import android.text.TextPaint;
+import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.WindowManager;
+import android.view.animation.DecelerateInterpolator;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.kongzue.dialog.R;
+import com.kongzue.dialog.interfaces.OnNotificationClickListener;
+import com.kongzue.dialog.util.DialogSettings;
+import com.kongzue.dialog.util.view.NotifyToastShadowView;
+import com.kongzue.dialog.util.SafelyHandlerWrapper;
+import com.kongzue.dialog.util.TextInfo;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
+/**
+ * Author: @Kongzue
+ * Github: https://github.com/kongzue/
+ * Homepage: http://kongzue.com/
+ * Mail: myzcxhh@live.cn
+ * CreateTime: 2019/4/10 18:32
+ */
+public class Notification {
+    
+    public enum DURATION_TIME {
+        SHORT, LONG
+    }
+    
+    private OnNotificationClickListener onNotificationClickListener;
+    
+    private DialogSettings.STYLE style;
+    private DURATION_TIME durationTime = DURATION_TIME.LONG;
+    private int backgroundColor = R.color.notificationNormal;
+    
+    private Toast toast;
+    private Context context;
+    private String title;
+    private String message;
+    private int iconResId;
+    
+    private RelativeLayout boxBody;
+    private LinearLayout btnNotic;
+    private LinearLayout boxTitle;
+    private ImageView imgIcon;
+    private TextView txtTitle;
+    private TextView txtMessage;
+    
+    private TextInfo titleTextInfo;
+    private TextInfo messageTextInfo;
+    
+    private Notification() {
+    }
+    
+    public static Notification build(Context context, String message) {
+        synchronized (Notification.class) {
+            Notification notification = new Notification();
+            notification.context = context;
+            notification.message = message;
+            return notification;
+        }
+    }
+    
+    public static Notification show(Context context, String message) {
+        Notification notification = build(context, message);
+        notification.showNotification();
+        return notification;
+    }
+    
+    public static Notification show(Context context, String message, DURATION_TIME durationTime) {
+        Notification notification = build(context, message);
+        notification.durationTime = durationTime;
+        notification.showNotification();
+        return notification;
+    }
+    
+    public static Notification show(Context context, String message, DialogSettings.STYLE style) {
+        Notification notification = build(context, message);
+        notification.style = style;
+        notification.showNotification();
+        return notification;
+    }
+    
+    public static Notification show(Context context, String message, DialogSettings.STYLE style, DURATION_TIME durationTime) {
+        Notification notification = build(context, message);
+        notification.durationTime = durationTime;
+        notification.style = style;
+        notification.showNotification();
+        return notification;
+    }
+    
+    public static Notification show(Context context, String title, String message) {
+        Notification notification = build(context, message);
+        notification.title = title;
+        notification.showNotification();
+        return notification;
+    }
+    
+    public static Notification show(Context context, String title, String message, DURATION_TIME durationTime) {
+        Notification notification = build(context, message);
+        notification.title = title;
+        notification.durationTime = durationTime;
+        notification.showNotification();
+        return notification;
+    }
+    
+    public static Notification show(Context context, String title, String message, DialogSettings.STYLE style) {
+        Notification notification = build(context, message);
+        notification.title = title;
+        notification.style = style;
+        notification.showNotification();
+        return notification;
+    }
+    
+    public static Notification show(Context context, String title, String message, DialogSettings.STYLE style, DURATION_TIME durationTime) {
+        Notification notification = build(context, message);
+        notification.title = title;
+        notification.durationTime = durationTime;
+        notification.style = style;
+        notification.showNotification();
+        return notification;
+    }
+    
+    public static Notification show(Context context, String title, String message, int iconResId) {
+        Notification notification = build(context, message);
+        notification.title = title;
+        notification.iconResId = iconResId;
+        notification.showNotification();
+        return notification;
+    }
+    
+    public static Notification show(Context context, String title, String message, int iconResId, DURATION_TIME durationTime) {
+        Notification notification = build(context, message);
+        notification.title = title;
+        notification.iconResId = iconResId;
+        notification.durationTime = durationTime;
+        notification.showNotification();
+        return notification;
+    }
+    
+    public static Notification show(Context context, String title, String message, int iconResId, DialogSettings.STYLE style) {
+        Notification notification = build(context, message);
+        notification.title = title;
+        notification.iconResId = iconResId;
+        notification.style = style;
+        notification.showNotification();
+        return notification;
+    }
+    
+    public static Notification show(Context context, String title, String message, int iconResId, DialogSettings.STYLE style, DURATION_TIME durationTime) {
+        Notification notification = build(context, message);
+        notification.title = title;
+        notification.iconResId = iconResId;
+        notification.durationTime = durationTime;
+        notification.style = style;
+        notification.showNotification();
+        return notification;
+    }
+    
+    public void showNotification() {
+        if (style == null) style = DialogSettings.style;
+        switch (style) {
+            case STYLE_IOS:
+                showIOSNotification();
+                break;
+            case STYLE_MATERIAL:
+                showMaterialNotification();
+                break;
+            default:
+                showKongzueNotification();
+                break;
+        }
+    }
+    
+    private void showMaterialNotification() {
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        NotifyToastShadowView view = (NotifyToastShadowView) inflater.inflate(R.layout.notification_material, null);
+        
+        boxBody = view.findViewById(R.id.box_body);
+        btnNotic = view.findViewById(R.id.btn_notic);
+        imgIcon = view.findViewById(R.id.img_icon);
+        txtTitle = view.findViewById(R.id.txt_title);
+        txtMessage = view.findViewById(R.id.txt_message);
+    
+        view.setActivity((Activity) context);
+        view.setNotifyHeight(dip2px(80) + getStatusBarHeight());  //可触控区域高度
+        view.setOnNotificationClickListener(new OnNotificationClickListener() {
+            @Override
+            public void onClick() {
+                toast.cancel();
+                if (onNotificationClickListener != null) onNotificationClickListener.onClick();
+            }
+        });
+        
+        boxBody.post(new Runnable() {
+            @Override
+            public void run() {
+                boxBody.setY(-boxBody.getHeight());
+                boxBody.animate().setInterpolator(new DecelerateInterpolator()).translationY(0).setDuration(500);
+            }
+        });
+        
+        if (messageTextInfo == null) {
+            messageTextInfo = DialogSettings.contentTextInfo;
+        }
+        if (titleTextInfo == null) {
+            titleTextInfo = DialogSettings.titleTextInfo;
+        }
+        
+        useTextInfo(txtTitle, titleTextInfo);
+        useTextInfo(txtMessage, messageTextInfo);
+        
+        btnNotic.setPadding(dip2px(15), getStatusBarHeight() + dip2px(15), dip2px(15), dip2px(15));
+        
+        if (isNull(title)) {
+            txtTitle.setVisibility(View.GONE);
+        } else {
+            txtTitle.setVisibility(View.VISIBLE);
+            txtTitle.setText(title);
+        }
+        
+        if (iconResId == 0) {
+            imgIcon.setVisibility(View.GONE);
+        } else {
+            imgIcon.setVisibility(View.VISIBLE);
+            if (iconResId != 0) {
+                imgIcon.setImageResource(iconResId);
+            }
+        }
+        
+        txtMessage.setText(message);
+        if (isNull(title)) {
+            TextPaint tp = txtMessage.getPaint();
+            tp.setFakeBoldText(true);
+        } else {
+            TextPaint tp = txtMessage.getPaint();
+            tp.setFakeBoldText(false);
+        }
+        
+        boxBody.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                toast.cancel();
+                return false;
+            }
+        });
+        
+        new kToast().show(context, view);
+    }
+    
+    private void showIOSNotification() {
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        NotifyToastShadowView view = (NotifyToastShadowView) inflater.inflate(R.layout.notification_ios, null);
+        
+        boxBody = view.findViewById(R.id.box_body);
+        btnNotic = view.findViewById(R.id.btn_notic);
+        boxTitle = view.findViewById(R.id.box_title);
+        imgIcon = view.findViewById(R.id.img_icon);
+        txtTitle = view.findViewById(R.id.txt_title);
+        txtMessage = view.findViewById(R.id.txt_message);
+        
+        view.setActivity((Activity) context);
+        view.setNotifyHeight(dip2px(100) + getStatusBarHeight());  //可触控区域高度
+        view.setOnNotificationClickListener(new OnNotificationClickListener() {
+            @Override
+            public void onClick() {
+                toast.cancel();
+                if (onNotificationClickListener != null) onNotificationClickListener.onClick();
+            }
+        });
+        
+        boxBody.post(new Runnable() {
+            @Override
+            public void run() {
+                boxBody.setY(-boxBody.getHeight());
+                boxBody.animate().setInterpolator(new DecelerateInterpolator()).translationY(-dip2px(5)).setDuration(500);
+            }
+        });
+        
+        if (messageTextInfo == null) {
+            messageTextInfo = DialogSettings.contentTextInfo;
+        }
+        if (titleTextInfo == null) {
+            titleTextInfo = DialogSettings.titleTextInfo;
+        }
+        
+        useTextInfo(txtTitle, titleTextInfo);
+        useTextInfo(txtMessage, messageTextInfo);
+        
+        boxBody.setPadding(0, getStatusBarHeight(), 0, 0);
+        
+        if (isNull(title)) {
+            txtTitle.setVisibility(View.GONE);
+        } else {
+            txtTitle.setVisibility(View.VISIBLE);
+            txtTitle.setText(title);
+        }
+        
+        if (iconResId == 0) {
+            imgIcon.setVisibility(View.GONE);
+        } else {
+            imgIcon.setVisibility(View.VISIBLE);
+            if (iconResId != 0) {
+                imgIcon.setImageResource(iconResId);
+            }
+        }
+        
+        txtMessage.setText(message);
+        if (isNull(title)) {
+            boxTitle.setVisibility(View.GONE);
+            TextPaint tp = txtMessage.getPaint();
+            tp.setFakeBoldText(true);
+        } else {
+            boxTitle.setVisibility(View.VISIBLE);
+            TextPaint tp = txtMessage.getPaint();
+            tp.setFakeBoldText(false);
+        }
+        
+        boxBody.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                toast.cancel();
+                return false;
+            }
+        });
+        
+        new kToast().show(context, view);
+    }
+    
+    private void showKongzueNotification() {
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        NotifyToastShadowView view = (NotifyToastShadowView) inflater.inflate(R.layout.notification_kongzue, null);
+        
+        boxBody = view.findViewById(R.id.box_body);
+        btnNotic = view.findViewById(R.id.btn_notic);
+        imgIcon = view.findViewById(R.id.img_icon);
+        txtTitle = view.findViewById(R.id.txt_title);
+        txtMessage = view.findViewById(R.id.txt_message);
+    
+        view.setActivity((Activity) context);
+        view.setNotifyHeight(dip2px(50) + getStatusBarHeight());  //可触控区域高度
+        view.setOnNotificationClickListener(new OnNotificationClickListener() {
+            @Override
+            public void onClick() {
+                toast.cancel();
+                if (onNotificationClickListener != null) onNotificationClickListener.onClick();
+            }
+        });
+        
+        boxBody.post(new Runnable() {
+            @Override
+            public void run() {
+                boxBody.setY(-boxBody.getHeight());
+                boxBody.animate().setInterpolator(new DecelerateInterpolator()).translationY(0).setDuration(500);
+            }
+        });
+        
+        if (messageTextInfo == null) {
+            messageTextInfo = DialogSettings.contentTextInfo;
+        }
+        if (titleTextInfo == null) {
+            titleTextInfo = DialogSettings.titleTextInfo;
+        }
+        
+        useTextInfo(txtTitle, titleTextInfo);
+        useTextInfo(txtMessage, messageTextInfo);
+        
+        btnNotic.setPadding(dip2px(10), getStatusBarHeight(), dip2px(10), 0);
+        
+        if (isNull(title)) {
+            txtTitle.setVisibility(View.GONE);
+        } else {
+            txtTitle.setVisibility(View.VISIBLE);
+            txtTitle.setText(title);
+        }
+        
+        if (iconResId == 0) {
+            imgIcon.setVisibility(View.GONE);
+        } else {
+            imgIcon.setVisibility(View.VISIBLE);
+            if (iconResId != 0) {
+                imgIcon.setImageResource(iconResId);
+            }
+        }
+        
+        txtMessage.setText(message);
+        if (isNull(title)) {
+            txtMessage.setGravity(Gravity.CENTER);
+            TextPaint tp = txtMessage.getPaint();
+            tp.setFakeBoldText(true);
+        } else {
+            txtMessage.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
+            TextPaint tp = txtMessage.getPaint();
+            tp.setFakeBoldText(false);
+        }
+        
+        btnNotic.setBackgroundResource(backgroundColor);
+        
+        new kToast().show(context, view);
+    }
+    
+    public void log(Object o) {
+        Log.i(">>>", o.toString());
+    }
+    
+    private int getStatusBarHeight() {
+        try {
+            Class<?> c = Class.forName("com.android.internal.R$dimen");
+            Object obj = c.newInstance();
+            Field field = c.getField("status_bar_height");
+            int x = Integer.parseInt(field.get(obj).toString());
+            return context.getResources().getDimensionPixelSize(x);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+    
+    private Method show;
+    
+    public class kToast {
+        private LinearLayout btn;
+        
+        public void show(final Context context, final View view) {
+            if (toast != null) toast.cancel();
+            toast = null;
+            
+            toast = new Toast(context.getApplicationContext());
+            toast.setGravity(Gravity.FILL_HORIZONTAL | Gravity.TOP, 0, 0);
+            toast.setDuration(durationTime.ordinal());
+            toast.setView(view);
+            toast.getView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            
+            hookHandler(toast);
+            try {
+                Object mTN;
+                mTN = getField(toast, "mTN");
+                if (mTN != null) {
+                    Field tnParamsField = mTN.getClass().getDeclaredField("mParams");
+                    if (tnParamsField != null) {
+                        tnParamsField.setAccessible(true);
+                        WindowManager.LayoutParams params = (WindowManager.LayoutParams) tnParamsField.get(mTN);
+                        
+                        //params.windowAnimations = R.style.toastAnim;
+                        params.flags = WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+                        params.width = WindowManager.LayoutParams.MATCH_PARENT;
+                        params.height = WindowManager.LayoutParams.WRAP_CONTENT;
+                        
+                        Field tnNextViewField = mTN.getClass().getDeclaredField("mNextView");
+                        tnNextViewField.setAccessible(true);
+                        tnNextViewField.set(mTN, toast.getView());
+                    }
+                    
+                    try {
+                        //目前是没办法了，新版本Android Toast 的TN要show必须有IBinder，IBinder必须取得TN中mWM实例化对象WindowManagerImpl，这几乎没辙了
+                        Object mWM = getField(mTN, "mWM");
+                        Field tnField = mWM.getClass().getDeclaredField("mDefaultToken");
+                        tnField.setAccessible(true);
+                        IBinder token = (IBinder) tnField.get(mWM);
+                        
+                        if (Build.VERSION.SDK_INT >= 25) {
+                            show = mTN.getClass().getDeclaredMethod("show", IBinder.class);
+                        } else {
+                            show = mTN.getClass().getMethod("show");
+                        }
+                        
+                        show.invoke(mTN, token);
+                    } catch (Exception e) {
+                        //e.printStackTrace();
+                        toast.show();
+                    }
+                }
+                
+                //if (durationTime > DURATION_TIME.ALWAYS) {
+                //    handler.postDelayed(hideRunnable, mDuration * 1000);
+                //}
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        
+        private Object getField(Object object, String fieldName) throws NoSuchFieldException, IllegalAccessException {
+            Field field = object.getClass().getDeclaredField(fieldName);
+            if (field != null) {
+                field.setAccessible(true);
+                return field.get(object);
+            }
+            return null;
+        }
+    }
+    
+    //捕获8.0之前Toast的BadTokenException，Google在Android 8.0的代码提交中修复了这个问题(By @Dovar66[https://github.com/Dovar66/DToast])
+    private static void hookHandler(Toast toast) {
+        if (toast == null || Build.VERSION.SDK_INT >= 26) return;
+        try {
+            Field sField_TN = Toast.class.getDeclaredField("mTN");
+            sField_TN.setAccessible(true);
+            Field sField_TN_Handler = sField_TN.getType().getDeclaredField("mHandler");
+            sField_TN_Handler.setAccessible(true);
+            
+            Object tn = sField_TN.get(toast);
+            Handler preHandler = (Handler) sField_TN_Handler.get(tn);
+            sField_TN_Handler.set(tn, new SafelyHandlerWrapper(preHandler));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    protected boolean isNull(String s) {
+        if (s == null || s.trim().isEmpty() || s.equals("null") || s.equals("(null)")) {
+            return true;
+        }
+        return false;
+    }
+    
+    protected void useTextInfo(TextView textView, TextInfo textInfo) {
+        if (textInfo == null) return;
+        if (textView == null) return;
+        if (textInfo.getFontSize() > 0) {
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textInfo.getFontSize());
+        }
+        if (textInfo.getFontColor() != 1) {
+            textView.setTextColor(textInfo.getFontColor());
+        }
+        if (textInfo.getGravity() != -1) {
+            textView.setGravity(textInfo.getGravity());
+        }
+        Typeface font = Typeface.create(Typeface.SANS_SERIF, textInfo.isBold() ? Typeface.BOLD : Typeface.NORMAL);
+        textView.setTypeface(font);
+    }
+    
+    protected int dip2px(float dpValue) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dpValue * scale + 0.5f);
+    }
+    
+    //其他
+    public OnNotificationClickListener getOnNotificationClickListener() {
+        return onNotificationClickListener;
+    }
+    
+    public void setOnNotificationClickListener(OnNotificationClickListener onNotificationClickListener) {
+        this.onNotificationClickListener = onNotificationClickListener;
+    }
+    
+    public DialogSettings.STYLE getStyle() {
+        return style;
+    }
+    
+    public void setStyle(DialogSettings.STYLE style) {
+        this.style = style;
+    }
+    
+    public DURATION_TIME getDurationTime() {
+        return durationTime;
+    }
+    
+    public void setDurationTime(DURATION_TIME durationTime) {
+        this.durationTime = durationTime;
+    }
+    
+    public int getBackgroundColor() {
+        return backgroundColor;
+    }
+    
+    public void setBackgroundColor(int backgroundColor) {
+        this.backgroundColor = backgroundColor;
+    }
+    
+    public String getTitle() {
+        return title;
+    }
+    
+    public void setTitle(String title) {
+        this.title = title;
+    }
+    
+    public String getMessage() {
+        return message;
+    }
+    
+    public void setMessage(String message) {
+        this.message = message;
+    }
+    
+    public int getIconResId() {
+        return iconResId;
+    }
+    
+    public void setIconResId(int iconResId) {
+        this.iconResId = iconResId;
+    }
+    
+    public TextInfo getTitleTextInfo() {
+        return titleTextInfo;
+    }
+    
+    public void setTitleTextInfo(TextInfo titleTextInfo) {
+        this.titleTextInfo = titleTextInfo;
+    }
+    
+    public TextInfo getMessageTextInfo() {
+        return messageTextInfo;
+    }
+    
+    public void setMessageTextInfo(TextInfo messageTextInfo) {
+        this.messageTextInfo = messageTextInfo;
+    }
+}

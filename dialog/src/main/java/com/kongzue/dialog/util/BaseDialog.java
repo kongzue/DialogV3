@@ -17,6 +17,7 @@ import com.kongzue.dialog.interfaces.DialogLifeCycleListener;
 import com.kongzue.dialog.interfaces.OnDialogShowListener;
 import com.kongzue.dialog.interfaces.OnDismissListener;
 import com.kongzue.dialog.v3.TipDialog;
+import com.kongzue.dialog.v3.WaitDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,7 @@ import java.util.List;
 public abstract class BaseDialog {
     
     protected Handler mainHandler = new Handler(Looper.getMainLooper());
-    public static AppCompatActivity newContext;
+    protected static AppCompatActivity newContext;
     
     public BaseDialog() {
         initDefaultSettings();
@@ -116,7 +117,7 @@ public abstract class BaseDialog {
         List<BaseDialog> cache = new ArrayList<>();
         cache.addAll(BaseDialog.dialogList);
         for (BaseDialog dialog : cache) {
-            if (dialog.context.isDestroyed()){
+            if (dialog.context.isDestroyed()) {
                 dialogList.remove(dialog);
             }
         }
@@ -139,6 +140,10 @@ public abstract class BaseDialog {
         log("showNow");
         isShow = true;
         if (context.isDestroyed()) {
+            if (newContext == null) {
+                error("Context错误的指向了一个已被关闭的Activity或者Null，有可能是Activity因横竖屏切换被重启或者您手动执行了unload()方法，请确认其能够正确指向一个正在使用的Activity");
+                return;
+            }
             context = newContext;
         }
         FragmentManager fragmentManager = context.getSupportFragmentManager();
@@ -180,13 +185,14 @@ public abstract class BaseDialog {
         if (titleTextInfo == null) titleTextInfo = DialogSettings.titleTextInfo;
         if (messageTextInfo == null) messageTextInfo = DialogSettings.contentTextInfo;
         if (buttonTextInfo == null) buttonTextInfo = DialogSettings.buttonTextInfo;
-        if (inputInfo==null)inputInfo = DialogSettings.inputInfo;
+        if (inputInfo == null) inputInfo = DialogSettings.inputInfo;
         if (buttonPositiveTextInfo == null)
             buttonPositiveTextInfo = DialogSettings.buttonPositiveTextInfo;
     }
     
     protected void useTextInfo(TextView textView, TextInfo textInfo) {
         if (textInfo == null) return;
+        if (textView == null) return;
         if (textInfo.getFontSize() > 0) {
             textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textInfo.getFontSize());
         }
@@ -201,15 +207,27 @@ public abstract class BaseDialog {
     }
     
     //网络传输文本判空规则
-    public boolean isNull(String s) {
+    protected boolean isNull(String s) {
         if (s == null || s.trim().isEmpty() || s.equals("null") || s.equals("(null)")) {
             return true;
         }
         return false;
     }
     
-    public int dip2px(float dpValue) {
+    protected int dip2px(float dpValue) {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
+    }
+    
+    //不放心或强迫症可用的卸载方法
+    public static void unload() {
+        for (BaseDialog dialog : dialogList) {
+            if (dialog.isShow) {
+                dialog.doDismiss();
+            }
+        }
+        dialogList = new ArrayList<>();
+        newContext = null;
+        WaitDialog.waitDialogTemp = null;
     }
 }
