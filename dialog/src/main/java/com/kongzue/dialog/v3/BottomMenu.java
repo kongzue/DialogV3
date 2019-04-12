@@ -158,7 +158,6 @@ public class BottomMenu extends BaseDialog {
                     lp.width = display.getWidth();
                     window.setGravity(Gravity.BOTTOM);
                     window.setAttributes(lp);
-                    window.setWindowAnimations(R.style.bottomMenuAnimStyle);
                 }
             });
         }

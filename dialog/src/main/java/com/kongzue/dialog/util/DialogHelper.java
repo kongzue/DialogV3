@@ -1,6 +1,7 @@
 package com.kongzue.dialog.util;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,10 +11,15 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 
+import com.kongzue.dialog.R;
 import com.kongzue.dialog.interfaces.OnDialogShowListener;
 import com.kongzue.dialog.interfaces.OnDismissListener;
 
@@ -38,6 +44,7 @@ public class DialogHelper extends DialogFragment {
     private View rootView;
     private String parentId;
     private int styleId;
+    private int animResId;
     
     public DialogHelper() {
     }
@@ -49,6 +56,7 @@ public class DialogHelper extends DialogFragment {
             findMyParentAndBindView(null);
             return super.onCreateView(inflater, container, savedInstanceState);
         }
+        if (animResId != 0) getDialog().getWindow().setWindowAnimations(animResId);
         rootView = inflater.inflate(layoutId, null);
         if (onDialogShowListener != null) onDialogShowListener.onShow(getDialog());
         findMyParentAndBindView(rootView);
@@ -63,7 +71,7 @@ public class DialogHelper extends DialogFragment {
                     .setTitle("")
                     .setMessage("")
                     .setPositiveButton("", new DialogInterface.OnClickListener() {
-                
+                        
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dismiss();
@@ -174,5 +182,9 @@ public class DialogHelper extends DialogFragment {
     public void setStyle(int style, int theme) {
         styleId = theme;
         super.setStyle(style, theme);
+    }
+    
+    public void setAnim(int animResId) {
+        this.animResId = animResId;
     }
 }
