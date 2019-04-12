@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/btn_reply"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rect_button_gray"
+        android:clickable="true"
+        android:paddingHorizontal="14dp"
+        android:paddingVertical="8dp"
+        android:textSize="13dp"
+        android:textColor="@color/black"
+        android:text="回复" />
+
+    <TextView
+        android:id="@+id/dismiss"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rect_button_gray"
+        android:clickable="true"
+        android:paddingHorizontal="14dp"
+        android:textColor="@color/black"
+        android:layout_marginLeft="10dp"
+        android:textSize="13dp"
+        android:paddingVertical="8dp"
+        android:text="忽略" />
+
+</LinearLayout>

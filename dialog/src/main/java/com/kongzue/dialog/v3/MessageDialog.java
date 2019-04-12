@@ -11,6 +11,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutCompat;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -75,6 +76,9 @@ public class MessageDialog extends BaseDialog {
     protected TextView btnSelectOther;
     protected ImageView splitVertical2;
     protected TextView btnSelectPositive;
+    
+    protected MessageDialog() {
+    }
     
     public static MessageDialog build(@NonNull AppCompatActivity context) {
         synchronized (MessageDialog.class) {
@@ -210,6 +214,12 @@ public class MessageDialog extends BaseDialog {
                     } else {
                         bkg.setBackgroundResource(bkgResId);
                     }
+                    if (customView != null) {
+                        boxCustom.addView(customView);
+                        boxCustom.setVisibility(View.VISIBLE);
+                    } else {
+                        boxCustom.setVisibility(View.GONE);
+                    }
                     refreshTextViews();
                     break;
                 case STYLE_KONGZUE:
@@ -229,14 +239,20 @@ public class MessageDialog extends BaseDialog {
                         txtDialogTitle.setTextColor(Color.BLACK);
                         txtDialogTip.setTextColor(Color.BLACK);
                     }
-                    
                     if (backgroundColor != 0) {
                         bkg.setBackgroundColor(backgroundColor);
+                    }
+                    if (customView != null) {
+                        boxCustom.addView(customView);
+                        boxCustom.setVisibility(View.VISIBLE);
+                    } else {
+                        boxCustom.setVisibility(View.GONE);
                     }
                     refreshTextViews();
                     break;
                 case STYLE_MATERIAL:
                     materialAlertDialog.setTitle(title);
+                    if (customView != null) materialAlertDialog.setView(customView);
                     if (backgroundColor != 0)
                         materialAlertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(backgroundColor));
                     materialAlertDialog.setMessage(message);
@@ -778,5 +794,26 @@ public class MessageDialog extends BaseDialog {
         this.backgroundColor = backgroundColor;
         refreshView();
         return this;
+    }
+    
+    public View getCustomView() {
+        return customView;
+    }
+    
+    public MessageDialog setCustomView(View customView) {
+        this.customView = customView;
+        refreshView();
+        return this;
+    }
+    
+    public MessageDialog setCustomView(int customViewLayoutId, OnBindView onBindView) {
+        customView = LayoutInflater.from(context).inflate(customViewLayoutId, null);
+        onBindView.onBind(this, customView);
+        refreshView();
+        return this;
+    }
+    
+    public interface OnBindView {
+        void onBind(MessageDialog dialog, View v);
     }
 }

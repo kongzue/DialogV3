@@ -53,6 +53,9 @@ public class TipDialog extends BaseDialog {
     
     private int tipTime = 1500;
     
+    protected TipDialog() {
+    }
+    
     public static TipDialog build(AppCompatActivity context) {
         synchronized (TipDialog.class) {
             TipDialog waitDialog = new TipDialog();

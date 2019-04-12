@@ -63,6 +63,7 @@ public abstract class BaseDialog {
     protected TextInfo buttonPositiveTextInfo;
     protected InputInfo inputInfo;
     protected int backgroundColor = 0;
+    protected View customView;
     
     protected DialogLifeCycleListener dialogLifeCycleListener;
     protected OnDismissListener onDismissListener;

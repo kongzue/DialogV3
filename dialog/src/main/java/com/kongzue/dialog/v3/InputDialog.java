@@ -11,10 +11,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kongzue.dialog.R;
@@ -44,6 +46,9 @@ public class InputDialog extends MessageDialog {
     private OnInputDialogButtonClickListener onOkButtonClickListener;
     private OnInputDialogButtonClickListener onCancelButtonClickListener;
     private OnInputDialogButtonClickListener onOtherButtonClickListener;
+    
+    private InputDialog() {
+    }
     
     public static InputDialog build(@NonNull AppCompatActivity context) {
         synchronized (InputDialog.class) {
@@ -109,17 +114,37 @@ public class InputDialog extends MessageDialog {
         if (style == DialogSettings.STYLE.STYLE_MATERIAL) {
             if (materialAlertDialog != null) {
                 if (inputText != null) {
-                    txtInput = new EditText(context);
-                    txtInput.setSingleLine();
-                    txtInput.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) txtInput.getLayoutParams();
-                            p.setMargins(dip2px(20), 0, dip2px(20), 0);
-                            txtInput.requestLayout();
-                        }
-                    });
-                    materialAlertDialog.setView(txtInput);
+                    if (customView==null){
+                        txtInput = new EditText(context);
+                        txtInput.setSingleLine();
+                        txtInput.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) txtInput.getLayoutParams();
+                                p.setMargins(dip2px(20), 0, dip2px(20), 0);
+                                txtInput.requestLayout();
+                            }
+                        });
+                        materialAlertDialog.setView(txtInput);
+                    }else{
+                        txtInput = new EditText(context);
+                        txtInput.setSingleLine();
+                        txtInput.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) txtInput.getLayoutParams();
+                                p.setMargins(dip2px(20), 0, dip2px(20), 0);
+                                txtInput.requestLayout();
+                            }
+                        });
+                        
+                        LinearLayout viewBox = new LinearLayout(context);
+                        viewBox.setOrientation(LinearLayout.VERTICAL);
+                        viewBox.addView(customView);
+                        viewBox.addView(txtInput);
+                        
+                        materialAlertDialog.setView(viewBox);
+                    }
                 }
                 materialAlertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
                     @Override
@@ -623,5 +648,26 @@ public class InputDialog extends MessageDialog {
         this.inputInfo = inputInfo;
         refreshView();
         return this;
+    }
+    
+    public View getCustomView() {
+        return customView;
+    }
+    
+    public InputDialog setCustomView(View customView) {
+        this.customView = customView;
+        refreshView();
+        return this;
+    }
+    
+    public InputDialog setCustomView(int customViewLayoutId, OnBindView onBindView) {
+        customView = LayoutInflater.from(context).inflate(customViewLayoutId, null);
+        onBindView.onBind(this,customView);
+        refreshView();
+        return this;
+    }
+    
+    public interface OnBindView {
+        void onBind(InputDialog dialog, View v);
     }
 }

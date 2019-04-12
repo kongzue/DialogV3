@@ -58,13 +58,16 @@ public class Notification {
     private String message;
     private int iconResId;
     
+    private View customView;
     private NotifyToastShadowView rootView;
+    
     private RelativeLayout boxBody;
     private LinearLayout btnNotic;
     private LinearLayout boxTitle;
     private ImageView imgIcon;
     private TextView txtTitle;
     private TextView txtMessage;
+    private RelativeLayout boxCustom;
     
     private TextInfo titleTextInfo;
     private TextInfo messageTextInfo;
@@ -201,16 +204,20 @@ public class Notification {
         
         boxBody = rootView.findViewById(R.id.box_body);
         btnNotic = rootView.findViewById(R.id.btn_notic);
+        boxTitle = rootView.findViewById(R.id.box_title);
         imgIcon = rootView.findViewById(R.id.img_icon);
         txtTitle = rootView.findViewById(R.id.txt_title);
         txtMessage = rootView.findViewById(R.id.txt_message);
-    
+        boxCustom = rootView.findViewById(R.id.box_custom);
+        
         rootView.setParent(context);
         rootView.setOnNotificationClickListener(new OnNotificationClickListener() {
             @Override
             public void onClick() {
-                toast.cancel();
-                if (onNotificationClickListener != null) onNotificationClickListener.onClick();
+                if (customView == null) {
+                    toast.cancel();
+                    if (onNotificationClickListener != null) onNotificationClickListener.onClick();
+                }
             }
         });
         
@@ -268,7 +275,7 @@ public class Notification {
         boxBody.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                toast.cancel();
+                if (customView == null) toast.cancel();
                 return false;
             }
         });
@@ -286,13 +293,16 @@ public class Notification {
         imgIcon = rootView.findViewById(R.id.img_icon);
         txtTitle = rootView.findViewById(R.id.txt_title);
         txtMessage = rootView.findViewById(R.id.txt_message);
-    
+        boxCustom = rootView.findViewById(R.id.box_custom);
+        
         rootView.setParent(context);
         rootView.setOnNotificationClickListener(new OnNotificationClickListener() {
             @Override
             public void onClick() {
-                toast.cancel();
-                if (onNotificationClickListener != null) onNotificationClickListener.onClick();
+                if (customView == null) {
+                    toast.cancel();
+                    if (onNotificationClickListener != null) onNotificationClickListener.onClick();
+                }
             }
         });
         
@@ -352,7 +362,7 @@ public class Notification {
         boxBody.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                toast.cancel();
+                if (customView == null) toast.cancel();
                 return false;
             }
         });
@@ -369,14 +379,17 @@ public class Notification {
         imgIcon = rootView.findViewById(R.id.img_icon);
         txtTitle = rootView.findViewById(R.id.txt_title);
         txtMessage = rootView.findViewById(R.id.txt_message);
-    
+        boxCustom = rootView.findViewById(R.id.box_custom);
+        
         rootView.setParent(context);
         rootView.setNotifyHeight(dip2px(50) + getStatusBarHeight());  //可触控区域高度
         rootView.setOnNotificationClickListener(new OnNotificationClickListener() {
             @Override
             public void onClick() {
-                toast.cancel();
-                if (onNotificationClickListener != null) onNotificationClickListener.onClick();
+                if (customView == null) {
+                    toast.cancel();
+                    if (onNotificationClickListener != null) onNotificationClickListener.onClick();
+                }
             }
         });
         
@@ -412,11 +425,15 @@ public class Notification {
         if (style != DialogSettings.STYLE.STYLE_IOS) {
             if (btnNotic != null) {
                 if (backgroundColor == 0)
-                    backgroundColor = context.getResources().getColor(R.color.notificationNormal);
+                    if (style == DialogSettings.STYLE.STYLE_KONGZUE) {
+                        backgroundColor = context.getResources().getColor(R.color.notificationNormal);
+                    } else {
+                        backgroundColor = context.getResources().getColor(R.color.white);
+                    }
                 btnNotic.setBackgroundColor(backgroundColor);
             }
         }
-        if (txtTitle!=null){
+        if (txtTitle != null) {
             if (isNull(title)) {
                 txtTitle.setVisibility(View.GONE);
             } else {
@@ -424,7 +441,7 @@ public class Notification {
                 txtTitle.setText(title);
             }
         }
-        if (txtMessage!=null){
+        if (txtMessage != null) {
             txtMessage.setText(message);
             if (isNull(title)) {
                 txtMessage.setGravity(Gravity.CENTER);
@@ -436,7 +453,7 @@ public class Notification {
                 tp.setFakeBoldText(false);
             }
         }
-        if (imgIcon!=null) {
+        if (imgIcon != null) {
             if (iconResId == 0) {
                 imgIcon.setVisibility(View.GONE);
             } else {
@@ -446,7 +463,17 @@ public class Notification {
                 }
             }
         }
-    
+        if (boxCustom != null) {
+            if (customView != null) {
+                boxCustom.setVisibility(View.VISIBLE);
+                boxCustom.addView(customView);
+                rootView.setDispatchTouchEvent(false);
+            } else {
+                boxCustom.setVisibility(View.GONE);
+                rootView.setDispatchTouchEvent(true);
+            }
+        }
+        
         useTextInfo(txtTitle, titleTextInfo);
         useTextInfo(txtMessage, messageTextInfo);
     }
@@ -704,5 +731,30 @@ public class Notification {
     public Notification setOnDismissListener(OnDismissListener onDismissListener) {
         this.onDismissListener = onDismissListener;
         return this;
+    }
+    
+    public View getCustomView() {
+        return customView;
+    }
+    
+    public Notification setCustomView(View customView) {
+        this.customView = customView;
+        refreshView();
+        return this;
+    }
+    
+    public Notification setCustomView(int customViewLayoutId, OnBindView onBindView) {
+        customView = LayoutInflater.from(context).inflate(customViewLayoutId, null);
+        onBindView.onBind(this, customView);
+        refreshView();
+        return this;
+    }
+    
+    public void dismiss() {
+        if (toast != null) toast.cancel();
+    }
+    
+    public interface OnBindView {
+        void onBind(Notification notification, View v);
     }
 }

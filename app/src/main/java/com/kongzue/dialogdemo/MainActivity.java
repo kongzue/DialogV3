@@ -1,7 +1,14 @@
 package com.kongzue.dialogdemo;
 
+import android.app.ActivityManager;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.text.InputType;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -24,12 +31,15 @@ import com.kongzue.dialog.interfaces.OnNotificationClickListener;
 import com.kongzue.dialog.util.DialogSettings;
 import com.kongzue.dialog.util.InputInfo;
 import com.kongzue.dialog.v3.BottomMenu;
+import com.kongzue.dialog.v3.CustomDialog;
 import com.kongzue.dialog.v3.MessageDialog;
 import com.kongzue.dialog.v3.InputDialog;
 import com.kongzue.dialog.v3.Notification;
 import com.kongzue.dialog.v3.TipDialog;
 import com.kongzue.dialog.v3.WaitDialog;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+
+import java.util.List;
 
 @DarkStatusBarTheme(true)
 @DarkNavigationBarTheme(true)
@@ -56,6 +66,11 @@ public class MainActivity extends BaseActivity {
     private TextView btnNotify;
     private TextView btnBottomMenu;
     private TextView btnBottomMenuWithTitle;
+    private TextView btnCustomMessageDialog;
+    private TextView btnCustomInputDialog;
+    private TextView btnCustomBottomMenu;
+    private TextView btnCustomNotification;
+    private TextView btnCustomDialog;
     private RelativeLayout boxTable;
     private LinearLayout boxTableChild;
     private LinearLayout btnBack;
@@ -82,6 +97,11 @@ public class MainActivity extends BaseActivity {
         btnNotify = findViewById(R.id.btn_notify);
         btnBottomMenu = findViewById(R.id.btn_bottom_menu);
         btnBottomMenuWithTitle = findViewById(R.id.btn_bottom_menu_withTitle);
+        btnCustomMessageDialog = findViewById(R.id.btn_customMessageDialog);
+        btnCustomInputDialog = findViewById(R.id.btn_customInputDialog);
+        btnCustomBottomMenu = findViewById(R.id.btn_customBottomMenu);
+        btnCustomNotification = findViewById(R.id.btn_customNotification);
+        btnCustomDialog = findViewById(R.id.btn_customDialog);
         boxTable = findViewById(R.id.box_table);
         boxTableChild = findViewById(R.id.box_table_child);
         btnBack = findViewById(R.id.btn_back);
@@ -105,6 +125,135 @@ public class MainActivity extends BaseActivity {
     @Override
     public void setEvents() {
         
+        //完全自定义对话框
+        btnCustomDialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CustomDialog.show(me, R.layout.layout_custom_dialog, new CustomDialog.OnBindView() {
+                    @Override
+                    public void onBind(final CustomDialog dialog, View v) {
+                        ImageView btnOk = v.findViewById(R.id.btn_ok);
+                        
+                        btnOk.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog.doDismiss();
+                            }
+                        });
+                    }
+                });
+            }
+        });
+        
+        //自定义内容布局-对话框
+        btnCustomMessageDialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MessageDialog.show(me, "提示", "这个窗口附带自定义布局", "知道了")
+                        .setCustomView(R.layout.layout_custom, new MessageDialog.OnBindView() {
+                            @Override
+                            public void onBind(MessageDialog dialog, View v) {
+                                //绑定布局事件
+                                v.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        toast("点击了自定义布局");
+                                    }
+                                });
+                            }
+                        });
+            }
+        });
+        
+        //自定义内容布局-输入框
+        btnCustomInputDialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                InputDialog.show(me, "提示", "这个窗口附带自定义布局", "知道了")
+                        .setCustomView(R.layout.layout_custom, new InputDialog.OnBindView() {
+                            @Override
+                            public void onBind(InputDialog dialog, View v) {
+                                //绑定布局事件
+                                v.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        toast("点击了自定义布局");
+                                    }
+                                });
+                            }
+                        });
+            }
+        });
+        
+        //自定义内容布局-底部菜单
+        btnCustomBottomMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BottomMenu.show(me, new String[]{"菜单1", "菜单2", "菜单3"}, new OnMenuItemClickListener() {
+                    @Override
+                    public void onClick(String text, int index) {
+                    
+                    }
+                }).setCustomView(R.layout.layout_custom, new BottomMenu.OnBindView() {
+                    @Override
+                    public void onBind(BottomMenu bottomMenu, View v) {
+                        //绑定布局事件
+                        v.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                toast("点击了自定义布局");
+                            }
+                        });
+                    }
+                });
+            }
+        });
+        
+        //自定义布局-通知
+        btnCustomNotification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Notification.show(me, "提示", "提示信息", R.mipmap.ico_wechat).setCustomView(R.layout.layout_custom_notification_button, new Notification.OnBindView() {
+                    @Override
+                    public void onBind(final Notification notification, View v) {
+                        TextView btnReply;
+                        TextView dismiss;
+                        
+                        btnReply = v.findViewById(R.id.btn_reply);
+                        dismiss = v.findViewById(R.id.dismiss);
+                        
+                        btnReply.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                notification.dismiss();
+                                
+                                //注意要显示本对话框必须依赖一个 Activity 来显示，因此创建 Notification 时的 Context 建议使用当前正在活跃的 Activity，
+                                //额外的，您可以通过 v.getContext() 获取 Notification 创建时使用的 Context，
+                                //不过比较遗憾的是目前后台切换到前台会有较大延迟才会执行，建议本功能用于应用内各Activity的切换
+                                startActivity(new Intent(v.getContext(), MainActivity.class)
+                                                      .addCategory(Intent.CATEGORY_LAUNCHER)
+                                                      .setAction(Intent.ACTION_MAIN)
+                                                      .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED)
+                                );
+                                
+                                InputDialog.show(me, "回复", "请输入回复的消息。",
+                                                 "回复", "取消"
+                                );
+                            }
+                        });
+                        
+                        dismiss.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                notification.dismiss();
+                            }
+                        });
+                    }
+                });
+            }
+        });
+        
+        //底部菜单-普通
         btnBottomMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -117,6 +266,7 @@ public class MainActivity extends BaseActivity {
             }
         });
         
+        //带标题底部菜单
         btnBottomMenuWithTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -129,6 +279,7 @@ public class MainActivity extends BaseActivity {
             }
         });
         
+        //通知
         btnNotify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -146,37 +297,7 @@ public class MainActivity extends BaseActivity {
             }
         });
         
-        grpStyle.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (checkedId) {
-                    case R.id.rdo_ios:
-                        DialogSettings.style = DialogSettings.STYLE.STYLE_IOS;
-                        break;
-                    case R.id.rdo_kongzue:
-                        DialogSettings.style = DialogSettings.STYLE.STYLE_KONGZUE;
-                        break;
-                    case R.id.rdo_material:
-                        DialogSettings.style = DialogSettings.STYLE.STYLE_MATERIAL;
-                        break;
-                }
-            }
-        });
-        
-        grpTheme.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (checkedId) {
-                    case R.id.rdo_light:
-                        DialogSettings.theme = DialogSettings.THEME.LIGHT;
-                        break;
-                    case R.id.rdo_dark:
-                        DialogSettings.theme = DialogSettings.THEME.DARK;
-                        break;
-                }
-            }
-        });
-        
+        //消息窗口
         btnMessageDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -184,6 +305,7 @@ public class MainActivity extends BaseActivity {
             }
         });
         
+        //选择窗口
         btnSelectDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -192,6 +314,7 @@ public class MainActivity extends BaseActivity {
             }
         });
         
+        //输入窗口
         btnInputDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -215,10 +338,11 @@ public class MainActivity extends BaseActivity {
             }
         });
         
+        //等待窗
         btnWaitDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                WaitDialog.show(me, "请稍候...");
+                WaitDialog.show(me, null);
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -233,6 +357,7 @@ public class MainActivity extends BaseActivity {
             }
         });
         
+        //等待窗一段时间后提示窗
         btnTipDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -251,6 +376,7 @@ public class MainActivity extends BaseActivity {
             }
         });
         
+        //模态窗（序列化）演示
         btnModalDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -285,6 +411,7 @@ public class MainActivity extends BaseActivity {
             }
         });
         
+        //防 WindowLeaked 崩溃演示
         btnShowBreak.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -311,6 +438,40 @@ public class MainActivity extends BaseActivity {
             }
         });
         
+        //风格选择器
+        grpStyle.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId) {
+                    case R.id.rdo_ios:
+                        DialogSettings.style = DialogSettings.STYLE.STYLE_IOS;
+                        break;
+                    case R.id.rdo_kongzue:
+                        DialogSettings.style = DialogSettings.STYLE.STYLE_KONGZUE;
+                        break;
+                    case R.id.rdo_material:
+                        DialogSettings.style = DialogSettings.STYLE.STYLE_MATERIAL;
+                        break;
+                }
+            }
+        });
+        
+        //主题选择器
+        grpTheme.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId) {
+                    case R.id.rdo_light:
+                        DialogSettings.theme = DialogSettings.THEME.LIGHT;
+                        break;
+                    case R.id.rdo_dark:
+                        DialogSettings.theme = DialogSettings.THEME.DARK;
+                        break;
+                }
+            }
+        });
+        
+        //源代码Github库，欢迎Star&Fork
         btnShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -320,4 +481,17 @@ public class MainActivity extends BaseActivity {
         
     }
     
+    public static boolean isRunningForeground(Context context) {
+        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningAppProcessInfo> appProcessInfos = activityManager.getRunningAppProcesses();
+        // 枚举进程
+        for (ActivityManager.RunningAppProcessInfo appProcessInfo : appProcessInfos) {
+            if (appProcessInfo.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+                if (appProcessInfo.processName.equals(context.getApplicationInfo().processName)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

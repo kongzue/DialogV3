@@ -11,6 +11,9 @@ import android.support.v7.app.AppCompatActivity;
  */
 public class WaitDialog extends TipDialog {
     
+    private WaitDialog() {
+    }
+    
     public static TipDialog show(AppCompatActivity context, String message) {
         return TipDialog.showWait(context,message);
     }

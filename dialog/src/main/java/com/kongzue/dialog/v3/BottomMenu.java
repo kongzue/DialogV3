@@ -65,6 +65,9 @@ public class BottomMenu extends BaseDialog {
     private ViewGroup boxCancel;
     private TextView btnCancel;
     
+    private BottomMenu() {
+    }
+    
     public static BottomMenu build(@NonNull AppCompatActivity context) {
         synchronized (BottomMenu.class) {
             BottomMenu bottomMenu = new BottomMenu();
@@ -175,7 +178,6 @@ public class BottomMenu extends BaseDialog {
         if (menuTitleTextInfo == null) menuTitleTextInfo = titleTextInfo;
         
         if (rootView != null) {
-            
             btnCancel.setText(cancelButtonText);
             
             if (showCancelButton) {
@@ -252,6 +254,12 @@ public class BottomMenu extends BaseDialog {
                     listMenu.setAdapter(menuArrayAdapter);
                     
                     break;
+            }
+            if (customView != null) {
+                boxCustom.addView(customView);
+                boxCustom.setVisibility(View.VISIBLE);
+            }else{
+                boxCustom.setVisibility(View.GONE);
             }
             
             if (!isNull(title)) {
@@ -502,5 +510,26 @@ public class BottomMenu extends BaseDialog {
     public BottomMenu setOnDismissListener(OnDismissListener onDismissListener) {
         this.onDismissListener = onDismissListener;
         return this;
+    }
+    
+    public View getCustomView() {
+        return customView;
+    }
+    
+    public BottomMenu setCustomView(View customView) {
+        this.customView = customView;
+        refreshView();
+        return this;
+    }
+    
+    public BottomMenu setCustomView(int customViewLayoutId, OnBindView onBindView) {
+        customView = LayoutInflater.from(context).inflate(customViewLayoutId, null);
+        onBindView.onBind(this,customView);
+        refreshView();
+        return this;
+    }
+    
+    public interface OnBindView {
+        void onBind(BottomMenu bottomMenu, View v);
     }
 }

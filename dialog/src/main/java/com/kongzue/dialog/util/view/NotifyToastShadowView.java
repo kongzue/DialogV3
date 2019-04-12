@@ -27,6 +27,7 @@ public class NotifyToastShadowView extends RelativeLayout {
     private Activity activity;
     private int notifyHeight;
     private OnNotificationClickListener onNotificationClickListener;
+    private boolean dispatchTouchEvent = true;
     
     public NotifyToastShadowView(Context context) {
         super(context);
@@ -42,16 +43,20 @@ public class NotifyToastShadowView extends RelativeLayout {
     
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        if (ev.getAction() == MotionEvent.ACTION_CANCEL || ev.getAction() == MotionEvent.ACTION_DOWN || ev.getAction() == MotionEvent.ACTION_UP) {
-            if (ev.getY() < notifyHeight) {
-                if (onNotificationClickListener != null) onNotificationClickListener.onClick();
-                onNotificationClickListener = null;
-                return super.dispatchTouchEvent(ev);
+        if (dispatchTouchEvent) {
+            if (ev.getAction() == MotionEvent.ACTION_CANCEL || ev.getAction() == MotionEvent.ACTION_DOWN || ev.getAction() == MotionEvent.ACTION_UP) {
+                if (ev.getY() < notifyHeight) {
+                    if (onNotificationClickListener != null) onNotificationClickListener.onClick();
+                    onNotificationClickListener = null;
+                    return super.dispatchTouchEvent(ev);
+                } else {
+                    if (activity != null) activity.dispatchTouchEvent(ev);
+                    return false;
+                }
             } else {
-                if (activity != null) activity.dispatchTouchEvent(ev);
-                return false;
+                return super.dispatchTouchEvent(ev);
             }
-        } else {
+        }else{
             return super.dispatchTouchEvent(ev);
         }
     }
@@ -66,5 +71,9 @@ public class NotifyToastShadowView extends RelativeLayout {
     
     public void setOnNotificationClickListener(OnNotificationClickListener onNotificationClickListener) {
         this.onNotificationClickListener = onNotificationClickListener;
+    }
+    
+    public void setDispatchTouchEvent(boolean dispatchTouchEvent) {
+        this.dispatchTouchEvent = dispatchTouchEvent;
     }
 }
