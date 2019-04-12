@@ -9,7 +9,7 @@ import android.view.View;
  * Mail: myzcxhh@live.cn
  * CreateTime: 2019/4/8 21:09
  */
-public interface OnInputDialogButtonClickListener {
+public interface OnInputDialogButtonClickListener{
     
     boolean onClick(View v,String inputStr);
 }

@@ -1,13 +1,8 @@
 package com.kongzue.dialogdemo;
 
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.InputType;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -27,8 +22,7 @@ import com.kongzue.dialog.interfaces.OnInputDialogButtonClickListener;
 import com.kongzue.dialog.interfaces.OnNotificationClickListener;
 import com.kongzue.dialog.util.DialogSettings;
 import com.kongzue.dialog.util.InputInfo;
-import com.kongzue.dialog.util.view.BlurView;
-import com.kongzue.dialog.v3.NormalDialog;
+import com.kongzue.dialog.v3.MessageDialog;
 import com.kongzue.dialog.v3.InputDialog;
 import com.kongzue.dialog.v3.Notification;
 import com.kongzue.dialog.v3.TipDialog;
@@ -58,6 +52,8 @@ public class MainActivity extends BaseActivity {
     private TextView btnModalDialog;
     private TextView btnShowBreak;
     private TextView btnNotify;
+    private TextView btnBottomMenu;
+    private TextView btnBottomMenuWithTitle;
     private RelativeLayout boxTable;
     private LinearLayout boxTableChild;
     private LinearLayout btnBack;
@@ -82,6 +78,8 @@ public class MainActivity extends BaseActivity {
         btnModalDialog = findViewById(R.id.btn_modalDialog);
         btnShowBreak = findViewById(R.id.btn_showBreak);
         btnNotify = findViewById(R.id.btn_notify);
+        btnBottomMenu = findViewById(R.id.btn_bottom_menu);
+        btnBottomMenuWithTitle = findViewById(R.id.btn_bottom_menu_withTitle);
         boxTable = findViewById(R.id.box_table);
         boxTableChild = findViewById(R.id.box_table_child);
         btnBack = findViewById(R.id.btn_back);
@@ -111,7 +109,7 @@ public class MainActivity extends BaseActivity {
                 Notification.show(me,"提示","提示信息",R.mipmap.ico_wechat).setOnNotificationClickListener(new OnNotificationClickListener() {
                     @Override
                     public void onClick() {
-                        log("点击了消息");
+                        MessageDialog.show(me,"提示","点击了消息");
                     }
                 }).setOnDismissListener(new OnDismissListener() {
                     @Override
@@ -156,14 +154,14 @@ public class MainActivity extends BaseActivity {
         btnMessageDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NormalDialog.show(me, "提示", "这是一条消息", "确定");
+                MessageDialog.show(me, "提示", "这是一条消息", "确定");
             }
         });
         
         btnSelectDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NormalDialog.show(me, "提示", "这是一条消息", "是", "否", "取消")
+                MessageDialog.show(me, "提示", "这是一条消息", "是", "否", "取消")
                         .setButtonOrientation(LinearLayout.VERTICAL);
             }
         });
@@ -173,6 +171,7 @@ public class MainActivity extends BaseActivity {
             public void onClick(View v) {
                 InputDialog.show(me, "提示", "请输入密码（123456）", "确定", "取消")
                         .setOnOkButtonClickListener(new OnInputDialogButtonClickListener() {
+    
                             @Override
                             public boolean onClick(View v, String inputStr) {
                                 if (inputStr.equals("123456")) {
@@ -229,7 +228,7 @@ public class MainActivity extends BaseActivity {
         btnModalDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NormalDialog.build(me)
+                MessageDialog.build(me)
                         .setTitle("提示")
                         .setMessage("序列化对话框，即模态对话框，是通过代码一次性弹出多个对话框而一次只显示一个，当一个对话框关闭后下一个对话框才会显示。")
                         .setOkButton("了解", new OnDialogButtonClickListener() {
@@ -239,17 +238,17 @@ public class MainActivity extends BaseActivity {
                             }
                         })
                         .showDialog();
-                NormalDialog.show(me, "更多功能", "点击左边的按钮是无法关掉此对话框的，Kongzue Dialog提供的回调函数可以轻松帮你实现你想要的判断功能", "点我关闭", "我是关不掉的")
+                MessageDialog.show(me, "更多功能", "点击左边的按钮是无法关掉此对话框的，Kongzue Dialog提供的回调函数可以轻松帮你实现你想要的判断功能", "点我关闭", "我是关不掉的")
                         .setOnCancelButtonClickListener(new OnDialogButtonClickListener() {
                             @Override
                             public boolean onClick(View v) {
                                 return true;
                             }
                         });
-                NormalDialog.show(me, "纵向排列", "如果你正在使用iOS风格或Kongzue风格，这里的按钮可以纵向排列，以方便提供更多选择", "还不错", "有点意思", "还有呢？")
+                MessageDialog.show(me, "纵向排列", "如果你正在使用iOS风格或Kongzue风格，这里的按钮可以纵向排列，以方便提供更多选择", "还不错", "有点意思", "还有呢？")
                         .setButtonOrientation(LinearLayout.VERTICAL);
                 InputDialog.show(me, "输入对话框", "你也可以仅显示一个按钮，就像这样", "确定");
-                NormalDialog.show(me, "提示", "提示性对话框不受模态化影响，在本对话框显示的过程中也可以立即显示", "给我个提示", "结束")
+                MessageDialog.show(me, "提示", "提示性对话框不受模态化影响，在本对话框显示的过程中也可以立即显示", "给我个提示", "结束")
                         .setOnOkButtonClickListener(new OnDialogButtonClickListener() {
                             @Override
                             public boolean onClick(View v) {
@@ -263,7 +262,7 @@ public class MainActivity extends BaseActivity {
         btnShowBreak.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NormalDialog.show(me,"提示","一般的AlertDialog在显示时如果其依附的Activity被finish掉，会发生WindowLeaked错误导致程序崩溃，但Kongzue Dialog没有这个问题，您可以点击下边的按钮开始，等待几秒钟，Activity会被finish掉，但您不会遇到任何崩溃问题。","开始崩溃","取消")
+                MessageDialog.show(me, "提示", "一般的AlertDialog在显示时如果其依附的Activity被finish掉，会发生WindowLeaked错误导致程序崩溃，但Kongzue Dialog没有这个问题，您可以点击下边的按钮开始，等待几秒钟，Activity会被finish掉，但您不会遇到任何崩溃问题。", "开始崩溃", "取消")
                         .setOnOkButtonClickListener(new OnDialogButtonClickListener() {
                             @Override
                             public boolean onClick(View v) {

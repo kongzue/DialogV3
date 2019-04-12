@@ -174,6 +174,8 @@ public abstract class BaseDialog {
     
     public abstract void bindView(View rootView);
     
+    public abstract void refreshView();
+    
     public void doDismiss() {
         dialog.dismiss();
     }

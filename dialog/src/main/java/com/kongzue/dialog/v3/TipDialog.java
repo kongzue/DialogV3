@@ -160,6 +160,12 @@ public class TipDialog extends BaseDialog {
         }
     }
     
+    @Override
+    public void showDialog() {
+        log("启动等待对话框 -> " + message);
+        super.showDialog();
+    }
+    
     private View rootView;
     
     @Override
@@ -195,7 +201,7 @@ public class TipDialog extends BaseDialog {
         }, tipTime);
     }
     
-    private void refreshView() {
+    public void refreshView() {
         if (rootView != null) {
             final int bkgResId, blurFrontColor;
             //WaitDialog的颜色与主题色相反
@@ -275,7 +281,12 @@ public class TipDialog extends BaseDialog {
                 boxBody.setBackgroundResource(bkgResId);
             }
             
-            txtInfo.setText(message);
+            if (isNull(message)){
+                txtInfo.setVisibility(View.GONE);
+            }else{
+                txtInfo.setVisibility(View.VISIBLE);
+                txtInfo.setText(message);
+            }
         }
     }
     
@@ -306,6 +317,7 @@ public class TipDialog extends BaseDialog {
     }
     
     public TipDialog setMessage(String message) {
+        log("启动等待对话框 -> " + message);
         this.message = message;
         if (txtInfo != null) txtInfo.setText(message);
         refreshView();

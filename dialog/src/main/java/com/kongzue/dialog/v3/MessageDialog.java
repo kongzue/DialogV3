@@ -43,93 +43,93 @@ import static com.kongzue.dialog.util.DialogSettings.blurAlpha;
  * Mail: myzcxhh@live.cn
  * CreateTime: 2019/3/29 16:43
  */
-public class NormalDialog extends BaseDialog {
+public class MessageDialog extends BaseDialog {
     
-    private int buttonOrientation;
+    protected int buttonOrientation;
     
     private OnDialogButtonClickListener onOkButtonClickListener;
     private OnDialogButtonClickListener onCancelButtonClickListener;
     private OnDialogButtonClickListener onOtherButtonClickListener;
     
-    private Drawable okButtonDrawable;
-    private Drawable cancelButtonDrawable;
-    private Drawable otherButtonDrawable;
+    protected Drawable okButtonDrawable;
+    protected Drawable cancelButtonDrawable;
+    protected Drawable otherButtonDrawable;
     
-    private String title = "提示";
-    private String message = "提示信息";
-    private String okButton = "确定";
-    private String cancelButton = "取消";
-    private String otherButton;
+    protected String title = "提示";
+    protected String message = "提示信息";
+    protected String okButton = "确定";
+    protected String cancelButton = "取消";
+    protected String otherButton;
     
     private BlurView blurView;
     
-    private RelativeLayout bkg;
-    private TextView txtDialogTitle;
-    private TextView txtDialogTip;
-    private RelativeLayout boxCustom;
+    protected RelativeLayout bkg;
+    protected TextView txtDialogTitle;
+    protected TextView txtDialogTip;
+    protected RelativeLayout boxCustom;
     protected EditText txtInput;
-    private ImageView splitHorizontal;
-    private LinearLayout boxButton;
-    private TextView btnSelectNegative;
-    private ImageView splitVertical1;
-    private TextView btnSelectOther;
-    private ImageView splitVertical2;
-    private TextView btnSelectPositive;
+    protected ImageView splitHorizontal;
+    protected LinearLayout boxButton;
+    protected TextView btnSelectNegative;
+    protected ImageView splitVertical1;
+    protected TextView btnSelectOther;
+    protected ImageView splitVertical2;
+    protected TextView btnSelectPositive;
     
-    public static NormalDialog build(@NonNull AppCompatActivity context) {
-        synchronized (NormalDialog.class) {
-            NormalDialog normalDialog = new NormalDialog();
-            normalDialog.log("装载对话框");
-            normalDialog.context = context;
+    public static MessageDialog build(@NonNull AppCompatActivity context) {
+        synchronized (MessageDialog.class) {
+            MessageDialog messageDialog = new MessageDialog();
+            messageDialog.log("装载对话框");
+            messageDialog.context = context;
             
-            switch (normalDialog.style) {
+            switch (messageDialog.style) {
                 case STYLE_IOS:
-                    normalDialog.build(normalDialog, R.layout.dialog_select_ios);
+                    messageDialog.build(messageDialog, R.layout.dialog_select_ios);
                     break;
                 case STYLE_KONGZUE:
-                    normalDialog.build(normalDialog, R.layout.dialog_select);
+                    messageDialog.build(messageDialog, R.layout.dialog_select);
                     break;
                 case STYLE_MATERIAL:
-                    normalDialog.build(normalDialog);
+                    messageDialog.build(messageDialog);
                     break;
             }
-            return normalDialog;
+            return messageDialog;
         }
     }
     
-    public static NormalDialog show(@NonNull AppCompatActivity context, String title, String message) {
+    public static MessageDialog show(@NonNull AppCompatActivity context, String title, String message) {
         synchronized (TipDialog.class) {
-            NormalDialog normalDialog = show(context, title, message, null, null, null);
-            return normalDialog;
+            MessageDialog messageDialog = show(context, title, message, null, null, null);
+            return messageDialog;
         }
     }
     
-    public static NormalDialog show(@NonNull AppCompatActivity context, String title, String message, String okButton) {
+    public static MessageDialog show(@NonNull AppCompatActivity context, String title, String message, String okButton) {
         synchronized (TipDialog.class) {
-            NormalDialog normalDialog = show(context, title, message, okButton, null, null);
-            return normalDialog;
+            MessageDialog messageDialog = show(context, title, message, okButton, null, null);
+            return messageDialog;
         }
     }
     
-    public static NormalDialog show(@NonNull AppCompatActivity context, String title, String message, String okButton, String cancelButton) {
+    public static MessageDialog show(@NonNull AppCompatActivity context, String title, String message, String okButton, String cancelButton) {
         synchronized (TipDialog.class) {
-            NormalDialog normalDialog = show(context, title, message, okButton, cancelButton, null);
-            return normalDialog;
+            MessageDialog messageDialog = show(context, title, message, okButton, cancelButton, null);
+            return messageDialog;
         }
     }
     
-    public static NormalDialog show(@NonNull AppCompatActivity context, String title, String message, String okButton, String cancelButton, String otherButton) {
+    public static MessageDialog show(@NonNull AppCompatActivity context, String title, String message, String okButton, String cancelButton, String otherButton) {
         synchronized (TipDialog.class) {
-            NormalDialog normalDialog = build(context);
+            MessageDialog messageDialog = build(context);
             
-            normalDialog.title = title;
-            if (okButton != null) normalDialog.okButton = okButton;
-            normalDialog.message = message;
-            normalDialog.cancelButton = cancelButton;
-            normalDialog.otherButton = otherButton;
+            messageDialog.title = title;
+            if (okButton != null) messageDialog.okButton = okButton;
+            messageDialog.message = message;
+            messageDialog.cancelButton = cancelButton;
+            messageDialog.otherButton = otherButton;
             
-            normalDialog.showDialog();
-            return normalDialog;
+            messageDialog.showDialog();
+            return messageDialog;
         }
     }
     
@@ -138,6 +138,7 @@ public class NormalDialog extends BaseDialog {
     
     @Override
     public void bindView(View rootView) {
+        log("启动对话框 -> " + title + ":" + message);
         if (style == DialogSettings.STYLE.STYLE_MATERIAL) {
             materialAlertDialog = (AlertDialog) dialog.getDialog();
         } else {
@@ -161,7 +162,7 @@ public class NormalDialog extends BaseDialog {
         refreshView();
     }
     
-    protected void refreshView() {
+    public void refreshView() {
         if (txtDialogTitle != null) {
             if (title == null) {
                 txtDialogTitle.setVisibility(View.GONE);
@@ -185,10 +186,10 @@ public class NormalDialog extends BaseDialog {
                 case STYLE_IOS:
                     if (theme == DialogSettings.THEME.LIGHT) {
                         bkgResId = R.drawable.rect_selectdialog_ios_bkg_light;
-                        blurFrontColor = Color.argb(blurAlpha, 255, 255, 255);
+                        blurFrontColor = Color.argb(blurAlpha, 244, 245, 246);
                     } else {
                         bkgResId = R.drawable.rect_selectdialog_ios_bkg_dark;
-                        blurFrontColor = Color.argb(blurAlpha, 0, 0, 0);
+                        blurFrontColor = Color.argb(blurAlpha + 10, 22, 22, 22);
                         txtDialogTitle.setTextColor(Color.WHITE);
                         txtDialogTip.setTextColor(Color.WHITE);
                         splitHorizontal.setBackgroundColor(context.getResources().getColor(R.color.dialogSplitIOSDark));
@@ -364,6 +365,7 @@ public class NormalDialog extends BaseDialog {
             if (isNull(cancelButton)) {
                 btnSelectNegative.setVisibility(View.GONE);
                 if (style == DialogSettings.STYLE.STYLE_IOS) {
+                    splitVertical2.setVisibility(View.GONE);
                     btnSelectPositive.setBackgroundResource(R.drawable.button_menu_ios_bottom);
                 }
             } else {
@@ -464,7 +466,7 @@ public class NormalDialog extends BaseDialog {
         }
     }
     
-    private void refreshTextViews() {
+    protected void refreshTextViews() {
         useTextInfo(txtDialogTitle, titleTextInfo);
         useTextInfo(txtDialogTip, messageTextInfo);
         useTextInfo(btnSelectNegative, buttonTextInfo);
@@ -474,7 +476,6 @@ public class NormalDialog extends BaseDialog {
     
     @Override
     public void showDialog() {
-        log("启动选择对话框");
         if (style == DialogSettings.STYLE.STYLE_IOS) {
             super.showDialog();
         } else if (style == DialogSettings.STYLE.STYLE_MATERIAL) {
@@ -492,7 +493,7 @@ public class NormalDialog extends BaseDialog {
         return title;
     }
     
-    public NormalDialog setTitle(String title) {
+    public MessageDialog setTitle(String title) {
         this.title = title;
         return this;
     }
@@ -501,7 +502,7 @@ public class NormalDialog extends BaseDialog {
         return message;
     }
     
-    public NormalDialog setMessage(String content) {
+    public MessageDialog setMessage(String content) {
         this.message = content;
         return this;
     }
@@ -510,13 +511,13 @@ public class NormalDialog extends BaseDialog {
         return okButton;
     }
     
-    public NormalDialog setOkButton(String okButton) {
+    public MessageDialog setOkButton(String okButton) {
         this.okButton = okButton;
         refreshView();
         return this;
     }
     
-    public NormalDialog setOkButton(String okButton, OnDialogButtonClickListener onOkButtonClickListener) {
+    public MessageDialog setOkButton(String okButton, OnDialogButtonClickListener onOkButtonClickListener) {
         this.okButton = okButton;
         this.onOkButtonClickListener = onOkButtonClickListener;
         refreshView();
@@ -527,13 +528,13 @@ public class NormalDialog extends BaseDialog {
         return cancelButton;
     }
     
-    public NormalDialog setCancelButton(String cancelButton) {
+    public MessageDialog setCancelButton(String cancelButton) {
         this.cancelButton = cancelButton;
         refreshView();
         return this;
     }
     
-    public NormalDialog setCancelButton(String cancelButton, OnDialogButtonClickListener onCancelButtonClickListener) {
+    public MessageDialog setCancelButton(String cancelButton, OnDialogButtonClickListener onCancelButtonClickListener) {
         this.cancelButton = cancelButton;
         this.onCancelButtonClickListener = onCancelButtonClickListener;
         refreshView();
@@ -544,13 +545,13 @@ public class NormalDialog extends BaseDialog {
         return otherButton;
     }
     
-    public NormalDialog setOtherButton(String otherButton) {
+    public MessageDialog setOtherButton(String otherButton) {
         this.otherButton = otherButton;
         refreshView();
         return this;
     }
     
-    public NormalDialog setOtherButton(String otherButton, OnDialogButtonClickListener onOtherButtonClickListener) {
+    public MessageDialog setOtherButton(String otherButton, OnDialogButtonClickListener onOtherButtonClickListener) {
         this.otherButton = otherButton;
         this.onOtherButtonClickListener = onOtherButtonClickListener;
         refreshView();
@@ -561,7 +562,7 @@ public class NormalDialog extends BaseDialog {
         return onOkButtonClickListener;
     }
     
-    public NormalDialog setOnOkButtonClickListener(OnDialogButtonClickListener onOkButtonClickListener) {
+    public MessageDialog setOnOkButtonClickListener(OnDialogButtonClickListener onOkButtonClickListener) {
         this.onOkButtonClickListener = onOkButtonClickListener;
         refreshView();
         return this;
@@ -571,7 +572,7 @@ public class NormalDialog extends BaseDialog {
         return onCancelButtonClickListener;
     }
     
-    public NormalDialog setOnCancelButtonClickListener(OnDialogButtonClickListener onCancelButtonClickListener) {
+    public MessageDialog setOnCancelButtonClickListener(OnDialogButtonClickListener onCancelButtonClickListener) {
         this.onCancelButtonClickListener = onCancelButtonClickListener;
         refreshView();
         return this;
@@ -581,43 +582,43 @@ public class NormalDialog extends BaseDialog {
         return onOtherButtonClickListener;
     }
     
-    public NormalDialog setOnOtherButtonClickListener(OnDialogButtonClickListener onOtherButtonClickListener) {
+    public MessageDialog setOnOtherButtonClickListener(OnDialogButtonClickListener onOtherButtonClickListener) {
         this.onOtherButtonClickListener = onOtherButtonClickListener;
         refreshView();
         return this;
     }
     
-    public NormalDialog setOkButtonDrawable(@DrawableRes int okButtonDrawableResId) {
+    public MessageDialog setOkButtonDrawable(@DrawableRes int okButtonDrawableResId) {
         this.okButtonDrawable = ContextCompat.getDrawable(context, okButtonDrawableResId);
         refreshView();
         return this;
     }
     
-    public NormalDialog setOkButtonDrawable(Drawable okButtonDrawable) {
+    public MessageDialog setOkButtonDrawable(Drawable okButtonDrawable) {
         this.okButtonDrawable = okButtonDrawable;
         refreshView();
         return this;
     }
     
-    public NormalDialog setCancelButtonDrawable(@DrawableRes int okButtonDrawableResId) {
+    public MessageDialog setCancelButtonDrawable(@DrawableRes int okButtonDrawableResId) {
         this.cancelButtonDrawable = ContextCompat.getDrawable(context, okButtonDrawableResId);
         refreshView();
         return this;
     }
     
-    public NormalDialog setCancelButtonDrawable(Drawable cancelButtonDrawable) {
+    public MessageDialog setCancelButtonDrawable(Drawable cancelButtonDrawable) {
         this.cancelButtonDrawable = cancelButtonDrawable;
         refreshView();
         return this;
     }
     
-    public NormalDialog setOtherButtonDrawable(@DrawableRes int okButtonDrawableResId) {
+    public MessageDialog setOtherButtonDrawable(@DrawableRes int okButtonDrawableResId) {
         this.otherButtonDrawable = ContextCompat.getDrawable(context, okButtonDrawableResId);
         refreshView();
         return this;
     }
     
-    public NormalDialog setOtherButtonDrawable(Drawable otherButtonDrawable) {
+    public MessageDialog setOtherButtonDrawable(Drawable otherButtonDrawable) {
         this.otherButtonDrawable = otherButtonDrawable;
         refreshView();
         return this;
@@ -627,7 +628,7 @@ public class NormalDialog extends BaseDialog {
         return buttonOrientation;
     }
     
-    public NormalDialog setButtonOrientation(@LinearLayoutCompat.OrientationMode int buttonOrientation) {
+    public MessageDialog setButtonOrientation(@LinearLayoutCompat.OrientationMode int buttonOrientation) {
         this.buttonOrientation = buttonOrientation;
         refreshView();
         return this;
@@ -653,7 +654,7 @@ public class NormalDialog extends BaseDialog {
         } : dialogLifeCycleListener;
     }
     
-    public NormalDialog setDialogLifeCycleListener(DialogLifeCycleListener listener) {
+    public MessageDialog setDialogLifeCycleListener(DialogLifeCycleListener listener) {
         dialogLifeCycleListener = listener;
         return this;
     }
@@ -667,7 +668,7 @@ public class NormalDialog extends BaseDialog {
         } : onDismissListener;
     }
     
-    public NormalDialog setOnDismissListener(OnDismissListener onDismissListener) {
+    public MessageDialog setOnDismissListener(OnDismissListener onDismissListener) {
         this.onDismissListener = onDismissListener;
         return this;
     }
@@ -676,7 +677,7 @@ public class NormalDialog extends BaseDialog {
         return style;
     }
     
-    public NormalDialog setStyle(DialogSettings.STYLE style) {
+    public MessageDialog setStyle(DialogSettings.STYLE style) {
         if (isAlreadyShown) {
             error("必须使用 build(...) 方法创建时，才可以使用 setStyle(...) 来修改对话框主题或风格。");
             return this;
@@ -702,7 +703,7 @@ public class NormalDialog extends BaseDialog {
         return theme;
     }
     
-    public NormalDialog setTheme(DialogSettings.THEME theme) {
+    public MessageDialog setTheme(DialogSettings.THEME theme) {
         
         if (isAlreadyShown) {
             error("必须使用 build(...) 方法创建时，才可以使用 setTheme(...) 来修改对话框主题或风格。");
@@ -718,7 +719,7 @@ public class NormalDialog extends BaseDialog {
         return cancelable == BOOLEAN.TRUE;
     }
     
-    public NormalDialog setCancelable(boolean enable) {
+    public MessageDialog setCancelable(boolean enable) {
         this.cancelable = enable ? BOOLEAN.TRUE : BOOLEAN.FALSE;
         if (dialog != null) dialog.setCancelable(cancelable == BOOLEAN.TRUE);
         return this;
@@ -729,7 +730,7 @@ public class NormalDialog extends BaseDialog {
         return titleTextInfo;
     }
     
-    public NormalDialog setTitleTextInfo(TextInfo titleTextInfo) {
+    public MessageDialog setTitleTextInfo(TextInfo titleTextInfo) {
         this.titleTextInfo = titleTextInfo;
         refreshView();
         return this;
@@ -739,7 +740,7 @@ public class NormalDialog extends BaseDialog {
         return messageTextInfo;
     }
     
-    public NormalDialog setMessageTextInfo(TextInfo messageTextInfo) {
+    public MessageDialog setMessageTextInfo(TextInfo messageTextInfo) {
         this.messageTextInfo = messageTextInfo;
         refreshView();
         return this;
@@ -749,7 +750,7 @@ public class NormalDialog extends BaseDialog {
         return buttonTextInfo;
     }
     
-    public NormalDialog setButtonTextInfo(TextInfo buttonTextInfo) {
+    public MessageDialog setButtonTextInfo(TextInfo buttonTextInfo) {
         this.buttonTextInfo = buttonTextInfo;
         refreshView();
         return this;
@@ -759,7 +760,7 @@ public class NormalDialog extends BaseDialog {
         return buttonPositiveTextInfo;
     }
     
-    public NormalDialog setButtonPositiveTextInfo(TextInfo buttonPositiveTextInfo) {
+    public MessageDialog setButtonPositiveTextInfo(TextInfo buttonPositiveTextInfo) {
         this.buttonPositiveTextInfo = buttonPositiveTextInfo;
         refreshView();
         return this;
@@ -769,7 +770,7 @@ public class NormalDialog extends BaseDialog {
         return backgroundColor;
     }
     
-    public NormalDialog setBackgroundColor(int backgroundColor) {
+    public MessageDialog setBackgroundColor(int backgroundColor) {
         this.backgroundColor = backgroundColor;
         refreshView();
         return this;
