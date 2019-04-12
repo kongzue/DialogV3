@@ -88,8 +88,7 @@ public abstract class BaseDialog {
         return baseDialog;
     }
     
-    
-    public void showDialog() {
+    protected void showDialog() {
         showDialog(R.style.BaseDialog);
     }
     
@@ -175,6 +174,8 @@ public abstract class BaseDialog {
     public abstract void bindView(View rootView);
     
     public abstract void refreshView();
+    
+    public abstract void show();
     
     public void doDismiss() {
         dialog.dismiss();

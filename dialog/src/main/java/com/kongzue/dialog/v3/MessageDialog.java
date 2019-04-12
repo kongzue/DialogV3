@@ -466,6 +466,11 @@ public class MessageDialog extends BaseDialog {
         }
     }
     
+    @Override
+    public void show() {
+        showDialog();
+    }
+    
     protected void refreshTextViews() {
         useTextInfo(txtDialogTitle, titleTextInfo);
         useTextInfo(txtDialogTip, messageTextInfo);
@@ -474,8 +479,7 @@ public class MessageDialog extends BaseDialog {
         useTextInfo(btnSelectPositive, buttonPositiveTextInfo);
     }
     
-    @Override
-    public void showDialog() {
+    protected void showDialog() {
         if (style == DialogSettings.STYLE.STYLE_IOS) {
             super.showDialog();
         } else if (style == DialogSettings.STYLE.STYLE_MATERIAL) {

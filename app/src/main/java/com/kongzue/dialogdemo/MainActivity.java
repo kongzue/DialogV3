@@ -19,6 +19,7 @@ import com.kongzue.baseframework.util.JumpParameter;
 import com.kongzue.dialog.interfaces.OnDialogButtonClickListener;
 import com.kongzue.dialog.interfaces.OnDismissListener;
 import com.kongzue.dialog.interfaces.OnInputDialogButtonClickListener;
+import com.kongzue.dialog.interfaces.OnMenuItemClickListener;
 import com.kongzue.dialog.interfaces.OnNotificationClickListener;
 import com.kongzue.dialog.util.DialogSettings;
 import com.kongzue.dialog.util.InputInfo;
@@ -103,21 +104,38 @@ public class MainActivity extends BaseActivity {
     
     @Override
     public void setEvents() {
-    
+        
         btnBottomMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BottomMenu.build(me).showDialog();
+                BottomMenu.show(me, new String[]{"菜单1", "菜单2", "菜单3"}, new OnMenuItemClickListener() {
+                    @Override
+                    public void onClick(String text, int index) {
+                    
+                    }
+                });
             }
         });
-    
+        
+        btnBottomMenuWithTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BottomMenu.show(me, new String[]{"菜单1", "菜单2", "菜单3"}, new OnMenuItemClickListener() {
+                    @Override
+                    public void onClick(String text, int index) {
+                        log("点击了：" + text);
+                    }
+                }).setTitle("这里是标题文字");
+            }
+        });
+        
         btnNotify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Notification.show(me,"提示","提示信息",R.mipmap.ico_wechat).setOnNotificationClickListener(new OnNotificationClickListener() {
+                Notification.show(me, "提示", "提示信息", R.mipmap.ico_wechat).setOnNotificationClickListener(new OnNotificationClickListener() {
                     @Override
                     public void onClick() {
-                        MessageDialog.show(me,"提示","点击了消息，注意判断Activity是否在前台");
+                        MessageDialog.show(me, "提示", "点击了消息，注意判断Activity是否在前台");
                     }
                 }).setOnDismissListener(new OnDismissListener() {
                     @Override
@@ -179,7 +197,7 @@ public class MainActivity extends BaseActivity {
             public void onClick(View v) {
                 InputDialog.show(me, "提示", "请输入密码（123456）", "确定", "取消")
                         .setOnOkButtonClickListener(new OnInputDialogButtonClickListener() {
-    
+                            
                             @Override
                             public boolean onClick(View v, String inputStr) {
                                 if (inputStr.equals("123456")) {
@@ -245,7 +263,7 @@ public class MainActivity extends BaseActivity {
                                 return false;
                             }
                         })
-                        .showDialog();
+                        .show();
                 MessageDialog.show(me, "更多功能", "点击左边的按钮是无法关掉此对话框的，Kongzue Dialog提供的回调函数可以轻松帮你实现你想要的判断功能", "点我关闭", "我是关不掉的")
                         .setOnCancelButtonClickListener(new OnDialogButtonClickListener() {
                             @Override

@@ -11,6 +11,7 @@ import android.util.TypedValue;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -24,6 +25,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kongzue.dialog.R;
+import com.kongzue.dialog.interfaces.OnDismissListener;
 import com.kongzue.dialog.interfaces.OnMenuItemClickListener;
 import com.kongzue.dialog.util.BaseDialog;
 import com.kongzue.dialog.util.DialogSettings;
@@ -69,11 +71,6 @@ public class BottomMenu extends BaseDialog {
             bottomMenu.log("装载底部菜单");
             bottomMenu.context = context;
             
-            bottomMenu.menuTextList = new ArrayList<>();
-            bottomMenu.menuTextList.add("测试菜单1");
-            bottomMenu.menuTextList.add("测试菜单2");
-            bottomMenu.menuTextList.add("测试菜单3");
-            
             switch (bottomMenu.style) {
                 case STYLE_IOS:
                     bottomMenu.build(bottomMenu, R.layout.bottom_menu_ios);
@@ -87,6 +84,48 @@ public class BottomMenu extends BaseDialog {
             }
             return bottomMenu;
         }
+    }
+    
+    public static BottomMenu show(@NonNull AppCompatActivity context, List<String> menuTextList, OnMenuItemClickListener onMenuItemClickListener) {
+        BottomMenu bottomMenu = build(context);
+        bottomMenu.menuTextList = menuTextList;
+        bottomMenu.onMenuItemClickListener = onMenuItemClickListener;
+        bottomMenu.showDialog();
+        return bottomMenu;
+    }
+    
+    public static BottomMenu show(@NonNull AppCompatActivity context, String title, List<String> menuTextList, OnMenuItemClickListener onMenuItemClickListener) {
+        BottomMenu bottomMenu = build(context);
+        bottomMenu.menuTextList = menuTextList;
+        bottomMenu.title = title;
+        bottomMenu.onMenuItemClickListener = onMenuItemClickListener;
+        bottomMenu.showDialog();
+        return bottomMenu;
+    }
+    
+    public static BottomMenu show(@NonNull AppCompatActivity context, String[] menuTexts, OnMenuItemClickListener onMenuItemClickListener) {
+        BottomMenu bottomMenu = build(context);
+        List<String> list = new ArrayList<>();
+        for (String s : menuTexts) {
+            list.add(s);
+        }
+        bottomMenu.menuTextList = list;
+        bottomMenu.onMenuItemClickListener = onMenuItemClickListener;
+        bottomMenu.showDialog();
+        return bottomMenu;
+    }
+    
+    public static BottomMenu show(@NonNull AppCompatActivity context, String title, String[] menuTexts, OnMenuItemClickListener onMenuItemClickListener) {
+        BottomMenu bottomMenu = build(context);
+        List<String> list = new ArrayList<>();
+        for (String s : menuTexts) {
+            list.add(s);
+        }
+        bottomMenu.menuTextList = list;
+        bottomMenu.title = title;
+        bottomMenu.onMenuItemClickListener = onMenuItemClickListener;
+        bottomMenu.showDialog();
+        return bottomMenu;
     }
     
     private View rootView;
@@ -126,6 +165,9 @@ public class BottomMenu extends BaseDialog {
     private BlurView blurList;
     private BlurView blurCancel;
     
+    private boolean isListViewTouchDown;
+    private float listViewTouchDownY;
+    
     @Override
     public void refreshView() {
         if (menuTextInfo == null) menuTextInfo = buttonTextInfo;
@@ -147,6 +189,33 @@ public class BottomMenu extends BaseDialog {
                     boxCancel.setVisibility(View.GONE);
                     menuArrayAdapter = new NormalMenuArrayAdapter(context, R.layout.item_bottom_menu_material, menuTextList);
                     listMenu.setAdapter(menuArrayAdapter);
+                    
+                    listMenu.setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                                isListViewTouchDown = true;
+                                listViewTouchDownY = event.getY();
+                            }
+                            if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                                if (isListViewTouchDown) {
+                                    float aimY = boxBody.getY() + (event.getY() - listViewTouchDownY);
+                                    if (aimY < 0) aimY = 0;
+                                    boxBody.setY(aimY);
+                                }
+                            }
+                            if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {
+                                if (isListViewTouchDown) {
+                                    if (boxBody.getY() > dip2px(15)) {
+                                        rootDialog.dismiss();
+                                        return true;
+                                    }
+                                }
+                                isListViewTouchDown = false;
+                            }
+                            return false;
+                        }
+                    });
                     break;
                 case STYLE_KONGZUE:
                     menuArrayAdapter = new NormalMenuArrayAdapter(context, R.layout.item_bottom_menu_kongzue, menuTextList);
@@ -185,6 +254,12 @@ public class BottomMenu extends BaseDialog {
                     break;
             }
             
+            if (!isNull(title)) {
+                txtTitle.setText(title);
+                txtTitle.setVisibility(View.VISIBLE);
+                if (titleSplitLine != null) titleSplitLine.setVisibility(View.VISIBLE);
+            }
+            
             listMenu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -204,6 +279,11 @@ public class BottomMenu extends BaseDialog {
         
         useTextInfo(txtTitle, menuTitleTextInfo);
         useTextInfo(btnCancel, cancelButtonTextInfo);
+    }
+    
+    @Override
+    public void show() {
+        showDialog();
     }
     
     private ArrayAdapter menuArrayAdapter;
@@ -317,5 +397,110 @@ public class BottomMenu extends BaseDialog {
             
             return convertView;
         }
+    }
+    
+    //其他设置
+    public List<String> getMenuTextList() {
+        return menuTextList;
+    }
+    
+    public BottomMenu setMenuTextList(List<String> menuTextList) {
+        this.menuTextList = menuTextList;
+        refreshView();
+        return this;
+    }
+    
+    public BottomMenu setMenuTextList(String[] menuTexts) {
+        List<String> list = new ArrayList<>();
+        for (String s : menuTexts) {
+            list.add(s);
+        }
+        this.menuTextList = list;
+        refreshView();
+        return this;
+    }
+    
+    public String getTitle() {
+        return title;
+    }
+    
+    public BottomMenu setTitle(String title) {
+        this.title = title;
+        refreshView();
+        return this;
+    }
+    
+    public String getCancelButtonText() {
+        return cancelButtonText;
+    }
+    
+    public BottomMenu setCancelButtonText(String cancelButtonText) {
+        this.cancelButtonText = cancelButtonText;
+        refreshView();
+        return this;
+    }
+    
+    public boolean isShowCancelButton() {
+        return showCancelButton;
+    }
+    
+    public BottomMenu setShowCancelButton(boolean showCancelButton) {
+        this.showCancelButton = showCancelButton;
+        refreshView();
+        return this;
+    }
+    
+    public OnMenuItemClickListener getOnMenuItemClickListener() {
+        return onMenuItemClickListener;
+    }
+    
+    public BottomMenu setOnMenuItemClickListener(OnMenuItemClickListener onMenuItemClickListener) {
+        this.onMenuItemClickListener = onMenuItemClickListener;
+        refreshView();
+        return this;
+    }
+    
+    public TextInfo getMenuTitleTextInfo() {
+        return menuTitleTextInfo;
+    }
+    
+    public BottomMenu setMenuTitleTextInfo(TextInfo menuTitleTextInfo) {
+        this.menuTitleTextInfo = menuTitleTextInfo;
+        refreshView();
+        return this;
+    }
+    
+    public TextInfo getMenuTextInfo() {
+        return menuTextInfo;
+    }
+    
+    public BottomMenu setMenuTextInfo(TextInfo menuTextInfo) {
+        this.menuTextInfo = menuTextInfo;
+        refreshView();
+        return this;
+    }
+    
+    public TextInfo getCancelButtonTextInfo() {
+        return cancelButtonTextInfo;
+    }
+    
+    public BottomMenu setCancelButtonTextInfo(TextInfo cancelButtonTextInfo) {
+        this.cancelButtonTextInfo = cancelButtonTextInfo;
+        refreshView();
+        return this;
+    }
+    
+    public OnDismissListener getOnDismissListener() {
+        return onDismissListener == null ? new OnDismissListener() {
+            @Override
+            public void onDismiss() {
+            
+            }
+        } : onDismissListener;
+    }
+    
+    public BottomMenu setOnDismissListener(OnDismissListener onDismissListener) {
+        this.onDismissListener = onDismissListener;
+        return this;
     }
 }

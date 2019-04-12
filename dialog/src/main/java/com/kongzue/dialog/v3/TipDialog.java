@@ -160,8 +160,7 @@ public class TipDialog extends BaseDialog {
         }
     }
     
-    @Override
-    public void showDialog() {
+    protected void showDialog() {
         log("启动等待对话框 -> " + message);
         super.showDialog();
     }
@@ -288,6 +287,11 @@ public class TipDialog extends BaseDialog {
                 txtInfo.setText(message);
             }
         }
+    }
+    
+    @Override
+    public void show() {
+        showDialog();
     }
     
     public OnDismissListener getOnDismissListener() {
