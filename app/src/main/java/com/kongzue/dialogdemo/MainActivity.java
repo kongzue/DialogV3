@@ -230,11 +230,11 @@ public class MainActivity extends BaseActivity {
                                 //注意要显示本对话框必须依赖一个 Activity 来显示，因此创建 Notification 时的 Context 建议使用当前正在活跃的 Activity，
                                 //额外的，您可以通过 v.getContext() 获取 Notification 创建时使用的 Context，
                                 //不过比较遗憾的是目前后台切换到前台会有较大延迟才会执行，建议本功能用于应用内各Activity的切换
-                                startActivity(new Intent(v.getContext(), MainActivity.class)
-                                                      .addCategory(Intent.CATEGORY_LAUNCHER)
-                                                      .setAction(Intent.ACTION_MAIN)
-                                                      .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED)
-                                );
+                                //startActivity(new Intent(v.getContext(), MainActivity.class)
+                                //                      .addCategory(Intent.CATEGORY_LAUNCHER)
+                                //                      .setAction(Intent.ACTION_MAIN)
+                                //                      .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED)
+                                //);
                                 
                                 InputDialog.show(me, "回复", "请输入回复的消息。",
                                                  "回复", "取消"

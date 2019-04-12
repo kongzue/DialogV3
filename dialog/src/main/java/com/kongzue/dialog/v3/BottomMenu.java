@@ -258,6 +258,7 @@ public class BottomMenu extends BaseDialog {
             if (customView != null) {
                 boxCustom.addView(customView);
                 boxCustom.setVisibility(View.VISIBLE);
+                if (titleSplitLine != null) titleSplitLine.setVisibility(View.VISIBLE);
             }else{
                 boxCustom.setVisibility(View.GONE);
             }
