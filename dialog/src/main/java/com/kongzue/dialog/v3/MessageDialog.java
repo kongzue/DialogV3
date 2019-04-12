@@ -134,7 +134,7 @@ public class MessageDialog extends BaseDialog {
     }
     
     protected AlertDialog materialAlertDialog;
-    private View rootView;
+    protected View rootView;
     
     @Override
     public void bindView(View rootView) {

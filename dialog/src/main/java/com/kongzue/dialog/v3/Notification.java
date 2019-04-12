@@ -58,6 +58,7 @@ public class Notification {
     private String message;
     private int iconResId;
     
+    private NotifyToastShadowView rootView;
     private RelativeLayout boxBody;
     private LinearLayout btnNotic;
     private LinearLayout boxTitle;
@@ -196,17 +197,16 @@ public class Notification {
     
     private void showMaterialNotification() {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        NotifyToastShadowView view = (NotifyToastShadowView) inflater.inflate(R.layout.notification_material, null);
+        rootView = (NotifyToastShadowView) inflater.inflate(R.layout.notification_material, null);
         
-        boxBody = view.findViewById(R.id.box_body);
-        btnNotic = view.findViewById(R.id.btn_notic);
-        imgIcon = view.findViewById(R.id.img_icon);
-        txtTitle = view.findViewById(R.id.txt_title);
-        txtMessage = view.findViewById(R.id.txt_message);
-        
-        view.setParent(context);
-        view.setNotifyHeight(dip2px(80) + getStatusBarHeight());  //可触控区域高度
-        view.setOnNotificationClickListener(new OnNotificationClickListener() {
+        boxBody = rootView.findViewById(R.id.box_body);
+        btnNotic = rootView.findViewById(R.id.btn_notic);
+        imgIcon = rootView.findViewById(R.id.img_icon);
+        txtTitle = rootView.findViewById(R.id.txt_title);
+        txtMessage = rootView.findViewById(R.id.txt_message);
+    
+        rootView.setParent(context);
+        rootView.setOnNotificationClickListener(new OnNotificationClickListener() {
             @Override
             public void onClick() {
                 toast.cancel();
@@ -219,6 +219,12 @@ public class Notification {
             public void run() {
                 boxBody.setY(-boxBody.getHeight());
                 boxBody.animate().setInterpolator(new DecelerateInterpolator()).translationY(0).setDuration(500);
+            }
+        });
+        btnNotic.post(new Runnable() {
+            @Override
+            public void run() {
+                rootView.setNotifyHeight(btnNotic.getHeight() + getStatusBarHeight());  //可触控区域高度
             }
         });
         
@@ -267,23 +273,22 @@ public class Notification {
             }
         });
         
-        new kToast().show(context, view);
+        new kToast().show(context, rootView);
     }
     
     private void showIOSNotification() {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        NotifyToastShadowView view = (NotifyToastShadowView) inflater.inflate(R.layout.notification_ios, null);
+        rootView = (NotifyToastShadowView) inflater.inflate(R.layout.notification_ios, null);
         
-        boxBody = view.findViewById(R.id.box_body);
-        btnNotic = view.findViewById(R.id.btn_notic);
-        boxTitle = view.findViewById(R.id.box_title);
-        imgIcon = view.findViewById(R.id.img_icon);
-        txtTitle = view.findViewById(R.id.txt_title);
-        txtMessage = view.findViewById(R.id.txt_message);
-        
-        view.setParent(context);
-        view.setNotifyHeight(dip2px(100) + getStatusBarHeight());  //可触控区域高度
-        view.setOnNotificationClickListener(new OnNotificationClickListener() {
+        boxBody = rootView.findViewById(R.id.box_body);
+        btnNotic = rootView.findViewById(R.id.btn_notic);
+        boxTitle = rootView.findViewById(R.id.box_title);
+        imgIcon = rootView.findViewById(R.id.img_icon);
+        txtTitle = rootView.findViewById(R.id.txt_title);
+        txtMessage = rootView.findViewById(R.id.txt_message);
+    
+        rootView.setParent(context);
+        rootView.setOnNotificationClickListener(new OnNotificationClickListener() {
             @Override
             public void onClick() {
                 toast.cancel();
@@ -296,6 +301,12 @@ public class Notification {
             public void run() {
                 boxBody.setY(-boxBody.getHeight());
                 boxBody.animate().setInterpolator(new DecelerateInterpolator()).translationY(-dip2px(5)).setDuration(500);
+            }
+        });
+        btnNotic.post(new Runnable() {
+            @Override
+            public void run() {
+                rootView.setNotifyHeight(btnNotic.getHeight() + getStatusBarHeight());  //可触控区域高度
             }
         });
         
@@ -346,22 +357,22 @@ public class Notification {
             }
         });
         
-        new kToast().show(context, view);
+        new kToast().show(context, rootView);
     }
     
     private void showKongzueNotification() {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        NotifyToastShadowView view = (NotifyToastShadowView) inflater.inflate(R.layout.notification_kongzue, null);
+        rootView = (NotifyToastShadowView) inflater.inflate(R.layout.notification_kongzue, null);
         
-        boxBody = view.findViewById(R.id.box_body);
-        btnNotic = view.findViewById(R.id.btn_notic);
-        imgIcon = view.findViewById(R.id.img_icon);
-        txtTitle = view.findViewById(R.id.txt_title);
-        txtMessage = view.findViewById(R.id.txt_message);
-        
-        view.setParent(context);
-        view.setNotifyHeight(dip2px(50) + getStatusBarHeight());  //可触控区域高度
-        view.setOnNotificationClickListener(new OnNotificationClickListener() {
+        boxBody = rootView.findViewById(R.id.box_body);
+        btnNotic = rootView.findViewById(R.id.btn_notic);
+        imgIcon = rootView.findViewById(R.id.img_icon);
+        txtTitle = rootView.findViewById(R.id.txt_title);
+        txtMessage = rootView.findViewById(R.id.txt_message);
+    
+        rootView.setParent(context);
+        rootView.setNotifyHeight(dip2px(50) + getStatusBarHeight());  //可触控区域高度
+        rootView.setOnNotificationClickListener(new OnNotificationClickListener() {
             @Override
             public void onClick() {
                 toast.cancel();
@@ -376,6 +387,12 @@ public class Notification {
                 boxBody.animate().setInterpolator(new DecelerateInterpolator()).translationY(0).setDuration(500);
             }
         });
+        btnNotic.post(new Runnable() {
+            @Override
+            public void run() {
+                rootView.setNotifyHeight(btnNotic.getHeight() + getStatusBarHeight());  //可触控区域高度
+            }
+        });
         
         if (messageTextInfo == null) {
             messageTextInfo = DialogSettings.contentTextInfo;
@@ -388,7 +405,7 @@ public class Notification {
         
         refreshView();
         
-        new kToast().show(context, view);
+        new kToast().show(context, rootView);
     }
     
     private void refreshView() {

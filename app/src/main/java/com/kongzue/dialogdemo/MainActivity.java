@@ -22,6 +22,7 @@ import com.kongzue.dialog.interfaces.OnInputDialogButtonClickListener;
 import com.kongzue.dialog.interfaces.OnNotificationClickListener;
 import com.kongzue.dialog.util.DialogSettings;
 import com.kongzue.dialog.util.InputInfo;
+import com.kongzue.dialog.v3.BottomMenu;
 import com.kongzue.dialog.v3.MessageDialog;
 import com.kongzue.dialog.v3.InputDialog;
 import com.kongzue.dialog.v3.Notification;
@@ -103,18 +104,25 @@ public class MainActivity extends BaseActivity {
     @Override
     public void setEvents() {
     
+        btnBottomMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BottomMenu.build(me).showDialog();
+            }
+        });
+    
         btnNotify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Notification.show(me,"提示","提示信息",R.mipmap.ico_wechat).setOnNotificationClickListener(new OnNotificationClickListener() {
                     @Override
                     public void onClick() {
-                        MessageDialog.show(me,"提示","点击了消息");
+                        MessageDialog.show(me,"提示","点击了消息，注意判断Activity是否在前台");
                     }
                 }).setOnDismissListener(new OnDismissListener() {
                     @Override
                     public void onDismiss() {
-                        log("消息消失了");
+                        log("消息溜走了");
                     }
                 });
             }
@@ -282,6 +290,13 @@ public class MainActivity extends BaseActivity {
                                 return true;
                             }
                         });
+            }
+        });
+        
+        btnShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openUrl("https://github.com/kongzue/DialogV3");
             }
         });
         

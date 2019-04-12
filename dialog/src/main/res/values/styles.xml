@@ -98,4 +98,8 @@
         <item name="android:windowExitAnimation">@anim/notification_exit_anim</item>
     </style>
 
+    <style name="bottomMenuAnimStyle">
+        <item name="android:windowEnterAnimation">@anim/bottom_menu_enter</item>
+        <item name="android:windowExitAnimation">@anim/bottom_menu_exit</item>
+    </style>
 </resources>
