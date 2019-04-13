@@ -49,8 +49,6 @@ public class TipDialog extends BaseDialog {
     private RelativeLayout boxTip;
     private TextView txtInfo;
     
-    private boolean isTip = false;
-    
     private int tipTime = 1500;
     
     protected TipDialog() {
@@ -360,6 +358,16 @@ public class TipDialog extends BaseDialog {
     public TipDialog setTipTime(int tipTime) {
         this.tipTime = tipTime;
         if (type != null) autoDismiss();
+        return this;
+    }
+    
+    public TipDialog setTheme(DialogSettings.THEME theme) {
+        if (theme== DialogSettings.THEME.LIGHT){
+            this.theme = DialogSettings.THEME.DARK;
+        }else{
+            this.theme = DialogSettings.THEME.LIGHT;
+        }
+        refreshView();
         return this;
     }
 }

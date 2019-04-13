@@ -160,7 +160,7 @@ public abstract class BaseDialog {
         
         if (baseDialog instanceof TipDialog) {
             if (cancelable == null)
-                cancelable = DialogSettings.cancelableWaitDialog ? BOOLEAN.TRUE : BOOLEAN.FALSE;
+                cancelable = DialogSettings.cancelableTipDialog ? BOOLEAN.TRUE : BOOLEAN.FALSE;
         } else {
             if (cancelable == null)
                 cancelable = DialogSettings.cancelable ? BOOLEAN.TRUE : BOOLEAN.FALSE;

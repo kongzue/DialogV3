@@ -2,6 +2,8 @@ package com.kongzue.dialog.v3;
 
 import android.support.v7.app.AppCompatActivity;
 
+import com.kongzue.dialog.util.DialogSettings;
+
 /**
  * Author: @Kongzue
  * Github: https://github.com/kongzue/
@@ -17,5 +19,4 @@ public class WaitDialog extends TipDialog {
     public static TipDialog show(AppCompatActivity context, String message) {
         return TipDialog.showWait(context,message);
     }
-    
 }

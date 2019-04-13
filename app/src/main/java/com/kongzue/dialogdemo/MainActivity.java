@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Handler;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kongzue.baseframework.BaseActivity;
 import com.kongzue.baseframework.interfaces.DarkNavigationBarTheme;
@@ -30,6 +32,7 @@ import com.kongzue.dialog.interfaces.OnMenuItemClickListener;
 import com.kongzue.dialog.interfaces.OnNotificationClickListener;
 import com.kongzue.dialog.util.DialogSettings;
 import com.kongzue.dialog.util.InputInfo;
+import com.kongzue.dialog.util.TextInfo;
 import com.kongzue.dialog.v3.BottomMenu;
 import com.kongzue.dialog.v3.CustomDialog;
 import com.kongzue.dialog.v3.MessageDialog;
@@ -236,7 +239,7 @@ public class MainActivity extends BaseActivity {
                                 //                      .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED)
                                 //);
                                 
-                                InputDialog.show(me, "回复", "请输入回复的消息。",
+                                InputDialog.show(me, "回复", "请输入回复的消息",
                                                  "回复", "取消"
                                 );
                             }
@@ -286,7 +289,7 @@ public class MainActivity extends BaseActivity {
                 Notification.show(me, "提示", "提示信息", R.mipmap.ico_wechat).setOnNotificationClickListener(new OnNotificationClickListener() {
                     @Override
                     public void onClick() {
-                        MessageDialog.show(me, "提示", "点击了消息，注意判断Activity是否在前台");
+                        MessageDialog.show(me, "提示", "点击了消息");
                     }
                 }).setOnDismissListener(new OnDismissListener() {
                     @Override
@@ -332,7 +335,14 @@ public class MainActivity extends BaseActivity {
                                 }
                             }
                         })
-                        .setInputInfo(new InputInfo().setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD))
+                        .setHintText("请输入密码")
+                        .setInputInfo(new InputInfo()
+                                              .setMAX_LENGTH(6)
+                                              .setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD)
+                                              .setTextInfo(new TextInfo()
+                                                                   .setFontColor(Color.RED)
+                                              )
+                        )
                         .setCancelable(false)
                 ;
             }
@@ -349,7 +359,7 @@ public class MainActivity extends BaseActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                TipDialog.dismiss();
+                                WaitDialog.dismiss();
                             }
                         });
                     }
@@ -368,7 +378,7 @@ public class MainActivity extends BaseActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                TipDialog.show(me, "警告提示", TipDialog.TYPE.WARNING);
+                                TipDialog.show(me, "成功！", TipDialog.TYPE.SUCCESS);
                             }
                         });
                     }

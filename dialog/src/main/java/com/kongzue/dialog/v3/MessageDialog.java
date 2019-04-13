@@ -59,7 +59,7 @@ public class MessageDialog extends BaseDialog {
     protected String title = "提示";
     protected String message = "提示信息";
     protected String okButton = "确定";
-    protected String cancelButton = "取消";
+    protected String cancelButton;
     protected String otherButton;
     
     private BlurView blurView;
@@ -712,7 +712,7 @@ public class MessageDialog extends BaseDialog {
                 build(this, R.layout.dialog_select);
                 break;
             case STYLE_MATERIAL:
-                
+                build(this);
                 break;
         }
         

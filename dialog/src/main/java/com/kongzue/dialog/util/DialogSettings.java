@@ -49,11 +49,8 @@ public class DialogSettings {
     //全局对话框默认是否可以点击外围遮罩区域或返回键关闭，此开关不影响提示框（TipDialog）以及等待框（TipDialog）
     public static boolean cancelable = true;
     
-    //全局提示框（TipDialog）默认是否可以关闭
+    //全局提示框及等待框（WaitDialog、TipDialog）默认是否可以关闭
     public static boolean cancelableTipDialog = false;
-    
-    //全局等待框（TipDialog）默认是否可以关闭
-    public static boolean cancelableWaitDialog = false;
     
     //日志
     public static boolean DEBUGMODE = false;
