@@ -14,6 +14,8 @@
 <img src="https://img.shields.io/badge/Homepage-Kongzue.com-brightgreen.svg" alt="Homepage">
 </a>
 
+![Kongzue Dialog V3](https://github.com/kongzue/Res/raw/master/app/src/main/res/mipmap-xxxhdpi/img_dialog_v3.png)
+
 ### Kongzue Dialog V3 的优势
 
 #### 1，不会发生 WindowLeaked 错误
@@ -41,8 +43,6 @@ Kongzue Dialog V3 依然会像第二代一样提供多种主题风格选择，�
 Kongzue Dialog V3 默认即支持模态化窗口模式，即即便从代码一次执行显示多个对话框，实际也会再上一个对话框消失后再显示下一个，以避免对话框叠加造成的混乱情况发生。
 
 ## Demo
-
-![Kongzue Dialog V3](https://github.com/kongzue/Res/raw/master/app/src/main/res/mipmap-xxxhdpi/img_dialog_v3.png)
 
 现已提供 Kongzue Dialog V3 Demo 演示程序供下载体验： https://fir.im/DialogV3
 
