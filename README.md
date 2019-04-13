@@ -122,6 +122,19 @@ MessageDialog.show(MainActivity.this, "提示", "这是一条双按钮消息", "
 MessageDialog.show(MainActivity.this, "提示", "这是一条三按钮消息", "确定", "取消", "其他");
 ```
 
+消息对话框的按钮回调方法提供了一个 return 值用于判断点击按钮后是否需要关闭对话框，默认 return false 会关闭当前的输入对话框，若 return true 则点击该按钮后不会关闭：
+```
+MessageDialog.show(MainActivity.this, "更多功能", "点击左边的按钮是无法关掉此对话框的，Kongzue Dialog提供的回调函数可以轻松帮你实现你想要的判断功能", "点我关闭", "我是关不掉的")
+        .setOnCancelButtonClickListener(new OnDialogButtonClickListener() {
+            @Override
+            public boolean onClick(BaseDialog baseDialog, View v) {
+                return true;                    //位于“取消”位置的按钮点击后无法关闭对话框
+            }
+        });
+```
+
+此功能便于做选择判断，在合理的事件触发后可允许关闭对话框。
+
 也可以通过 build(...) 方法创建，并定制更多效果：
 ```
 MessageDialog.build(MainActivity.this)
@@ -159,6 +172,18 @@ InputDialog.show(MainActivity.this, "输入对话框", "输入一些内容", "�
 ```
 
 InputDialog 与 MessageDialog 类似也提供多种构建方法，在此不再赘述。
+
+输入对话框的按钮回调中会直接返回当前输入的文本内容：
+```
+InputDialog.show(MainActivity.this, "提示", "请输入密码", "确定", "取消")
+        .setOnOkButtonClickListener(new OnInputDialogButtonClickListener() {
+            @Override
+            public boolean onClick(BaseDialog baseDialog, View v, String inputStr) {
+                //inputStr 即当前输入的文本
+                return false;
+            }
+        })
+```
 
 如果需要修改输入框的提示语（HintText）或内容（InputText），可以使用以下方法：
 ```

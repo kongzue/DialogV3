@@ -114,7 +114,7 @@ public class InputDialog extends MessageDialog {
         if (style == DialogSettings.STYLE.STYLE_MATERIAL) {
             if (materialAlertDialog != null) {
                 if (inputText != null) {
-                    if (customView==null){
+                    if (customView == null) {
                         txtInput = new EditText(context);
                         txtInput.setSingleLine();
                         txtInput.post(new Runnable() {
@@ -126,7 +126,7 @@ public class InputDialog extends MessageDialog {
                             }
                         });
                         materialAlertDialog.setView(txtInput);
-                    }else{
+                    } else {
                         txtInput = new EditText(context);
                         txtInput.setSingleLine();
                         txtInput.post(new Runnable() {
@@ -154,7 +154,7 @@ public class InputDialog extends MessageDialog {
                             @Override
                             public void onClick(View v) {
                                 if (onOkButtonClickListener != null) {
-                                    if (!onOkButtonClickListener.onClick(v, getInputText()))
+                                    if (!onOkButtonClickListener.onClick(InputDialog.this, v, getInputText()))
                                         materialAlertDialog.dismiss();
                                 } else {
                                     materialAlertDialog.dismiss();
@@ -168,7 +168,7 @@ public class InputDialog extends MessageDialog {
                             @Override
                             public void onClick(View v) {
                                 if (onCancelButtonClickListener != null) {
-                                    if (!onCancelButtonClickListener.onClick(v, getInputText()))
+                                    if (!onCancelButtonClickListener.onClick(InputDialog.this, v, getInputText()))
                                         materialAlertDialog.dismiss();
                                 } else {
                                     materialAlertDialog.dismiss();
@@ -183,7 +183,7 @@ public class InputDialog extends MessageDialog {
                                 @Override
                                 public void onClick(View v) {
                                     if (onOtherButtonClickListener != null) {
-                                        if (!onOtherButtonClickListener.onClick(v, getInputText()))
+                                        if (!onOtherButtonClickListener.onClick(InputDialog.this, v, getInputText()))
                                             materialAlertDialog.dismiss();
                                     } else {
                                         materialAlertDialog.dismiss();
@@ -223,7 +223,7 @@ public class InputDialog extends MessageDialog {
                     @Override
                     public void onClick(View v) {
                         if (onOkButtonClickListener != null) {
-                            if (!onOkButtonClickListener.onClick(v, getInputText())) {
+                            if (!onOkButtonClickListener.onClick(InputDialog.this, v, getInputText())) {
                                 doDismiss();
                             }
                         } else {
@@ -237,7 +237,7 @@ public class InputDialog extends MessageDialog {
                     @Override
                     public void onClick(View v) {
                         if (onCancelButtonClickListener != null) {
-                            if (!onCancelButtonClickListener.onClick(v, getInputText())) {
+                            if (!onCancelButtonClickListener.onClick(InputDialog.this, v, getInputText())) {
                                 doDismiss();
                             }
                         } else {
@@ -251,7 +251,7 @@ public class InputDialog extends MessageDialog {
                     @Override
                     public void onClick(View v) {
                         if (onOtherButtonClickListener != null) {
-                            if (!onOtherButtonClickListener.onClick(v, getInputText())) {
+                            if (!onOtherButtonClickListener.onClick(InputDialog.this, v, getInputText())) {
                                 doDismiss();
                             }
                         } else {
@@ -662,7 +662,7 @@ public class InputDialog extends MessageDialog {
     
     public InputDialog setCustomView(int customViewLayoutId, OnBindView onBindView) {
         customView = LayoutInflater.from(context).inflate(customViewLayoutId, null);
-        onBindView.onBind(this,customView);
+        onBindView.onBind(this, customView);
         refreshView();
         return this;
     }

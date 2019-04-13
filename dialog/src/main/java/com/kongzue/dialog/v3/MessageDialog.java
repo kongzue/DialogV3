@@ -286,7 +286,7 @@ public class MessageDialog extends BaseDialog {
                                 @Override
                                 public void onClick(View v) {
                                     if (onOkButtonClickListener != null) {
-                                        if (!onOkButtonClickListener.onClick(v))
+                                        if (!onOkButtonClickListener.onClick(MessageDialog.this, v))
                                             materialAlertDialog.dismiss();
                                     } else {
                                         materialAlertDialog.dismiss();
@@ -301,7 +301,7 @@ public class MessageDialog extends BaseDialog {
                                     @Override
                                     public void onClick(View v) {
                                         if (onCancelButtonClickListener != null) {
-                                            if (!onCancelButtonClickListener.onClick(v))
+                                            if (!onCancelButtonClickListener.onClick(MessageDialog.this, v))
                                                 materialAlertDialog.dismiss();
                                         } else {
                                             materialAlertDialog.dismiss();
@@ -317,7 +317,7 @@ public class MessageDialog extends BaseDialog {
                                     @Override
                                     public void onClick(View v) {
                                         if (onOtherButtonClickListener != null) {
-                                            if (!onOtherButtonClickListener.onClick(v))
+                                            if (!onOtherButtonClickListener.onClick(MessageDialog.this, v))
                                                 materialAlertDialog.dismiss();
                                         } else {
                                             materialAlertDialog.dismiss();
@@ -368,7 +368,7 @@ public class MessageDialog extends BaseDialog {
                 @Override
                 public void onClick(View v) {
                     if (onOkButtonClickListener != null) {
-                        if (!onOkButtonClickListener.onClick(v)) {
+                        if (!onOkButtonClickListener.onClick(MessageDialog.this, v)) {
                             doDismiss();
                         }
                     } else {
@@ -398,7 +398,7 @@ public class MessageDialog extends BaseDialog {
                     @Override
                     public void onClick(View v) {
                         if (onCancelButtonClickListener != null) {
-                            if (!onCancelButtonClickListener.onClick(v)) {
+                            if (!onCancelButtonClickListener.onClick(MessageDialog.this, v)) {
                                 doDismiss();
                             }
                         } else {
@@ -426,7 +426,7 @@ public class MessageDialog extends BaseDialog {
                 @Override
                 public void onClick(View v) {
                     if (onOtherButtonClickListener != null) {
-                        if (!onOtherButtonClickListener.onClick(v)) {
+                        if (!onOtherButtonClickListener.onClick(MessageDialog.this, v)) {
                             doDismiss();
                         }
                     } else {

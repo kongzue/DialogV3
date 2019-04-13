@@ -2,6 +2,8 @@ package com.kongzue.dialog.interfaces;
 
 import android.view.View;
 
+import com.kongzue.dialog.util.BaseDialog;
+
 /**
  * Author: @Kongzue
  * Github: https://github.com/kongzue/
@@ -11,6 +13,6 @@ import android.view.View;
  */
 public interface OnDialogButtonClickListener {
     
-    boolean onClick(View v);
+    boolean onClick(BaseDialog baseDialog, View v);
     
 }

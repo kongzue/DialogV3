@@ -30,6 +30,7 @@ import com.kongzue.dialog.interfaces.OnDismissListener;
 import com.kongzue.dialog.interfaces.OnInputDialogButtonClickListener;
 import com.kongzue.dialog.interfaces.OnMenuItemClickListener;
 import com.kongzue.dialog.interfaces.OnNotificationClickListener;
+import com.kongzue.dialog.util.BaseDialog;
 import com.kongzue.dialog.util.DialogSettings;
 import com.kongzue.dialog.util.InputInfo;
 import com.kongzue.dialog.util.TextInfo;
@@ -323,9 +324,8 @@ public class MainActivity extends BaseActivity {
             public void onClick(View v) {
                 InputDialog.show(me, "提示", "请输入密码（123456）", "确定", "取消")
                         .setOnOkButtonClickListener(new OnInputDialogButtonClickListener() {
-                            
                             @Override
-                            public boolean onClick(View v, String inputStr) {
+                            public boolean onClick(BaseDialog baseDialog, View v, String inputStr) {
                                 if (inputStr.equals("123456")) {
                                     TipDialog.show(me, "成功！", TipDialog.TYPE.SUCCESS);
                                     return false;
@@ -395,7 +395,7 @@ public class MainActivity extends BaseActivity {
                         .setMessage("序列化对话框，即模态对话框，是通过代码一次性弹出多个对话框而一次只显示一个，当一个对话框关闭后下一个对话框才会显示。")
                         .setOkButton("了解", new OnDialogButtonClickListener() {
                             @Override
-                            public boolean onClick(View v) {
+                            public boolean onClick(BaseDialog baseDialog, View v) {
                                 return false;
                             }
                         })
@@ -403,7 +403,7 @@ public class MainActivity extends BaseActivity {
                 MessageDialog.show(me, "更多功能", "点击左边的按钮是无法关掉此对话框的，Kongzue Dialog提供的回调函数可以轻松帮你实现你想要的判断功能", "点我关闭", "我是关不掉的")
                         .setOnCancelButtonClickListener(new OnDialogButtonClickListener() {
                             @Override
-                            public boolean onClick(View v) {
+                            public boolean onClick(BaseDialog baseDialog, View v) {
                                 return true;
                             }
                         });
@@ -413,7 +413,7 @@ public class MainActivity extends BaseActivity {
                 MessageDialog.show(me, "提示", "提示性对话框不受模态化影响，在本对话框显示的过程中也可以立即显示", "给我个提示", "结束")
                         .setOnOkButtonClickListener(new OnDialogButtonClickListener() {
                             @Override
-                            public boolean onClick(View v) {
+                            public boolean onClick(BaseDialog baseDialog, View v) {
                                 btnTipDialog.callOnClick();
                                 return true;
                             }
@@ -428,7 +428,7 @@ public class MainActivity extends BaseActivity {
                 MessageDialog.show(me, "提示", "一般的AlertDialog在显示时如果其依附的Activity被finish掉，会发生WindowLeaked错误导致程序崩溃，但Kongzue Dialog没有这个问题，您可以点击下边的按钮开始，等待几秒钟，Activity会被finish掉，但您不会遇到任何崩溃问题。", "开始崩溃", "取消")
                         .setOnOkButtonClickListener(new OnDialogButtonClickListener() {
                             @Override
-                            public boolean onClick(View v) {
+                            public boolean onClick(BaseDialog baseDialog, View v) {
                                 WaitDialog.show(me, "准备崩溃中...");
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
