@@ -1,5 +1,5 @@
 # Kongzue Dialog V3
-献给要求我们安卓照着苹果设计稿做开发的产品们（手动滑稽
+献给要求安卓照着苹果设计稿做开发的产品们（手动滑稽
 
 <a href="https://github.com/kongzue/Dialog/">
 <img src="https://img.shields.io/badge/Kongzue%20Dialog-2.9.9.8-green.svg" alt="Kongzue Dialog">
