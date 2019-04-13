@@ -139,7 +139,7 @@ MessageDialog.build(MainActivity.this)
         .show();
 ```
 
-需注意的是，只有修改主题风格的 setStyle(...) 和 setTheme(...) 方法必须在使用 build(...) 创建时在可以修改。
+需注意的是，只有修改主题风格的 setStyle(...) 和 setTheme(...) 方法必须在使用 build(...) 创建时才可以修改。
 
 一些特殊需求中可能用到需要纵向排列按钮的三按钮消息框，则可以通过以下方法实现：
 ```
