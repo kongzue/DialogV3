@@ -112,14 +112,14 @@ android {
 
 以下范例通过参数快速创建一个基本的消息对话框：
 ```
-MessageDialog.show(me, "提示", "这是一条消息", "确定");
+MessageDialog.show(MainActivity.this, "提示", "这是一条消息", "确定");
 ```
 
 额外的，MessageDialog 还提供多种参数的构建方法，方便快速创建合适的对话框：
 ```
-MessageDialog.show(me, "提示", "这是一条双按钮消息", "确定", "取消");
+MessageDialog.show(MainActivity.this, "提示", "这是一条双按钮消息", "确定", "取消");
 
-MessageDialog.show(me, "提示", "这是一条三按钮消息", "确定", "取消", "其他");
+MessageDialog.show(MainActivity.this, "提示", "这是一条三按钮消息", "确定", "取消", "其他");
 ```
 
 也可以通过 build(...) 方法创建，并定制更多效果：
@@ -144,7 +144,7 @@ MessageDialog.build(MainActivity.this)
 一些特殊需求中可能用到需要纵向排列按钮的三按钮消息框，则可以通过以下方法实现：
 ```
 MessageDialog
-        .show(me, "纵向排列", "如果你正在使用iOS风格或Kongzue风格，这里的按钮可以纵向排列，以方便提供更多选择", "还不错", "有点意思", "还有呢？")
+        .show(MainActivity.this, "纵向排列", "如果你正在使用iOS风格或Kongzue风格，这里的按钮可以纵向排列，以方便提供更多选择", "还不错", "有点意思", "还有呢？")
         .setButtonOrientation(LinearLayout.VERTICAL);
 ```
 
@@ -155,14 +155,14 @@ MessageDialog
 
 以下范例通过参数快速创建一个基本的输入对话框：
 ```
-InputDialog.show(me, "输入对话框", "输入一些内容", "确定");
+InputDialog.show(MainActivity.this, "输入对话框", "输入一些内容", "确定");
 ```
 
 InputDialog 与 MessageDialog 类似也提供多种构建方法，在此不再赘述。
 
 如果需要修改输入框的提示语（HintText）或内容（InputText），可以使用以下方法：
 ```
-InputDialog.show(me, "输入对话框", "输入一些内容", "确定")
+InputDialog.show(MainActivity.this, "输入对话框", "输入一些内容", "确定")
         .setInputText("123456")
         .setHintText("请输入密码")
 ;
@@ -170,7 +170,7 @@ InputDialog.show(me, "输入对话框", "输入一些内容", "确定")
 
 如需控制输入内容的字号、颜色、输入长度、文本类型，可以通过以下方法实现：
 ```
-InputDialog.show(me, "输入对话框", "请输入6位密码", "确定")
+InputDialog.show(MainActivity.this, "输入对话框", "请输入6位密码", "确定")
         .setInputInfo(new InputInfo()
                               .setMAX_LENGTH(6)
                               .setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD)
@@ -190,12 +190,12 @@ InputDialog.show(me, "输入对话框", "请输入6位密码", "确定")
 
 使用以下代码构建等待对话框：
 ```
-WaitDialog.show(me, "请稍候...");
+WaitDialog.show(MainActivity.this, "请稍候...");
 ```
 
 使用以下代码构建提示对话框：
 ```
-TipDialog.show(me, "警告提示", TipDialog.TYPE.WARNING);
+TipDialog.show(MainActivity.this, "警告提示", TipDialog.TYPE.WARNING);
 ```
 
 TipDialog 自带三种类型的提示图标（TipDialog.TYPE），可通过参数设置指定：
@@ -207,12 +207,12 @@ TipDialog.TYPE.ERROR                                    //错误叉提示图
 
 也可以通过如下代码设置自定义的图片：
 ```
-TipDialog.show(me, "警告提示", R.mipmap.img_tip);        //入参自定义图片资源文件
+TipDialog.show(MainActivity.this, "警告提示", R.mipmap.img_tip);        //入参自定义图片资源文件
 ```
 
 额外的，可以通过以下语句设置 TipDialog 自动关闭的时长（单位：毫秒）：
 ```
-TipDialog.show(me, "成功！", TipDialog.TYPE.SUCCESS)
+TipDialog.show(MainActivity.this, "成功！", TipDialog.TYPE.SUCCESS)
         .setTipTime(5000);
 ```
 
@@ -224,7 +224,7 @@ TipDialog.show(me, "成功！", TipDialog.TYPE.SUCCESS)
 
 另外注意 WaitDialog 和 TipDialog 的主题和全局主题（DialogSettings.theme）是相反的，即对话框处于亮色模式时等待和提示对话框是暗色模式的，可以通过以下代码自定义：
 ```
-WaitDialog.show(me, null)
+WaitDialog.show(MainActivity.this, null)
         .setTheme(DialogSettings.THEME.LIGHT);      //强制指定为亮色模式
 ```
 
@@ -235,7 +235,7 @@ WaitDialog.show(me, null)
 
 使用以下代码构建底部菜单：
 ```
-BottomMenu.show(me, new String[]{"菜单1", "菜单2", "菜单3"}, new OnMenuItemClickListener() {
+BottomMenu.show(MainActivity.this, new String[]{"菜单1", "菜单2", "菜单3"}, new OnMenuItemClickListener() {
     @Override
     public void onClick(String text, int index) {
         //返回参数 text 即菜单名称，index 即菜单索引
@@ -247,7 +247,7 @@ BottomMenu 可以通过 String[] 集合创建，也可以通过 List<String> 创
 
 要为底部菜单加上标题，可以使用一下语句：
 ```
-BottomMenu.show(me, new String[]{"菜单1", "菜单2", "菜单3"}, new OnMenuItemClickListener() {
+BottomMenu.show(MainActivity.this, new String[]{"菜单1", "菜单2", "菜单3"}, new OnMenuItemClickListener() {
     @Override
     public void onClick(String text, int index) {
         log("点击了：" + text);
@@ -265,15 +265,15 @@ BottomMenu.show(me, new String[]{"菜单1", "菜单2", "菜单3"}, new OnMenuIte
 
 使用以下代码快速构建通知：
 ```
-Notification.show(me, "提示", "提示信息");
+Notification.show(MainActivity.this, "提示", "提示信息");
 ```
 
 需要加入图标与点击、关闭事件：
 ```
-Notification.show(me, "提示", "提示信息", R.mipmap.ico_wechat).setOnNotificationClickListener(new OnNotificationClickListener() {
+Notification.show(MainActivity.this, "提示", "提示信息", R.mipmap.ico_wechat).setOnNotificationClickListener(new OnNotificationClickListener() {
     @Override
     public void onClick() {
-        MessageDialog.show(me, "提示", "点击了消息");
+        MessageDialog.show(MainActivity.this, "提示", "点击了消息");
     }
 }).setOnDismissListener(new OnDismissListener() {
     @Override
@@ -289,7 +289,7 @@ Notification.show(me, "提示", "提示信息", R.mipmap.ico_wechat).setOnNotifi
 对于任意一个对话框组件，Kongzue Dialog V3 提供了自定义布局功能，您可以使用一下代码来插入自定义布局：
 ```
 //对于未实例化的布局：
-MessageDialog.show(me, "提示", "这个窗口附带自定义布局", "知道了")
+MessageDialog.show(MainActivity.this, "提示", "这个窗口附带自定义布局", "知道了")
         .setCustomView(R.layout.layout_custom, new MessageDialog.OnBindView() {
             @Override
             public void onBind(MessageDialog dialog, View v) {
@@ -305,7 +305,7 @@ MessageDialog.show(me, "提示", "这个窗口附带自定义布局", "知道了
         
 //对于已实例化的布局：
 View customView;
-MessageDialog.show(me, "提示", "这个窗口附带自定义布局", "知道了")
+MessageDialog.show(MainActivity.this, "提示", "这个窗口附带自定义布局", "知道了")
         .setCustomView(customView);
 ```
 
@@ -319,7 +319,7 @@ Kongzue Dialog V3 提供了完全自定义对话框方便快速实现特殊效�
 使用以下代码创建自定义对话框：
 ```
 //对于未实例化的布局：
-CustomDialog.show(me, R.layout.layout_custom_dialog, new CustomDialog.OnBindView() {
+CustomDialog.show(MainActivity.this, R.layout.layout_custom_dialog, new CustomDialog.OnBindView() {
     @Override
     public void onBind(final CustomDialog dialog, View v) {
         ImageView btnOk = v.findViewById(R.id.btn_ok);
@@ -335,7 +335,7 @@ CustomDialog.show(me, R.layout.layout_custom_dialog, new CustomDialog.OnBindView
 
 //对于已实例化的布局：
 View customView;
-CustomDialog.show(me, customView, new CustomDialog.OnBindView() {
+CustomDialog.show(MainActivity.this, customView, new CustomDialog.OnBindView() {
     @Override
     public void onBind(final CustomDialog dialog, View v) {
         ImageView btnOk = v.findViewById(R.id.btn_ok);
