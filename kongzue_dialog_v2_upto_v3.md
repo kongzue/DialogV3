@@ -4,7 +4,7 @@ Kongzue Dialog V3 重写了全部代码，且尽可能与 V2 版本的使用习�
 
 ## 为什么要升级到 V3
 
-Kongzue Dialog V2 代码提交于 2017 年 6 月 1 日，当时采用的是标准的 AlertDialog 作为 Dialog 实现主体，因原生 AlertDialog 构建复杂同时修改样式不够灵活，因此我编写了 Kongzue Dialog V2 目的是快速构建，同时提供更为丰富的功能和能够轻松完成定置化需求，而 AlertDialog 一直以来存在不少问题，诸如当其依赖的 Activity 被先于 AlertDialog 关闭时会发生 WindowLeaked 异常，该异常表示 AlertDialog 必须先于 Activity 关闭，为解决这些问题，V2 版本在升级过程中修改更换使用了 DialogFragment，而为保证快速完成更换，修改的方式仅仅是将创建好的 AlertDialog 交给 DialogFragment 来处理事务，因此整个框架越发臃肿，这是升级 V3 版本的主要原因。
+Kongzue Dialog V2 代码最早提交于 2017 年 6 月 1 日，当时采用的是标准的 AlertDialog 作为 Dialog 实现主体，因原生 AlertDialog 构建复杂同时修改样式不够灵活，因此我编写了 Kongzue Dialog V2 目的是快速构建，同时提供更为丰富的功能和能够轻松完成定置化需求，而 AlertDialog 一直以来存在不少问题，诸如当其依赖的 Activity 被先于 AlertDialog 关闭时会发生 WindowLeaked 异常，该异常表示 AlertDialog 必须先于 Activity 关闭，为解决这些问题，V2 版本在升级过程中修改更换使用了 DialogFragment，而为保证快速完成更换，修改的方式仅仅是将创建好的 AlertDialog 交给 DialogFragment 来处理事务，因此整个框架越发臃肿，这是升级 V3 版本的主要原因。
 
 其次 V2 版本提供的很多方法在累计 160+ 次更新迭代的过程中并没有做到完美，产生了很多冗余的问题，因此我抽时间重新整理了所有代码，并构建了 Kongzue Dialog V3 版本。
 
