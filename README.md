@@ -376,9 +376,19 @@ CustomDialog.show(MainActivity.this, customView, new CustomDialog.OnBindView() {
 ```
 
 ## 一些建议
-由于采用了模态化的对话框展示模式、等待提示框延时关闭以及事件重绑定等技术，可能会被某些检测软件定性为“内存泄漏”的问题，但实际并不会引发任何崩溃和错误，如有不放心可以在您的程序退出时通过以下语句彻底清空所有 Kongzue Dialog V3 使用的内存句柄：
+由于采用了模态化的对话框展示模式、等待提示框延时关闭以及事件重绑定等技术，可能会被某些 BUG 检测软件定性为“内存泄漏”的问题，但实际并不会引发任何崩溃和错误，如有不放心可以在您的程序退出时通过以下语句彻底清空所有 Kongzue Dialog V3 使用的内存句柄：
 ```
 BaseDialog.unload();
+```
+
+## 混淆
+为避免不必要的问题，可以将以下代码加入 proguard-rules.pro 文件中。
+```
+-keep class com.kongzue.dialog.** { *; }
+-dontwarn com.kongzue.dialog.**
+
+# 额外的，建议将 android.view 也列入 keep 范围：
+-keep class android.view.** { *; }
 ```
 
 ## 开源协议
@@ -400,4 +410,4 @@ limitations under the License.
 
 ## 更新日志：
 
-内测阶段。
+测试阶段。
