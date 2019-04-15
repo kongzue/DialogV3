@@ -105,6 +105,35 @@ public class TipDialog extends BaseDialog {
         }
     }
     
+    public static TipDialog showWait(AppCompatActivity context, int messageResId) {
+        synchronized (TipDialog.class) {
+            TipDialog waitDialog = build(context);
+            
+            waitDialogTemp.onDismissListener = new OnDismissListener() {
+                @Override
+                public void onDismiss() {
+                    if (waitDialogTemp.dismissListener != null)
+                        waitDialogTemp.dismissListener.onDismiss();
+                    waitDialogTemp = null;
+                }
+            };
+            
+            if (waitDialog == null) {
+                waitDialogTemp.setTip(null);
+                waitDialogTemp.setMessage(context.getString(messageResId));
+                if (waitDialogTemp.cancelTimer != null) waitDialogTemp.cancelTimer.cancel();
+                return waitDialogTemp;
+            } else {
+                waitDialog.message = context.getString(messageResId);
+                waitDialog.type = null;
+                waitDialog.tipImage = null;
+                if (waitDialog.cancelTimer != null) waitDialog.cancelTimer.cancel();
+                waitDialog.showDialog();
+                return waitDialog;
+            }
+        }
+    }
+    
     public static TipDialog show(AppCompatActivity context, String message, TYPE type) {
         synchronized (TipDialog.class) {
             TipDialog waitDialog = build(context);
@@ -133,7 +162,11 @@ public class TipDialog extends BaseDialog {
         }
     }
     
-    public static TipDialog show(AppCompatActivity context, String message, int resId) {
+    public static TipDialog show(AppCompatActivity context, int messageResId, TYPE type) {
+        return show(context, context.getString(messageResId), type);
+    }
+    
+    public static TipDialog show(AppCompatActivity context, String message, int icoResId) {
         synchronized (TipDialog.class) {
             TipDialog waitDialog = build(context);
             
@@ -147,18 +180,22 @@ public class TipDialog extends BaseDialog {
             };
             
             if (waitDialog == null) {
-                waitDialogTemp.setTip(resId);
+                waitDialogTemp.setTip(icoResId);
                 waitDialogTemp.setMessage(message);
                 waitDialogTemp.autoDismiss();
                 return waitDialogTemp;
             } else {
                 waitDialog.message = message;
-                waitDialog.setTip(resId);
+                waitDialog.setTip(icoResId);
                 waitDialog.showDialog();
                 waitDialog.autoDismiss();
                 return waitDialog;
             }
         }
+    }
+    
+    public static TipDialog show(AppCompatActivity context, int messageResId, int icoResId) {
+        return show(context, context.getString(messageResId), icoResId);
     }
     
     protected void showDialog() {
@@ -281,9 +318,9 @@ public class TipDialog extends BaseDialog {
                 boxBody.setBackgroundResource(bkgResId);
             }
             
-            if (isNull(message)){
+            if (isNull(message)) {
                 txtInfo.setVisibility(View.GONE);
-            }else{
+            } else {
                 txtInfo.setVisibility(View.VISIBLE);
                 txtInfo.setText(message);
             }
@@ -322,8 +359,16 @@ public class TipDialog extends BaseDialog {
     }
     
     public TipDialog setMessage(String message) {
-        log("启动等待对话框 -> " + message);
         this.message = message;
+        log("启动等待对话框 -> " + message);
+        if (txtInfo != null) txtInfo.setText(message);
+        refreshView();
+        return this;
+    }
+    
+    public TipDialog setMessage(int messageResId) {
+        this.message = context.getString(messageResId);
+        log("启动等待对话框 -> " + message);
         if (txtInfo != null) txtInfo.setText(message);
         refreshView();
         return this;
@@ -362,9 +407,9 @@ public class TipDialog extends BaseDialog {
     }
     
     public TipDialog setTheme(DialogSettings.THEME theme) {
-        if (theme== DialogSettings.THEME.LIGHT){
+        if (theme == DialogSettings.THEME.LIGHT) {
             this.theme = DialogSettings.THEME.DARK;
-        }else{
+        } else {
             this.theme = DialogSettings.THEME.LIGHT;
         }
         refreshView();

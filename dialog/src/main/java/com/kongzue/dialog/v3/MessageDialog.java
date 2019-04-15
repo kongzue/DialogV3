@@ -108,6 +108,17 @@ public class MessageDialog extends BaseDialog {
         }
     }
     
+    public static MessageDialog show(@NonNull AppCompatActivity context, int titleResId, int messageResId) {
+        synchronized (TipDialog.class) {
+            MessageDialog messageDialog = show(context,
+                                               context.getString(titleResId),
+                                               context.getString(messageResId),
+                                               null, null, null
+            );
+            return messageDialog;
+        }
+    }
+    
     public static MessageDialog show(@NonNull AppCompatActivity context, String title, String message, String okButton) {
         synchronized (TipDialog.class) {
             MessageDialog messageDialog = show(context, title, message, okButton, null, null);
@@ -115,9 +126,35 @@ public class MessageDialog extends BaseDialog {
         }
     }
     
+    public static MessageDialog show(@NonNull AppCompatActivity context, int titleResId, int messageResId, int okButtonResId) {
+        synchronized (TipDialog.class) {
+            MessageDialog messageDialog = show(context,
+                                               context.getString(titleResId),
+                                               context.getString(messageResId),
+                                               context.getString(okButtonResId)
+                    , null, null
+            );
+            return messageDialog;
+        }
+    }
+    
     public static MessageDialog show(@NonNull AppCompatActivity context, String title, String message, String okButton, String cancelButton) {
         synchronized (TipDialog.class) {
             MessageDialog messageDialog = show(context, title, message, okButton, cancelButton, null);
+            return messageDialog;
+        }
+    }
+    
+    public static MessageDialog show(@NonNull AppCompatActivity context, int titleResId, int messageResId, int okButtonResId, int cancelButtonResId) {
+        synchronized (TipDialog.class) {
+            MessageDialog messageDialog = show(
+                    context,
+                    context.getString(titleResId),
+                    context.getString(messageResId),
+                    context.getString(okButtonResId),
+                    context.getString(cancelButtonResId),
+                    null
+            );
             return messageDialog;
         }
     }
@@ -133,6 +170,20 @@ public class MessageDialog extends BaseDialog {
             messageDialog.otherButton = otherButton;
             
             messageDialog.showDialog();
+            return messageDialog;
+        }
+    }
+    
+    public static MessageDialog show(@NonNull AppCompatActivity context, int titleResId, int messageResId, int okButtonResId, int cancelButtonResId, int otherButtonResId) {
+        synchronized (TipDialog.class) {
+            MessageDialog messageDialog = show(
+                    context,
+                    context.getString(titleResId),
+                    context.getString(messageResId),
+                    context.getString(okButtonResId),
+                    context.getString(cancelButtonResId),
+                    context.getString(otherButtonResId)
+            );
             return messageDialog;
         }
     }
@@ -518,12 +569,22 @@ public class MessageDialog extends BaseDialog {
         return this;
     }
     
+    public MessageDialog setTitle(int titleResId) {
+        this.title = context.getString(titleResId);
+        return this;
+    }
+    
     public String getMessage() {
         return message;
     }
     
     public MessageDialog setMessage(String content) {
         this.message = content;
+        return this;
+    }
+    
+    public MessageDialog setMessage(int contentResId) {
+        this.message = context.getString(contentResId);
         return this;
     }
     
@@ -537,8 +598,24 @@ public class MessageDialog extends BaseDialog {
         return this;
     }
     
+    public MessageDialog setOkButton(int okButtonResId) {
+        setOkButton(context.getString(okButtonResId));
+        return this;
+    }
+    
     public MessageDialog setOkButton(String okButton, OnDialogButtonClickListener onOkButtonClickListener) {
         this.okButton = okButton;
+        this.onOkButtonClickListener = onOkButtonClickListener;
+        refreshView();
+        return this;
+    }
+    
+    public MessageDialog setOkButton(int okButtonResId, OnDialogButtonClickListener onOkButtonClickListener) {
+        setOkButton(context.getString(okButtonResId), onOkButtonClickListener);
+        return this;
+    }
+    
+    public MessageDialog setOkButton(OnDialogButtonClickListener onOkButtonClickListener) {
         this.onOkButtonClickListener = onOkButtonClickListener;
         refreshView();
         return this;
@@ -554,8 +631,24 @@ public class MessageDialog extends BaseDialog {
         return this;
     }
     
+    public MessageDialog setCancelButton(int cancelButtonResId) {
+        setCancelButton(context.getString(cancelButtonResId));
+        return this;
+    }
+    
     public MessageDialog setCancelButton(String cancelButton, OnDialogButtonClickListener onCancelButtonClickListener) {
         this.cancelButton = cancelButton;
+        this.onCancelButtonClickListener = onCancelButtonClickListener;
+        refreshView();
+        return this;
+    }
+    
+    public MessageDialog setCancelButton(int cancelButtonResId, OnDialogButtonClickListener onCancelButtonClickListener) {
+        setCancelButton(context.getString(cancelButtonResId), onCancelButtonClickListener);
+        return this;
+    }
+    
+    public MessageDialog setCancelButton(OnDialogButtonClickListener onCancelButtonClickListener) {
         this.onCancelButtonClickListener = onCancelButtonClickListener;
         refreshView();
         return this;
@@ -571,8 +664,24 @@ public class MessageDialog extends BaseDialog {
         return this;
     }
     
+    public MessageDialog setOtherButton(int otherButtonResId) {
+        setOtherButton(context.getString(otherButtonResId));
+        return this;
+    }
+    
     public MessageDialog setOtherButton(String otherButton, OnDialogButtonClickListener onOtherButtonClickListener) {
         this.otherButton = otherButton;
+        this.onOtherButtonClickListener = onOtherButtonClickListener;
+        refreshView();
+        return this;
+    }
+    
+    public MessageDialog setOtherButton(int otherButtonResId, OnDialogButtonClickListener onOtherButtonClickListener) {
+        setOtherButton(context.getString(otherButtonResId), onOtherButtonClickListener);
+        return this;
+    }
+    
+    public MessageDialog setOtherButton(OnDialogButtonClickListener onOtherButtonClickListener) {
         this.onOtherButtonClickListener = onOtherButtonClickListener;
         refreshView();
         return this;
@@ -648,7 +757,7 @@ public class MessageDialog extends BaseDialog {
         return buttonOrientation;
     }
     
-    public MessageDialog setButtonOrientation(@LinearLayoutCompat.OrientationMode int buttonOrientation) {
+    public MessageDialog setButtonOrientation(int buttonOrientation) {
         this.buttonOrientation = buttonOrientation;
         refreshView();
         return this;

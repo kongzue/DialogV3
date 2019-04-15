@@ -17,6 +17,10 @@ public class WaitDialog extends TipDialog {
     }
     
     public static TipDialog show(AppCompatActivity context, String message) {
-        return TipDialog.showWait(context,message);
+        return TipDialog.showWait(context, message);
+    }
+    
+    public static TipDialog show(AppCompatActivity context, int messageResId) {
+        return TipDialog.showWait(context, messageResId);
     }
 }

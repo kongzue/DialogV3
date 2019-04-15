@@ -84,10 +84,23 @@ public class Notification {
         }
     }
     
+    public static Notification build(Context context, int messageResId) {
+        synchronized (Notification.class) {
+            Notification notification = new Notification();
+            notification.context = context;
+            notification.message = context.getString(messageResId);
+            return notification;
+        }
+    }
+    
     public static Notification show(Context context, String message) {
         Notification notification = build(context, message);
         notification.showNotification();
         return notification;
+    }
+    
+    public static Notification show(Context context, int messageResId) {
+        return show(context, context.getString(messageResId));
     }
     
     public static Notification show(Context context, String message, DURATION_TIME durationTime) {
@@ -97,11 +110,19 @@ public class Notification {
         return notification;
     }
     
+    public static Notification show(Context context, int messageResId, DURATION_TIME durationTime) {
+        return show(context, context.getString(messageResId), durationTime);
+    }
+    
     public static Notification show(Context context, String message, DialogSettings.STYLE style) {
         Notification notification = build(context, message);
         notification.style = style;
         notification.showNotification();
         return notification;
+    }
+    
+    public static Notification show(Context context, int messageResId, DialogSettings.STYLE style) {
+        return show(context, context.getString(messageResId), style);
     }
     
     public static Notification show(Context context, String message, DialogSettings.STYLE style, DURATION_TIME durationTime) {
@@ -112,11 +133,19 @@ public class Notification {
         return notification;
     }
     
+    public static Notification show(Context context, int messageResId, DialogSettings.STYLE style, DURATION_TIME durationTime) {
+        return show(context, context.getString(messageResId), style, durationTime);
+    }
+    
     public static Notification show(Context context, String title, String message) {
         Notification notification = build(context, message);
         notification.title = title;
         notification.showNotification();
         return notification;
+    }
+    
+    public static Notification show(Context context, int titleResId, int messageResId) {
+        return show(context, context.getString(titleResId), context.getString(messageResId));
     }
     
     public static Notification show(Context context, String title, String message, DURATION_TIME durationTime) {
@@ -127,12 +156,20 @@ public class Notification {
         return notification;
     }
     
+    public static Notification show(Context context, int titleResId, int messageResId, DURATION_TIME durationTime) {
+        return show(context, context.getString(titleResId), context.getString(messageResId), durationTime);
+    }
+    
     public static Notification show(Context context, String title, String message, DialogSettings.STYLE style) {
         Notification notification = build(context, message);
         notification.title = title;
         notification.style = style;
         notification.showNotification();
         return notification;
+    }
+    
+    public static Notification show(Context context, int titleResId, int messageResId, DialogSettings.STYLE style) {
+        return show(context, context.getString(titleResId), context.getString(messageResId), style);
     }
     
     public static Notification show(Context context, String title, String message, DialogSettings.STYLE style, DURATION_TIME durationTime) {
@@ -144,12 +181,20 @@ public class Notification {
         return notification;
     }
     
+    public static Notification show(Context context, int titleResId, int messageResId, DialogSettings.STYLE style, DURATION_TIME durationTime) {
+        return show(context, context.getString(titleResId), context.getString(messageResId), style, durationTime);
+    }
+    
     public static Notification show(Context context, String title, String message, int iconResId) {
         Notification notification = build(context, message);
         notification.title = title;
         notification.iconResId = iconResId;
         notification.showNotification();
         return notification;
+    }
+    
+    public static Notification show(Context context, int titleResId, int messageResId, int iconResId) {
+        return show(context, context.getString(titleResId), context.getString(messageResId), iconResId);
     }
     
     public static Notification show(Context context, String title, String message, int iconResId, DURATION_TIME durationTime) {
@@ -161,6 +206,10 @@ public class Notification {
         return notification;
     }
     
+    public static Notification show(Context context, int titleResId, int messageResId, int iconResId, DURATION_TIME durationTime) {
+        return show(context, context.getString(titleResId), context.getString(messageResId), iconResId, durationTime);
+    }
+    
     public static Notification show(Context context, String title, String message, int iconResId, DialogSettings.STYLE style) {
         Notification notification = build(context, message);
         notification.title = title;
@@ -168,6 +217,10 @@ public class Notification {
         notification.style = style;
         notification.showNotification();
         return notification;
+    }
+    
+    public static Notification show(Context context, int titleResId, int messageResId, int iconResId, DialogSettings.STYLE style) {
+        return show(context, context.getString(titleResId), context.getString(messageResId), iconResId, style);
     }
     
     public static Notification show(Context context, String title, String message, int iconResId, DialogSettings.STYLE style, DURATION_TIME durationTime) {
@@ -178,6 +231,10 @@ public class Notification {
         notification.style = style;
         notification.showNotification();
         return notification;
+    }
+    
+    public static Notification show(Context context, int titleResId, int messageResId, int iconResId, DialogSettings.STYLE style, DURATION_TIME durationTime) {
+        return show(context, context.getString(titleResId), context.getString(messageResId), iconResId, style, durationTime);
     }
     
     private boolean isShow;
@@ -684,12 +741,24 @@ public class Notification {
         return this;
     }
     
+    public Notification setTitle(int titleResId) {
+        this.title = context.getString(titleResId);
+        refreshView();
+        return this;
+    }
+    
     public String getMessage() {
         return message;
     }
     
     public Notification setMessage(String message) {
         this.message = message;
+        refreshView();
+        return this;
+    }
+    
+    public Notification setMessage(int messageResId) {
+        this.message = context.getString(messageResId);
         refreshView();
         return this;
     }

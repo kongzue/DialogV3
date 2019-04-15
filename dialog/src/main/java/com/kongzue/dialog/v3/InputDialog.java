@@ -78,6 +78,17 @@ public class InputDialog extends MessageDialog {
         }
     }
     
+    public static InputDialog show(@NonNull AppCompatActivity context, int titleResId, int messageResId) {
+        synchronized (TipDialog.class) {
+            InputDialog inputDialog = show(context,
+                                           context.getString(titleResId),
+                                           context.getString(messageResId),
+                                           null, null, null
+            );
+            return inputDialog;
+        }
+    }
+    
     public static InputDialog show(@NonNull AppCompatActivity context, String title, String message, String okButton) {
         synchronized (TipDialog.class) {
             InputDialog inputDialog = show(context, title, message, okButton, null, null);
@@ -85,9 +96,35 @@ public class InputDialog extends MessageDialog {
         }
     }
     
+    public static InputDialog show(@NonNull AppCompatActivity context, int titleResId, int messageResId, int okButtonResId) {
+        synchronized (TipDialog.class) {
+            InputDialog inputDialog = show(context,
+                                           context.getString(titleResId),
+                                           context.getString(messageResId),
+                                           context.getString(okButtonResId),
+                                           null, null
+            );
+            return inputDialog;
+        }
+    }
+    
     public static InputDialog show(@NonNull AppCompatActivity context, String title, String message, String okButton, String cancelButton) {
         synchronized (TipDialog.class) {
             InputDialog inputDialog = show(context, title, message, okButton, cancelButton, null);
+            return inputDialog;
+        }
+    }
+    
+    public static InputDialog show(@NonNull AppCompatActivity context, int titleResId, int messageResId, int okButtonResId, int cancelButtonResId) {
+        synchronized (TipDialog.class) {
+            InputDialog inputDialog = show(
+                    context,
+                    context.getString(titleResId),
+                    context.getString(messageResId),
+                    context.getString(okButtonResId),
+                    context.getString(cancelButtonResId),
+                    null
+            );
             return inputDialog;
         }
     }
@@ -103,6 +140,20 @@ public class InputDialog extends MessageDialog {
             inputDialog.otherButton = otherButton;
             
             inputDialog.showDialog();
+            return inputDialog;
+        }
+    }
+    
+    public static InputDialog show(@NonNull AppCompatActivity context, int titleResId, int messageResId, int okButtonResId, int cancelButtonResId, int otherButtonResId) {
+        synchronized (TipDialog.class) {
+            InputDialog inputDialog = show(
+                    context,
+                    context.getString(titleResId),
+                    context.getString(messageResId),
+                    context.getString(okButtonResId),
+                    context.getString(cancelButtonResId),
+                    context.getString(otherButtonResId)
+            );
             return inputDialog;
         }
     }
@@ -328,12 +379,22 @@ public class InputDialog extends MessageDialog {
         return this;
     }
     
+    public InputDialog setTitle(int titleResId) {
+        this.title = context.getString(titleResId);
+        return this;
+    }
+    
     public String getMessage() {
         return message;
     }
     
     public InputDialog setMessage(String content) {
         this.message = content;
+        return this;
+    }
+    
+    public InputDialog setMessage(int contentResId) {
+        this.message = context.getString(contentResId);
         return this;
     }
     
@@ -347,8 +408,24 @@ public class InputDialog extends MessageDialog {
         return this;
     }
     
+    public InputDialog setOkButton(int okButtonResId) {
+        setOkButton(context.getString(okButtonResId));
+        return this;
+    }
+    
     public InputDialog setOkButton(String okButton, OnInputDialogButtonClickListener onOkButtonClickListener) {
         this.okButton = okButton;
+        this.onOkButtonClickListener = onOkButtonClickListener;
+        refreshView();
+        return this;
+    }
+    
+    public InputDialog setOkButton(int okButtonResId, OnInputDialogButtonClickListener onOkButtonClickListener) {
+        setOkButton(context.getString(okButtonResId), onOkButtonClickListener);
+        return this;
+    }
+    
+    public InputDialog setOkButton(OnInputDialogButtonClickListener onOkButtonClickListener) {
         this.onOkButtonClickListener = onOkButtonClickListener;
         refreshView();
         return this;
@@ -364,8 +441,24 @@ public class InputDialog extends MessageDialog {
         return this;
     }
     
+    public InputDialog setCancelButton(int cancelButtonResId) {
+        setCancelButton(context.getString(cancelButtonResId));
+        return this;
+    }
+    
     public InputDialog setCancelButton(String cancelButton, OnInputDialogButtonClickListener onCancelButtonClickListener) {
         this.cancelButton = cancelButton;
+        this.onCancelButtonClickListener = onCancelButtonClickListener;
+        refreshView();
+        return this;
+    }
+    
+    public InputDialog setCancelButton(int cancelButtonResId, OnInputDialogButtonClickListener onCancelButtonClickListener) {
+        setCancelButton(context.getString(cancelButtonResId), onCancelButtonClickListener);
+        return this;
+    }
+    
+    public InputDialog setCancelButton(OnInputDialogButtonClickListener onCancelButtonClickListener) {
         this.onCancelButtonClickListener = onCancelButtonClickListener;
         refreshView();
         return this;
@@ -381,8 +474,25 @@ public class InputDialog extends MessageDialog {
         return this;
     }
     
+    public InputDialog setOtherButton(int otherButtonResId) {
+        setCancelButton(context.getString(otherButtonResId));
+        refreshView();
+        return this;
+    }
+    
     public InputDialog setOtherButton(String otherButton, OnInputDialogButtonClickListener onOtherButtonClickListener) {
         this.otherButton = otherButton;
+        this.onOtherButtonClickListener = onOtherButtonClickListener;
+        refreshView();
+        return this;
+    }
+    
+    public InputDialog setOtherButton(int otherButtonResId, OnInputDialogButtonClickListener onOtherButtonClickListener) {
+        setOtherButton(context.getString(otherButtonResId), onOtherButtonClickListener);
+        return this;
+    }
+    
+    public InputDialog setOtherButton(OnInputDialogButtonClickListener onOtherButtonClickListener) {
         this.onOtherButtonClickListener = onOtherButtonClickListener;
         refreshView();
         return this;
@@ -476,7 +586,7 @@ public class InputDialog extends MessageDialog {
         return buttonOrientation;
     }
     
-    public InputDialog setButtonOrientation(@LinearLayoutCompat.OrientationMode int buttonOrientation) {
+    public InputDialog setButtonOrientation(int buttonOrientation) {
         this.buttonOrientation = buttonOrientation;
         refreshView();
         return this;
@@ -630,12 +740,24 @@ public class InputDialog extends MessageDialog {
         return this;
     }
     
+    public InputDialog setInputText(int inputTextResId) {
+        this.inputText = context.getString(inputTextResId);
+        refreshView();
+        return this;
+    }
+    
     public String getHintText() {
         return hintText;
     }
     
     public InputDialog setHintText(String hintText) {
         this.hintText = hintText;
+        refreshView();
+        return this;
+    }
+    
+    public InputDialog setHintText(int hintTextResId) {
+        this.hintText = context.getString(hintTextResId);
         refreshView();
         return this;
     }

@@ -438,12 +438,24 @@ public class BottomMenu extends BaseDialog {
         return this;
     }
     
+    public BottomMenu setTitle(int titleResId) {
+        this.title = context.getString(titleResId);
+        refreshView();
+        return this;
+    }
+    
     public String getCancelButtonText() {
         return cancelButtonText;
     }
     
     public BottomMenu setCancelButtonText(String cancelButtonText) {
         this.cancelButtonText = cancelButtonText;
+        refreshView();
+        return this;
+    }
+    
+    public BottomMenu setCancelButtonText(int cancelButtonTextResId) {
+        this.cancelButtonText = context.getString(cancelButtonTextResId);
         refreshView();
         return this;
     }
