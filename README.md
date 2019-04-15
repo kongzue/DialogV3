@@ -39,8 +39,40 @@ Kongzue Dialog V3 依然会像第二代一样提供多种主题风格选择，�
 
 我们的组件也会提供许许多多的接口供您自定义对话框的每一点细节，方便而快捷，迅速构建您的程序。
 
-#### 4，模态化
+#### 4，模态化&快速创建
 Kongzue Dialog V3 默认即支持模态化窗口模式，即即便从代码一次执行显示多个对话框，实际也会再上一个对话框消失后再显示下一个，以避免对话框叠加造成的混乱情况发生。
+
+另外 Kongzue Dialog 不强制您必须使用 Builder 等方式创建，且为了避免额外的代码量，所有组件均提供了可灵活使用的 show(...) 构造方法，因此只需要输入组件名称，按一下 “.” 按键，即可快速根据提示创建出一个对话框。
+
+下边是 AlertDialog 和 Kongzue Dialog V3 在创建一个典型对话框的代码对比：
+
+使用 AlertDialog：
+```
+android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);         //需要先创建Builder
+builder.setTitle(R.string.error_title);
+builder.setCancelable(false);                                                                                                   //每次都需要指定的设置
+builder.setMessage(R.string.error_not_install_tip);
+builder.setPositiveButton(me.getString(R.string.dialog_iknow_button), new DialogInterface.OnClickListener() {                  
+    @Override
+    public void onClick(DialogInterface dialogInterface, int i) {
+        //处理确定按钮事务
+    }
+});
+builder.setNegativeButton(me.getString(R.string.cancel), null);
+builder.show();                                                                                                                 //不要忘记.show()
+```
+
+使用 Kongzue Dialog V3：
+```
+MessageDialog.show(me, R.string.error_title, R.string.error_not_install_wechat, R.string.dialog_iknow_button, R.string.cancel)  //一次性完成所有赋值操作
+        .setOkButton(new OnDialogButtonClickListener() {                                                                        //仅需要对需要处理的按钮进行操作
+            @Override
+            public boolean onClick(BaseDialog baseDialog, View v) {
+                //处理确定按钮事务
+                return false;                                                                                                   //可以通过 return 决定点击按钮是否默认自动关闭对话框
+            }
+        });                                                                                                                     //很多设置可通过全局进行设置，不需要每次都指定
+```
 
 ## Demo
 
