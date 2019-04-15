@@ -64,7 +64,7 @@ builder.show();                                                                 
 
 使用 Kongzue Dialog V3：
 ```
-MessageDialog.show(me, R.string.error_title, R.string.error_not_install_tip, R.string.dialog_iknow_button, R.string.cancel)  //一次性完成所有赋值操作
+MessageDialog.show(me, R.string.error_title, R.string.error_not_install_tip, R.string.dialog_iknow_button, R.string.cancel)     //一次性完成所有赋值操作
         .setOkButton(new OnDialogButtonClickListener() {                                                                        //仅需要对需要处理的按钮进行操作
             @Override
             public boolean onClick(BaseDialog baseDialog, View v) {
