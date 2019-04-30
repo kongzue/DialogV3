@@ -30,6 +30,8 @@ import static com.kongzue.dialog.util.DialogSettings.blurAlpha;
  */
 public class TipDialog extends BaseDialog {
     
+    private DialogSettings.THEME tipTheme;
+    
     public enum TYPE {
         WARNING, SUCCESS, ERROR, OTHER
     }
@@ -241,9 +243,9 @@ public class TipDialog extends BaseDialog {
     public void refreshView() {
         if (rootView != null) {
             final int bkgResId, blurFrontColor;
-            //WaitDialog的颜色与主题色相反
-            switch (theme) {
-                case DARK:
+            if (tipTheme == null) tipTheme = DialogSettings.tipTheme;
+            switch (tipTheme) {
+                case LIGHT:
                     bkgResId = R.drawable.rect_light;
                     blurFrontColor = Color.argb(blurAlpha, 255, 255, 255);
                     int darkColor = Color.rgb(0, 0, 0);
@@ -271,7 +273,7 @@ public class TipDialog extends BaseDialog {
                         boxTip.setVisibility(View.GONE);
                     }
                     break;
-                case LIGHT:
+                case DARK:
                     bkgResId = R.drawable.rect_dark;
                     int lightColor = Color.rgb(255, 255, 255);
                     blurFrontColor = Color.argb(blurAlpha, 0, 0, 0);
@@ -330,6 +332,7 @@ public class TipDialog extends BaseDialog {
     @Override
     public void show() {
         showDialog();
+        autoDismiss();
     }
     
     public OnDismissListener getOnDismissListener() {
@@ -407,12 +410,12 @@ public class TipDialog extends BaseDialog {
     }
     
     public TipDialog setTheme(DialogSettings.THEME theme) {
-        if (theme == DialogSettings.THEME.LIGHT) {
-            this.theme = DialogSettings.THEME.DARK;
-        } else {
-            this.theme = DialogSettings.THEME.LIGHT;
-        }
+        tipTheme = theme;
         refreshView();
         return this;
+    }
+    
+    public DialogSettings.THEME getTheme() {
+        return tipTheme;
     }
 }

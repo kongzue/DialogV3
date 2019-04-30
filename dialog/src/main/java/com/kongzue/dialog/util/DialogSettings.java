@@ -25,8 +25,11 @@ public class DialogSettings {
     //全局主题风格
     public static STYLE style = STYLE.STYLE_MATERIAL;
     
-    //全局明暗风格
+    //全局对话框明暗风格
     public static THEME theme = THEME.LIGHT;
+    
+    //全局提示框明暗风格
+    public static THEME tipTheme = THEME.DARK;
     
     //全局标题文字样式
     public static TextInfo titleTextInfo;

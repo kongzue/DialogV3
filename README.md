@@ -2,10 +2,10 @@
 献给要求安卓照着苹果设计稿做开发的产品们（手动滑稽
 
 <a href="https://github.com/kongzue/Dialog/">
-<img src="https://img.shields.io/badge/Kongzue%20Dialog-2.9.9.7-green.svg" alt="Kongzue Dialog">
+<img src="https://img.shields.io/badge/Kongzue%20Dialog-2.9.9.4-green.svg" alt="Kongzue Dialog">
 </a> 
-<a href="https://bintray.com/myzchh/maven/dialog/2.9.9.7/link">
-<img src="https://img.shields.io/badge/Maven-2.9.9.7-blue.svg" alt="Maven">
+<a href="https://bintray.com/myzchh/maven/dialog/2.9.9.4/link">
+<img src="https://img.shields.io/badge/Maven-2.9.9.4-blue.svg" alt="Maven">
 </a> 
 <a href="http://www.apache.org/licenses/LICENSE-2.0">
 <img src="https://img.shields.io/badge/License-Apache%202.0-red.svg" alt="License">
@@ -87,14 +87,14 @@ Maven仓库：
 <dependency>
   <groupId>com.kongzue.dialog_v3</groupId>
   <artifactId>dialog</artifactId>
-  <version>2.9.9.7</version>
+  <version>2.9.9.4</version>
   <type>pom</type>
 </dependency>
 ```
 Gradle：
 在dependencies{}中添加引用：
 ```
-implementation 'com.kongzue.dialog_v3:dialog:2.9.9.7'
+implementation 'com.kongzue.dialog_v3:dialog:2.9.9.4'
 ```
 
 从 Kongzue Dialog V2 升级至 Kongzue Dialog V3，请参考 [Kongzue Dialog V2升级注意事项](kongzue_dialog_v2_upto_v3.md)
@@ -106,7 +106,8 @@ import com.kongzue.dialog.util.DialogSettings;
 
 DialogSettings.isUseBlur = (boolean);               //是否开启模糊效果，默认关闭
 DialogSettings.style = (DialogSettings.STYLE);      //全局主题风格，提供三种可选风格，STYLE_MATERIAL, STYLE_KONGZUE, STYLE_IOS
-DialogSettings.theme = (DialogSettings.THEME);      //全局明暗风格，提供两种可选主题，LIGHT, DARK
+DialogSettings.theme = (DialogSettings.THEME);      //全局对话框明暗风格，提供两种可选主题，LIGHT, DARK
+DialogSettings.tipTheme = (DialogSettings.THEME);   //全局提示框明暗风格，提供两种可选主题，LIGHT, DARK
 DialogSettings.titleTextInfo = (TextInfo);          //全局标题文字样式
 DialogSettings.contentTextInfo = (TextInfo);        //全局正文文字样式
 DialogSettings.buttonTextInfo = (TextInfo);         //全局默认按钮文字样式

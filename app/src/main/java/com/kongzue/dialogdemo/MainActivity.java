@@ -473,9 +473,11 @@ public class MainActivity extends BaseActivity {
                 switch (checkedId) {
                     case R.id.rdo_light:
                         DialogSettings.theme = DialogSettings.THEME.LIGHT;
+                        DialogSettings.tipTheme = DialogSettings.THEME.DARK;
                         break;
                     case R.id.rdo_dark:
                         DialogSettings.theme = DialogSettings.THEME.DARK;
+                        DialogSettings.tipTheme = DialogSettings.THEME.LIGHT;
                         break;
                 }
             }

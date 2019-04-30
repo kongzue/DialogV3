@@ -71,11 +71,11 @@ public abstract class BaseDialog {
     protected OnDismissListener dismissEvent;
     
     public void log(Object o) {
-        if (DialogSettings.DEBUGMODE) Log.i(">>>",  o.toString());
+        if (DialogSettings.DEBUGMODE) Log.i(">>>", o.toString());
     }
     
     public void error(Object o) {
-        if (DialogSettings.DEBUGMODE) Log.e(">>>",  o.toString());
+        if (DialogSettings.DEBUGMODE) Log.e(">>>", o.toString());
     }
     
     public BaseDialog build(BaseDialog baseDialog, int layoutId) {
@@ -151,10 +151,11 @@ public abstract class BaseDialog {
         dialog = new DialogHelper().setLayoutId(baseDialog, layoutId);
         dialog.setStyle(DialogFragment.STYLE_NORMAL, styleId);
         dialog.show(fragmentManager, "kongzueDialog");
-        if (baseDialog instanceof BottomMenu){
+        if (baseDialog instanceof BottomMenu) {
             dialog.setAnim(R.style.bottomMenuAnimStyle);
-        }else{
-            if (style== DialogSettings.STYLE.STYLE_IOS && !(baseDialog instanceof TipDialog)) dialog.setAnim(R.style.iOSDialogAnimStyle);
+        } else {
+            if (style == DialogSettings.STYLE.STYLE_IOS && !(baseDialog instanceof TipDialog))
+                dialog.setAnim(R.style.iOSDialogAnimStyle);
         }
         dialog.setOnDismissListener(dismissEvent);
         
@@ -188,8 +189,13 @@ public abstract class BaseDialog {
         if (messageTextInfo == null) messageTextInfo = DialogSettings.contentTextInfo;
         if (buttonTextInfo == null) buttonTextInfo = DialogSettings.buttonTextInfo;
         if (inputInfo == null) inputInfo = DialogSettings.inputInfo;
-        if (buttonPositiveTextInfo == null)
-            buttonPositiveTextInfo = DialogSettings.buttonPositiveTextInfo;
+        if (buttonPositiveTextInfo == null) {
+            if (DialogSettings.buttonPositiveTextInfo == null) {
+                buttonPositiveTextInfo = buttonTextInfo;
+            } else {
+                buttonPositiveTextInfo = DialogSettings.buttonPositiveTextInfo;
+            }
+        }
     }
     
     protected void useTextInfo(TextView textView, TextInfo textInfo) {

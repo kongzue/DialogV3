@@ -5,7 +5,7 @@
     <color name="dark">#353535</color>
     <color name="black">#000</color>
     <color name="empty">#00000000</color>
-    <color name="waitDialogBackgroundDark">#D9585858</color>
+    <color name="waitDialogBackgroundDark">#f0181818</color>
     <color name="waitDialogBackgroundLight">#E6F4F5F6</color>
     <color name="dialogButtonBlueLight">#DCE9F7</color>
     <color name="dialogButtonBlueLightPress">#C7DFF7</color>

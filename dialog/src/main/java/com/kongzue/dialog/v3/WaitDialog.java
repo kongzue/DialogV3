@@ -23,4 +23,9 @@ public class WaitDialog extends TipDialog {
     public static TipDialog show(AppCompatActivity context, int messageResId) {
         return TipDialog.showWait(context, messageResId);
     }
+    
+    @Override
+    public void show() {
+        showDialog();
+    }
 }
