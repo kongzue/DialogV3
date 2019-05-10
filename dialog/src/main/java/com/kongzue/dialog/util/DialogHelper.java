@@ -1,7 +1,6 @@
 package com.kongzue.dialog.util;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,17 +10,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.Display;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 
-import com.kongzue.dialog.R;
-import com.kongzue.dialog.interfaces.OnDialogShowListener;
+import com.kongzue.dialog.interfaces.OnShowListener;
 import com.kongzue.dialog.interfaces.OnDismissListener;
 
 import java.util.ArrayList;
@@ -37,7 +30,7 @@ import java.util.List;
 public class DialogHelper extends DialogFragment {
     
     private OnDismissListener onDismissListener;
-    private OnDialogShowListener onDialogShowListener;
+    private OnShowListener onShowListener;
     private boolean isRestartDialog = false;
     private AlertDialog materialDialog;
     
@@ -53,13 +46,13 @@ public class DialogHelper extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (layoutId == -1) {
-            if (onDialogShowListener != null) onDialogShowListener.onShow(getDialog());
+            if (onShowListener != null) onShowListener.onShow(getDialog());
             findMyParentAndBindView(null);
             return super.onCreateView(inflater, container, savedInstanceState);
         }
         if (animResId != 0) getDialog().getWindow().setWindowAnimations(animResId);
         rootView = inflater.inflate(layoutId, null);
-        if (onDialogShowListener != null) onDialogShowListener.onShow(getDialog());
+        if (onShowListener != null) onShowListener.onShow(getDialog());
         findMyParentAndBindView(rootView);
         return rootView;
     }
@@ -163,12 +156,12 @@ public class DialogHelper extends DialogFragment {
         this.onDismissListener = onDismissListener;
     }
     
-    public OnDialogShowListener getOnDialogShowListener() {
-        return onDialogShowListener;
+    public OnShowListener getOnShowListener() {
+        return onShowListener;
     }
     
-    public void setOnDialogShowListener(OnDialogShowListener onDialogShowListener) {
-        this.onDialogShowListener = onDialogShowListener;
+    public void setOnShowListener(OnShowListener onShowListener) {
+        this.onShowListener = onShowListener;
     }
     
     @Override
@@ -188,4 +181,5 @@ public class DialogHelper extends DialogFragment {
     public void setAnim(int animResId) {
         this.animResId = animResId;
     }
+    
 }

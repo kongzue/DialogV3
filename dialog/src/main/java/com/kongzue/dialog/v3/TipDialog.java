@@ -1,15 +1,18 @@
 package com.kongzue.dialog.v3;
 
+import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.DrawableRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kongzue.dialog.R;
+import com.kongzue.dialog.interfaces.OnShowListener;
 import com.kongzue.dialog.interfaces.OnDismissListener;
 import com.kongzue.dialog.util.BaseDialog;
 import com.kongzue.dialog.util.DialogSettings;
@@ -326,10 +329,17 @@ public class TipDialog extends BaseDialog {
                 txtInfo.setVisibility(View.VISIBLE);
                 txtInfo.setText(message);
             }
+            
+            if (customView != null) {
+                progress.setVisibility(View.GONE);
+                boxTip.setBackground(null);
+                boxTip.setVisibility(View.VISIBLE);
+                boxTip.addView(customView);
+            }
         }
     }
     
-    protected void setDismissEvent(){
+    protected void setDismissEvent() {
         waitDialogTemp.onDismissListener = new OnDismissListener() {
             @Override
             public void onDismiss() {
@@ -347,6 +357,11 @@ public class TipDialog extends BaseDialog {
         autoDismiss();
     }
     
+    public void showNoAutoDismiss() {
+        showDialog();
+        setDismissEvent();
+    }
+    
     public OnDismissListener getOnDismissListener() {
         return dismissListener == null ? new OnDismissListener() {
             @Override
@@ -358,6 +373,20 @@ public class TipDialog extends BaseDialog {
     
     public TipDialog setOnDismissListener(OnDismissListener onDismissListener) {
         this.dismissListener = onDismissListener;
+        return this;
+    }
+    
+    public OnShowListener getOnShowListener() {
+        return onShowListener == null ? new OnShowListener() {
+            @Override
+            public void onShow(Dialog dialog) {
+            
+            }
+        } : onShowListener;
+    }
+    
+    public TipDialog setOnShowListener(OnShowListener onShowListener) {
+        this.onShowListener = onShowListener;
         return this;
     }
     
@@ -429,5 +458,32 @@ public class TipDialog extends BaseDialog {
     
     public DialogSettings.THEME getTheme() {
         return tipTheme;
+    }
+    
+    public TipDialog setCustomView(View customView) {
+        this.customView = customView;
+        refreshView();
+        return this;
+    }
+    
+    public TipDialog setCustomView(int customViewLayoutId, OnBindView onBindView) {
+        customView = LayoutInflater.from(context).inflate(customViewLayoutId, null);
+        onBindView.onBind(this, customView);
+        refreshView();
+        return this;
+    }
+    
+    public boolean getCancelable() {
+        return cancelable == BOOLEAN.TRUE;
+    }
+    
+    public TipDialog setCancelable(boolean enable) {
+        this.cancelable = enable ? BOOLEAN.TRUE : BOOLEAN.FALSE;
+        if (dialog != null) dialog.setCancelable(cancelable == BOOLEAN.TRUE);
+        return this;
+    }
+    
+    public interface OnBindView {
+        void onBind(TipDialog dialog, View v);
     }
 }

@@ -8,6 +8,6 @@ public interface DialogLifeCycleListener {
 
     void onShow(BaseDialog alertDialog);
 
-    void onDismiss();
+    void onDismiss(BaseDialog alertDialog);
 
 }

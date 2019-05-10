@@ -4,10 +4,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.util.TypedValue;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -25,6 +23,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kongzue.dialog.R;
+import com.kongzue.dialog.interfaces.OnShowListener;
 import com.kongzue.dialog.interfaces.OnDismissListener;
 import com.kongzue.dialog.interfaces.OnMenuItemClickListener;
 import com.kongzue.dialog.util.BaseDialog;
@@ -521,6 +520,20 @@ public class BottomMenu extends BaseDialog {
     
     public BottomMenu setOnDismissListener(OnDismissListener onDismissListener) {
         this.onDismissListener = onDismissListener;
+        return this;
+    }
+    
+    public OnShowListener getOnShowListener() {
+        return onShowListener == null ? new OnShowListener() {
+            @Override
+            public void onShow(Dialog dialog) {
+            
+            }
+        } : onShowListener;
+    }
+    
+    public BottomMenu setOnShowListener(OnShowListener onShowListener) {
+        this.onShowListener = onShowListener;
         return this;
     }
     

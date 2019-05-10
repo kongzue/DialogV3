@@ -98,6 +98,10 @@
         <item name="android:windowExitAnimation">@anim/notification_exit_anim</item>
     </style>
 
+    <style name="BottomDialog" parent="BaseDialog">
+        <item name="android:windowAnimationStyle">@style/bottomMenuAnimStyle</item>
+    </style>
+
     <style name="bottomMenuAnimStyle">
         <item name="android:windowEnterAnimation">@anim/bottom_menu_enter</item>
         <item name="android:windowExitAnimation">@anim/bottom_menu_exit</item>

@@ -9,7 +9,7 @@ import android.app.Dialog;
  * Mail: myzcxhh@live.cn
  * CreateTime: 2019/3/29 22:13
  */
-public interface OnDialogShowListener {
+public interface OnShowListener {
     
     void onShow(Dialog dialog);
     

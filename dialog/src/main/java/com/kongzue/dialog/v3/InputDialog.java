@@ -1,5 +1,6 @@
 package com.kongzue.dialog.v3;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -8,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.kongzue.dialog.R;
 import com.kongzue.dialog.interfaces.DialogLifeCycleListener;
 import com.kongzue.dialog.interfaces.OnDialogButtonClickListener;
+import com.kongzue.dialog.interfaces.OnShowListener;
 import com.kongzue.dialog.interfaces.OnDismissListener;
 import com.kongzue.dialog.interfaces.OnInputDialogButtonClickListener;
 import com.kongzue.dialog.util.BaseDialog;
@@ -593,30 +594,6 @@ public class InputDialog extends MessageDialog {
     }
     
     //其他
-    public DialogLifeCycleListener getDialogLifeCycleListener() {
-        return dialogLifeCycleListener == null ? new DialogLifeCycleListener() {
-            @Override
-            public void onCreate(BaseDialog alertDialog) {
-            
-            }
-            
-            @Override
-            public void onShow(BaseDialog alertDialog) {
-            
-            }
-            
-            @Override
-            public void onDismiss() {
-            
-            }
-        } : dialogLifeCycleListener;
-    }
-    
-    public InputDialog setDialogLifeCycleListener(DialogLifeCycleListener listener) {
-        dialogLifeCycleListener = listener;
-        return this;
-    }
-    
     public OnDismissListener getOnDismissListener() {
         return onDismissListener == null ? new OnDismissListener() {
             @Override
@@ -628,6 +605,20 @@ public class InputDialog extends MessageDialog {
     
     public InputDialog setOnDismissListener(OnDismissListener onDismissListener) {
         this.onDismissListener = onDismissListener;
+        return this;
+    }
+    
+    public OnShowListener getOnShowListener() {
+        return onShowListener == null ? new OnShowListener() {
+            @Override
+            public void onShow(Dialog dialog) {
+            
+            }
+        } : onShowListener;
+    }
+    
+    public InputDialog setOnShowListener(OnShowListener onShowListener) {
+        this.onShowListener = onShowListener;
         return this;
     }
     

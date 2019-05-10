@@ -1,11 +1,14 @@
 package com.kongzue.dialog.v3;
 
+import android.app.Dialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.kongzue.dialog.R;
+import com.kongzue.dialog.interfaces.OnShowListener;
+import com.kongzue.dialog.interfaces.OnDismissListener;
 import com.kongzue.dialog.util.BaseDialog;
 
 /**
@@ -57,7 +60,6 @@ public class CustomDialog extends BaseDialog {
         }
     }
     
-    
     private RelativeLayout boxCustom;
     
     @Override
@@ -83,5 +85,33 @@ public class CustomDialog extends BaseDialog {
     
     public interface OnBindView {
         void onBind(CustomDialog dialog, View v);
+    }
+    
+    public OnDismissListener getOnDismissListener() {
+        return onDismissListener == null ? new OnDismissListener() {
+            @Override
+            public void onDismiss() {
+            
+            }
+        } : onDismissListener;
+    }
+    
+    public CustomDialog setOnDismissListener(OnDismissListener onDismissListener) {
+        this.onDismissListener = onDismissListener;
+        return this;
+    }
+    
+    public OnShowListener getOnShowListener() {
+        return onShowListener == null ? new OnShowListener() {
+            @Override
+            public void onShow(Dialog dialog) {
+            
+            }
+        } : onShowListener;
+    }
+    
+    public CustomDialog setOnShowListener(OnShowListener onShowListener) {
+        this.onShowListener = onShowListener;
+        return this;
     }
 }

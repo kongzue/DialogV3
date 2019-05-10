@@ -2,6 +2,8 @@ package com.kongzue.dialog.util;
 
 import android.graphics.Color;
 
+import com.kongzue.dialog.interfaces.DialogLifeCycleListener;
+
 /**
  * Author: @Kongzue
  * Github: https://github.com/kongzue/
@@ -60,4 +62,10 @@ public class DialogSettings {
     
     //模糊透明度(0~255)
     public static int blurAlpha = 210;
+    
+    //允许自定义系统对话框style，注意设置此功能会导致原对话框风格和动画失效
+    public static int systemDialogStyle;
+    
+    //全局Dialog生命周期监听器
+    public static DialogLifeCycleListener dialogLifeCycleListener;
 }

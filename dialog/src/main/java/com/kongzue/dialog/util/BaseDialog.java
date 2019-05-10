@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.kongzue.dialog.R;
 import com.kongzue.dialog.interfaces.DialogLifeCycleListener;
-import com.kongzue.dialog.interfaces.OnDialogShowListener;
+import com.kongzue.dialog.interfaces.OnShowListener;
 import com.kongzue.dialog.interfaces.OnDismissListener;
 import com.kongzue.dialog.v3.BottomMenu;
 import com.kongzue.dialog.v3.TipDialog;
@@ -51,7 +51,7 @@ public abstract class BaseDialog {
     private BaseDialog baseDialog;
     private int layoutId;
     private int styleId;
-    protected boolean isShow;
+    public boolean isShow;
     protected boolean isAlreadyShown;
     
     protected DialogSettings.STYLE style;
@@ -66,9 +66,9 @@ public abstract class BaseDialog {
     protected int backgroundColor = 0;
     protected View customView;
     
-    protected DialogLifeCycleListener dialogLifeCycleListener;
     protected OnDismissListener onDismissListener;
     protected OnDismissListener dismissEvent;
+    protected OnShowListener onShowListener;
     
     public void log(Object o) {
         if (DialogSettings.DEBUGMODE) Log.i(">>>", o.toString());
@@ -95,6 +95,8 @@ public abstract class BaseDialog {
     }
     
     protected void showDialog(int style) {
+        if (DialogSettings.dialogLifeCycleListener != null)
+            DialogSettings.dialogLifeCycleListener.onCreate(this);
         isAlreadyShown = true;
         styleId = style;
         dismissEvent = new OnDismissListener() {
@@ -104,6 +106,8 @@ public abstract class BaseDialog {
                 dialogList.remove(baseDialog);
                 showNext();
                 if (onDismissListener != null) onDismissListener.onDismiss();
+                if (DialogSettings.dialogLifeCycleListener != null)
+                    DialogSettings.dialogLifeCycleListener.onDismiss(BaseDialog.this);
             }
         };
         dialogList.add(this);
@@ -149,14 +153,24 @@ public abstract class BaseDialog {
         }
         FragmentManager fragmentManager = context.getSupportFragmentManager();
         dialog = new DialogHelper().setLayoutId(baseDialog, layoutId);
+        if (baseDialog instanceof BottomMenu) {
+            styleId = R.style.BottomDialog;
+        }
+        if (DialogSettings.systemDialogStyle != 0) {
+            styleId = DialogSettings.systemDialogStyle;
+        }
         dialog.setStyle(DialogFragment.STYLE_NORMAL, styleId);
         dialog.show(fragmentManager, "kongzueDialog");
-        if (baseDialog instanceof BottomMenu) {
-            dialog.setAnim(R.style.bottomMenuAnimStyle);
-        } else {
-            if (style == DialogSettings.STYLE.STYLE_IOS && !(baseDialog instanceof TipDialog))
-                dialog.setAnim(R.style.iOSDialogAnimStyle);
-        }
+        dialog.setOnShowListener(new OnShowListener() {
+            @Override
+            public void onShow(Dialog dialog) {
+                if (onShowListener != null) onShowListener.onShow(dialog);
+                if (DialogSettings.dialogLifeCycleListener != null)
+                    DialogSettings.dialogLifeCycleListener.onShow(BaseDialog.this);
+            }
+        });
+        if (DialogSettings.systemDialogStyle == 0 && style == DialogSettings.STYLE.STYLE_IOS && !(baseDialog instanceof TipDialog) && !(baseDialog instanceof BottomMenu))
+            dialog.setAnim(R.style.iOSDialogAnimStyle);
         dialog.setOnDismissListener(dismissEvent);
         
         if (baseDialog instanceof TipDialog) {
