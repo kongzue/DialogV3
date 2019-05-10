@@ -104,20 +104,22 @@ implementation 'com.kongzue.dialog_v3:dialog:2.9.8.6'
 ```
 import com.kongzue.dialog.util.DialogSettings;
 
-DialogSettings.isUseBlur = (boolean);               //是否开启模糊效果，默认关闭
-DialogSettings.style = (DialogSettings.STYLE);      //全局主题风格，提供三种可选风格，STYLE_MATERIAL, STYLE_KONGZUE, STYLE_IOS
-DialogSettings.theme = (DialogSettings.THEME);      //全局对话框明暗风格，提供两种可选主题，LIGHT, DARK
-DialogSettings.tipTheme = (DialogSettings.THEME);   //全局提示框明暗风格，提供两种可选主题，LIGHT, DARK
-DialogSettings.titleTextInfo = (TextInfo);          //全局标题文字样式
-DialogSettings.contentTextInfo = (TextInfo);        //全局正文文字样式
-DialogSettings.buttonTextInfo = (TextInfo);         //全局默认按钮文字样式
-DialogSettings.buttonPositiveTextInfo = (TextInfo); //全局焦点按钮文字样式（一般指确定按钮）
-DialogSettings.inputInfo = (InputInfo);             //全局输入框文本样式
-DialogSettings.backgroundColor = (ColorInt);        //全局对话框背景颜色，值0时不生效
-DialogSettings.cancelable = (boolean);              //全局对话框默认是否可以点击外围遮罩区域或返回键关闭，此开关不影响提示框（TipDialog）以及等待框（TipDialog）
-DialogSettings.cancelableTipDialog = (boolean);     //全局提示框及等待框（WaitDialog、TipDialog）默认是否可以关闭
-DialogSettings.DEBUGMODE = (boolean);               //是否允许打印日志
-DialogSettings.blurAlpha = (int);                   //开启模糊后的透明度（0~255）
+DialogSettings.isUseBlur = (boolean);                   //是否开启模糊效果，默认关闭
+DialogSettings.style = (DialogSettings.STYLE);          //全局主题风格，提供三种可选风格，STYLE_MATERIAL, STYLE_KONGZUE, STYLE_IOS
+DialogSettings.theme = (DialogSettings.THEME);          //全局对话框明暗风格，提供两种可选主题，LIGHT, DARK
+DialogSettings.tipTheme = (DialogSettings.THEME);       //全局提示框明暗风格，提供两种可选主题，LIGHT, DARK
+DialogSettings.titleTextInfo = (TextInfo);              //全局标题文字样式
+DialogSettings.contentTextInfo = (TextInfo);            //全局正文文字样式
+DialogSettings.buttonTextInfo = (TextInfo);             //全局默认按钮文字样式
+DialogSettings.buttonPositiveTextInfo = (TextInfo);     //全局焦点按钮文字样式（一般指确定按钮）
+DialogSettings.inputInfo = (InputInfo);                 //全局输入框文本样式
+DialogSettings.backgroundColor = (ColorInt);            //全局对话框背景颜色，值0时不生效
+DialogSettings.cancelable = (boolean);                  //全局对话框默认是否可以点击外围遮罩区域或返回键关闭，此开关不影响提示框（TipDialog）以及等待框（TipDialog）
+DialogSettings.cancelableTipDialog = (boolean);         //全局提示框及等待框（WaitDialog、TipDialog）默认是否可以关闭
+DialogSettings.DEBUGMODE = (boolean);                   //是否允许打印日志
+DialogSettings.blurAlpha = (int);                       //开启模糊后的透明度（0~255）
+DialogSettings.systemDialogStyle = (styleResId);        //自定义系统对话框style，注意设置此功能会导致原对话框风格和动画失效
+DialogSettings.dialogLifeCycleListener = (DialogLifeCycleListener);  //全局Dialog生命周期监听器
 ```
 
 如果需要开启模糊效果，即 DialogSettings.isUseBlur = true; 需要进行额外 renderscript 配置，需要注意的是在部分低配置手机上此功能效率可能存在问题。
