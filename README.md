@@ -370,6 +370,8 @@ ShareDialog.build(me).setItems(itemList).setOnItemClickListener(new ShareDialog.
 }).show();
 ```
 
+额外需要注意，iOS风格模式下，默认会自动对图片进行圆角裁切，使用时只需要直接提供方形图标即可。
+
 ## 定制化
 
 ### 自定义布局
