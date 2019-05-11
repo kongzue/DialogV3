@@ -343,6 +343,33 @@ Notification.show(MainActivity.this, "提示", "提示信息", R.mipmap.ico_wech
 });
 ```
 
+### 分享对话框
+分享对话框会从屏幕底部弹出，并提供图标加文字的选择分享列表。
+
+![Kongzue Dialog V3 通知](https://github.com/kongzue/Res/raw/master/app/src/main/res/mipmap-xxxhdpi/img_dialog_v3_share.png)
+
+要使用分享对话框，需要先创建分享 Item：
+```
+List<ShareDialog.Item> itemList = new ArrayList<>();
+itemList.add(new ShareDialog.Item(me,R.mipmap.img_email_ios,"邮件"));
+itemList.add(new ShareDialog.Item(me,R.mipmap.img_qq_ios,"QQ"));
+itemList.add(new ShareDialog.Item(me,R.mipmap.img_wechat_ios,"微信"));
+itemList.add(new ShareDialog.Item(me,R.mipmap.img_weibo_ios,"微博"));
+itemList.add(new ShareDialog.Item(me,R.mipmap.img_memorandum_ios,"添加到“备忘录”"));
+itemList.add(new ShareDialog.Item(me,R.mipmap.img_remind_ios,"提醒事项"));
+```
+
+然后创建分享对话框及监听点击事件：
+```
+ShareDialog.build(me).setItems(itemList).setOnItemClickListener(new ShareDialog.OnItemClickListener() {
+    @Override
+    public boolean onClick(ShareDialog shareDialog, int index, ShareDialog.Item item) {
+        log("点击了：" + item.getText());
+        return false;
+    }
+}).show();
+```
+
 ## 定制化
 
 ### 自定义布局
@@ -369,7 +396,7 @@ MessageDialog.show(MainActivity.this, "提示", "这个窗口附带自定义布�
         .setCustomView(customView);
 ```
 
-目前支持自定义子布局的有：消息对话框组件（MessageDialog）、底部菜单组件（BottomDialog）、输入框组件（InputDialog）和通知组件（Notification）
+目前支持自定义子布局的有：消息对话框组件（MessageDialog）、底部菜单组件（BottomDialog）、输入框组件（InputDialog）、分享对话框（ShareDialog）和通知组件（Notification）
 
 ### 自定义对话框
 Kongzue Dialog V3 提供了完全自定义对话框方便快速实现特殊效果的对话框样式。

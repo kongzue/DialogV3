@@ -252,7 +252,6 @@ public class ShareDialog extends BaseDialog {
                         });
                         
                         boxBody.setOnTouchListener(materialScrollTouchListener);
-                        boxItem.setOnTouchListener(materialScrollTouchListener);
                         
                         rootView.setOnClickListener(new View.OnClickListener() {
                             @Override
