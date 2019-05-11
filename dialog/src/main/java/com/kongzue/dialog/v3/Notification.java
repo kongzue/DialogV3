@@ -522,9 +522,11 @@ public class Notification {
         }
         if (boxCustom != null) {
             if (customView != null) {
+                boxCustom.removeAllViews();
                 boxCustom.setVisibility(View.VISIBLE);
                 boxCustom.addView(customView);
                 rootView.setDispatchTouchEvent(false);
+                onBindView.onBind(this,customView);
             } else {
                 boxCustom.setVisibility(View.GONE);
                 rootView.setDispatchTouchEvent(true);
@@ -812,9 +814,11 @@ public class Notification {
         return this;
     }
     
+    private  OnBindView onBindView;
+    
     public Notification setCustomView(int customViewLayoutId, OnBindView onBindView) {
         customView = LayoutInflater.from(context).inflate(customViewLayoutId, null);
-        onBindView.onBind(this, customView);
+        this.onBindView=onBindView;
         refreshView();
         return this;
     }

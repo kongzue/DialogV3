@@ -43,8 +43,6 @@ import java.util.List;
  */
 public class BottomMenu extends BaseDialog {
     
-    private Dialog rootDialog;
-    
     private List<String> menuTextList;
     private String title;
     private String cancelButtonText = "取消";
@@ -135,6 +133,7 @@ public class BottomMenu extends BaseDialog {
     @Override
     public void bindView(View rootView) {
         this.rootView = rootView;
+        if (boxCustom != null) boxCustom.removeAllViews();
         boxBody = rootView.findViewById(R.id.box_body);
         boxList = rootView.findViewById(R.id.box_list);
         txtTitle = rootView.findViewById(R.id.txt_title);
@@ -144,22 +143,6 @@ public class BottomMenu extends BaseDialog {
         boxCancel = rootView.findViewById(R.id.box_cancel);
         btnCancel = rootView.findViewById(R.id.btn_cancel);
         
-        if (dialog != null) {
-            rootDialog = dialog.getDialog();
-            rootDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            rootDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-                @Override
-                public void onShow(DialogInterface dialog) {
-                    Window window = rootDialog.getWindow();
-                    WindowManager windowManager = context.getWindowManager();
-                    Display display = windowManager.getDefaultDisplay();
-                    WindowManager.LayoutParams lp = window.getAttributes();
-                    lp.width = display.getWidth();
-                    window.setGravity(Gravity.BOTTOM);
-                    window.setAttributes(lp);
-                }
-            });
-        }
         refreshView();
     }
     
@@ -193,27 +176,65 @@ public class BottomMenu extends BaseDialog {
                     listMenu.setOnTouchListener(new View.OnTouchListener() {
                         @Override
                         public boolean onTouch(View v, MotionEvent event) {
-                            if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                                isListViewTouchDown = true;
-                                listViewTouchDownY = event.getY();
-                            }
-                            if (event.getAction() == MotionEvent.ACTION_MOVE) {
-                                if (isListViewTouchDown) {
-                                    float aimY = boxBody.getY() + (event.getY() - listViewTouchDownY);
-                                    if (aimY < 0) aimY = 0;
-                                    boxBody.setY(aimY);
+                            if (!listMenu.canScrollVertically(-1)) {
+                                //不可滑动状态
+                                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                                    isListViewTouchDown = true;
+                                    listViewTouchDownY = event.getY();
                                 }
-                            }
-                            if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {
-                                if (isListViewTouchDown) {
-                                    if (boxBody.getY() > dip2px(15)) {
-                                        rootDialog.dismiss();
-                                        return true;
+                                if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                                    if (isListViewTouchDown) {
+                                        float deltaY = (event.getY() - listViewTouchDownY);
+                                        float aimY = boxBody.getY() + deltaY;
+                                        if (aimY < 0) aimY = 0;
+                                        if (deltaY < 0) {
+                                            if (boxBody.getY() > 0) {
+                                                boxBody.setY(aimY);
+                                                return true;
+                                            }
+                                            return false;
+                                        } else {
+                                            boxBody.setY(aimY);
+                                            return true;
+                                        }
                                     }
                                 }
-                                isListViewTouchDown = false;
+                                if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {
+                                    if (isListViewTouchDown) {
+                                        if (boxBody.getY() > dip2px(80)) {
+                                            doDismiss();
+                                            return true;
+                                        } else {
+                                            boxBody.animate().setDuration(300).translationY(0);
+                                        }
+                                    }
+                                    isListViewTouchDown = false;
+                                }
+                                listMenu.requestDisallowInterceptTouchEvent(false);
+                                return true;
+                            } else {
+                                //可滑动状态
+                                if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {
+                                    if (isListViewTouchDown) {
+                                        if (boxBody.getY() > dip2px(80)) {
+                                            doDismiss();
+                                            return true;
+                                        } else {
+                                            boxBody.animate().setDuration(300).translationY(0);
+                                        }
+                                    }
+                                    isListViewTouchDown = false;
+                                }
+                                listMenu.requestDisallowInterceptTouchEvent(true);
+                                return false;
                             }
-                            return false;
+                        }
+                    });
+                    boxBody.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            boxBody.setY(boxBody.getHeight());
+                            boxBody.animate().setDuration(300).translationY(0);
                         }
                     });
                     break;
@@ -254,10 +275,12 @@ public class BottomMenu extends BaseDialog {
                     break;
             }
             if (customView != null) {
+                boxCustom.removeAllViews();
                 boxCustom.addView(customView);
+                onBindView.onBind(this,customView);
                 boxCustom.setVisibility(View.VISIBLE);
                 if (titleSplitLine != null) titleSplitLine.setVisibility(View.VISIBLE);
-            }else{
+            } else {
                 boxCustom.setVisibility(View.GONE);
             }
             
@@ -272,14 +295,14 @@ public class BottomMenu extends BaseDialog {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     if (onMenuItemClickListener != null)
                         onMenuItemClickListener.onClick(menuTextList.get(position), position);
-                    rootDialog.dismiss();
+                    doDismiss();
                 }
             });
             
             btnCancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    rootDialog.dismiss();
+                    doDismiss();
                 }
             });
         }
@@ -547,9 +570,11 @@ public class BottomMenu extends BaseDialog {
         return this;
     }
     
+    private OnBindView onBindView;
+    
     public BottomMenu setCustomView(int customViewLayoutId, OnBindView onBindView) {
         customView = LayoutInflater.from(context).inflate(customViewLayoutId, null);
-        onBindView.onBind(this,customView);
+        this.onBindView = onBindView;
         refreshView();
         return this;
     }

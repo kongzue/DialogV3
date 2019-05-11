@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.kongzue.dialog.util.view.MaterialTouchView
+        android:id="@+id/box_body"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@drawable/rect_share_material_bkg">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="4dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="15dp"
+            android:src="@drawable/rect_share_material_tab"/>
+
+        <TextView
+            android:id="@+id/txt_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginBottom="15dp"
+            android:gravity="center_horizontal"
+            android:text="分享"
+            android:textColor="@color/tipTextColor"
+            android:textSize="18dp"/>
+
+        <RelativeLayout
+            android:id="@+id/box_custom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"></RelativeLayout>
+
+        <ImageView
+            android:id="@+id/title_split_line"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:visibility="gone"
+            android:background="@color/dialogSplitIOSLight" />
+
+        <com.kongzue.dialog.util.view.TableLayout
+            android:id="@+id/box_item"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </com.kongzue.dialog.util.view.MaterialTouchView>
+
+</LinearLayout>

@@ -39,10 +39,12 @@ import com.kongzue.dialog.v3.CustomDialog;
 import com.kongzue.dialog.v3.MessageDialog;
 import com.kongzue.dialog.v3.InputDialog;
 import com.kongzue.dialog.v3.Notification;
+import com.kongzue.dialog.v3.ShareDialog;
 import com.kongzue.dialog.v3.TipDialog;
 import com.kongzue.dialog.v3.WaitDialog;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @DarkStatusBarTheme(true)
@@ -70,6 +72,7 @@ public class MainActivity extends BaseActivity {
     private TextView btnNotify;
     private TextView btnBottomMenu;
     private TextView btnBottomMenuWithTitle;
+    private TextView btnShareDialog;
     private TextView btnCustomMessageDialog;
     private TextView btnCustomInputDialog;
     private TextView btnCustomBottomMenu;
@@ -101,6 +104,7 @@ public class MainActivity extends BaseActivity {
         btnNotify = findViewById(R.id.btn_notify);
         btnBottomMenu = findViewById(R.id.btn_bottom_menu);
         btnBottomMenuWithTitle = findViewById(R.id.btn_bottom_menu_withTitle);
+        btnShareDialog = findViewById(R.id.btn_shareDialog);
         btnCustomMessageDialog = findViewById(R.id.btn_customMessageDialog);
         btnCustomInputDialog = findViewById(R.id.btn_customInputDialog);
         btnCustomBottomMenu = findViewById(R.id.btn_customBottomMenu);
@@ -128,7 +132,6 @@ public class MainActivity extends BaseActivity {
     
     @Override
     public void setEvents() {
-        
         //完全自定义对话框
         btnCustomDialog.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -280,6 +283,36 @@ public class MainActivity extends BaseActivity {
                         log("点击了：" + text);
                     }
                 }).setTitle("这里是标题文字");
+            }
+        });
+        
+        //分享
+        btnShareDialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                List<ShareDialog.Item> itemList = new ArrayList<>();
+                if (DialogSettings.style== DialogSettings.STYLE.STYLE_IOS){
+                    itemList.add(new ShareDialog.Item(me,R.mipmap.img_email_ios,"邮件"));
+                    itemList.add(new ShareDialog.Item(me,R.mipmap.img_qq_ios,"QQ"));
+                    itemList.add(new ShareDialog.Item(me,R.mipmap.img_wechat_ios,"微信"));
+                    itemList.add(new ShareDialog.Item(me,R.mipmap.img_weibo_ios,"微博"));
+                    itemList.add(new ShareDialog.Item(me,R.mipmap.img_memorandum_ios,"添加到“备忘录”"));
+                    itemList.add(new ShareDialog.Item(me,R.mipmap.img_remind_ios,"提醒事项"));
+                }else{
+                    itemList.add(new ShareDialog.Item(me,R.mipmap.img_email_material,"邮件"));
+                    itemList.add(new ShareDialog.Item(me,R.mipmap.img_qq_material,"QQ"));
+                    itemList.add(new ShareDialog.Item(me,R.mipmap.img_wechat_material,"微信"));
+                    itemList.add(new ShareDialog.Item(me,R.mipmap.img_weibo_material,"微博"));
+                    itemList.add(new ShareDialog.Item(me,R.mipmap.img_hangout_material,"环聊"));
+                    itemList.add(new ShareDialog.Item(me,R.mipmap.img_remind_material,"Keep"));
+                }
+                ShareDialog.build(me).setItems(itemList).setOnItemClickListener(new ShareDialog.OnItemClickListener() {
+                    @Override
+                    public boolean onClick(ShareDialog shareDialog, int index, ShareDialog.Item item) {
+                        log("点击了：" + item.getText());
+                        return false;
+                    }
+                }).show();
             }
         });
         
@@ -505,5 +538,9 @@ public class MainActivity extends BaseActivity {
             }
         }
         return false;
+    }
+    
+    public void toast(final Object obj) {
+        Toast.makeText(getBaseContext(), obj.toString(), Toast.LENGTH_SHORT).show();
     }
 }

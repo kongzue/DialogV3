@@ -10,12 +10,20 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 
+import com.kongzue.dialog.R;
 import com.kongzue.dialog.interfaces.OnShowListener;
 import com.kongzue.dialog.interfaces.OnDismissListener;
+import com.kongzue.dialog.v3.BottomMenu;
+import com.kongzue.dialog.v3.ShareDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +36,8 @@ import java.util.List;
  * CreateTime: 2019/3/22 16:24
  */
 public class DialogHelper extends DialogFragment {
+    
+    private Dialog rootDialog;
     
     private OnDismissListener onDismissListener;
     private OnShowListener onShowListener;
@@ -74,7 +84,27 @@ public class DialogHelper extends DialogFragment {
                     .create();
             return materialDialog;
         }
-        return super.onCreateDialog(savedInstanceState);
+        Dialog dialog = super.onCreateDialog(savedInstanceState);
+        refreshDialogPosition(dialog);
+        return dialog;
+    }
+    
+    private void refreshDialogPosition(Dialog dialog) {
+        if (dialog != null) {
+            if (parent instanceof BottomMenu || parent instanceof ShareDialog) {
+                dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                Window window = dialog.getWindow();
+                window.getDecorView().setPadding(0,0,0,0);
+                WindowManager windowManager = getActivity().getWindowManager();
+                Display display = windowManager.getDefaultDisplay();
+                WindowManager.LayoutParams lp = window.getAttributes();
+                lp.width = display.getWidth();
+                lp.windowAnimations = R.style.bottomMenuAnim;
+                window.setGravity(Gravity.BOTTOM);
+                window.setWindowAnimations(R.style.bottomMenuAnim);
+                window.setAttributes(lp);
+            }
+        }
     }
     
     @Override
@@ -116,6 +146,8 @@ public class DialogHelper extends DialogFragment {
         super.onSaveInstanceState(outState);
     }
     
+    private BaseDialog parent;
+    
     //找爸爸行动
     private void findMyParentAndBindView(View rootView) {
         List<BaseDialog> cache = new ArrayList<>();
@@ -124,9 +156,11 @@ public class DialogHelper extends DialogFragment {
         for (BaseDialog baseDialog : cache) {
             baseDialog.context = (AppCompatActivity) getContext();
             if (baseDialog.toString().equals(parentId)) {
-                baseDialog.dialog = this;
-                baseDialog.bindView(rootView);
-                baseDialog.initDefaultSettings();
+                parent = baseDialog;
+                parent.dialog = this;
+                refreshDialogPosition(getDialog());
+                parent.bindView(rootView);
+                parent.initDefaultSettings();
                 setOnDismissListener(baseDialog.dismissEvent);
             }
         }
@@ -144,6 +178,7 @@ public class DialogHelper extends DialogFragment {
     
     public DialogHelper setLayoutId(BaseDialog baseDialog, int layoutId) {
         this.layoutId = layoutId;
+        this.parent = baseDialog;
         this.parentId = baseDialog.toString();
         return this;
     }
@@ -181,5 +216,4 @@ public class DialogHelper extends DialogFragment {
     public void setAnim(int animResId) {
         this.animResId = animResId;
     }
-    
 }

@@ -215,6 +215,7 @@ public class TipDialog extends BaseDialog {
         
         this.rootView = rootView;
         
+        if (boxBlur != null) boxBlur.removeAllViews();
         boxBody = rootView.findViewById(R.id.box_body);
         boxBlur = rootView.findViewById(R.id.box_blur);
         progress = rootView.findViewById(R.id.progress);
@@ -335,6 +336,7 @@ public class TipDialog extends BaseDialog {
                 boxTip.setBackground(null);
                 boxTip.setVisibility(View.VISIBLE);
                 boxTip.addView(customView);
+                onBindView.onBind(this,customView);
             }
         }
     }
@@ -466,9 +468,11 @@ public class TipDialog extends BaseDialog {
         return this;
     }
     
+    private OnBindView onBindView;
+    
     public TipDialog setCustomView(int customViewLayoutId, OnBindView onBindView) {
         customView = LayoutInflater.from(context).inflate(customViewLayoutId, null);
-        onBindView.onBind(this, customView);
+        this.onBindView = onBindView;
         refreshView();
         return this;
     }

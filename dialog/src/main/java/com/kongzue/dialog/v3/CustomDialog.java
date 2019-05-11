@@ -64,10 +64,12 @@ public class CustomDialog extends BaseDialog {
     
     @Override
     public void bindView(View rootView) {
+        if (boxCustom!=null)boxCustom.removeAllViews();
         boxCustom = rootView.findViewById(R.id.box_custom);
         if (boxCustom == null) {
             if (onBindView != null) onBindView.onBind(this, rootView);
         } else {
+            boxCustom.removeAllViews();
             boxCustom.addView(customView);
             if (onBindView != null) onBindView.onBind(this, customView);
         }

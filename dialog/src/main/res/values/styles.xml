@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="BaseDialog" parent="Theme.AppCompat.Light.Dialog">
         <item name="colorAccent">@color/dark</item>
@@ -99,10 +99,10 @@
     </style>
 
     <style name="BottomDialog" parent="BaseDialog">
-        <item name="android:windowAnimationStyle">@style/bottomMenuAnimStyle</item>
+        <item name="android:windowAnimationStyle">@style/bottomMenuAnim</item>
     </style>
 
-    <style name="bottomMenuAnimStyle">
+    <style name="bottomMenuAnim">
         <item name="android:windowEnterAnimation">@anim/bottom_menu_enter</item>
         <item name="android:windowExitAnimation">@anim/bottom_menu_exit</item>
     </style>

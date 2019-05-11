@@ -17,6 +17,7 @@ import com.kongzue.dialog.interfaces.DialogLifeCycleListener;
 import com.kongzue.dialog.interfaces.OnShowListener;
 import com.kongzue.dialog.interfaces.OnDismissListener;
 import com.kongzue.dialog.v3.BottomMenu;
+import com.kongzue.dialog.v3.ShareDialog;
 import com.kongzue.dialog.v3.TipDialog;
 import com.kongzue.dialog.v3.WaitDialog;
 
@@ -153,7 +154,7 @@ public abstract class BaseDialog {
         }
         FragmentManager fragmentManager = context.getSupportFragmentManager();
         dialog = new DialogHelper().setLayoutId(baseDialog, layoutId);
-        if (baseDialog instanceof BottomMenu) {
+        if (baseDialog instanceof BottomMenu || baseDialog instanceof ShareDialog) {
             styleId = R.style.BottomDialog;
         }
         if (DialogSettings.systemDialogStyle != 0) {
@@ -169,7 +170,7 @@ public abstract class BaseDialog {
                     DialogSettings.dialogLifeCycleListener.onShow(BaseDialog.this);
             }
         });
-        if (DialogSettings.systemDialogStyle == 0 && style == DialogSettings.STYLE.STYLE_IOS && !(baseDialog instanceof TipDialog) && !(baseDialog instanceof BottomMenu))
+        if (DialogSettings.systemDialogStyle == 0 && style == DialogSettings.STYLE.STYLE_IOS && !(baseDialog instanceof TipDialog) && !(baseDialog instanceof BottomMenu)&& !(baseDialog instanceof ShareDialog))
             dialog.setAnim(R.style.iOSDialogAnimStyle);
         dialog.setOnDismissListener(dismissEvent);
         

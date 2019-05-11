@@ -195,6 +195,7 @@ public class MessageDialog extends BaseDialog {
     @Override
     public void bindView(View rootView) {
         log("启动对话框 -> " + title + ":" + message);
+        if (boxCustom != null) boxCustom.removeAllViews();
         if (style == DialogSettings.STYLE.STYLE_MATERIAL) {
             materialAlertDialog = (AlertDialog) dialog.getDialog();
         } else {
@@ -267,7 +268,9 @@ public class MessageDialog extends BaseDialog {
                         bkg.setBackgroundResource(bkgResId);
                     }
                     if (customView != null) {
+                        boxCustom.removeAllViews();
                         boxCustom.addView(customView);
+                        onBindView.onBind(this,customView);
                         boxCustom.setVisibility(View.VISIBLE);
                     } else {
                         boxCustom.setVisibility(View.GONE);
@@ -295,7 +298,9 @@ public class MessageDialog extends BaseDialog {
                         bkg.setBackgroundColor(backgroundColor);
                     }
                     if (customView != null) {
+                        boxCustom.removeAllViews();
                         boxCustom.addView(customView);
+                        onBindView.onBind(this,customView);
                         boxCustom.setVisibility(View.VISIBLE);
                     } else {
                         boxCustom.setVisibility(View.GONE);
@@ -906,9 +911,11 @@ public class MessageDialog extends BaseDialog {
         return this;
     }
     
+    private OnBindView onBindView;
+    
     public MessageDialog setCustomView(int customViewLayoutId, OnBindView onBindView) {
         customView = LayoutInflater.from(context).inflate(customViewLayoutId, null);
-        onBindView.onBind(this, customView);
+        this.onBindView = onBindView;
         refreshView();
         return this;
     }
