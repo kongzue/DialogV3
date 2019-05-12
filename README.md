@@ -2,10 +2,10 @@
 献给要求安卓照着苹果设计稿做开发的产品们（手动滑稽
 
 <a href="https://github.com/kongzue/dialogV3/">
-<img src="https://img.shields.io/badge/Kongzue%20Dialog-2.9.8.5-green.svg" alt="Kongzue Dialog">
+<img src="https://img.shields.io/badge/Kongzue%20Dialog-2.9.8.4-green.svg" alt="Kongzue Dialog">
 </a> 
-<a href="https://bintray.com/myzchh/maven/dialogV3/2.9.8.5/link">
-<img src="https://img.shields.io/badge/Maven-2.9.8.5-blue.svg" alt="Maven">
+<a href="https://bintray.com/myzchh/maven/dialogV3/2.9.8.4/link">
+<img src="https://img.shields.io/badge/Maven-2.9.8.4-blue.svg" alt="Maven">
 </a> 
 <a href="http://www.apache.org/licenses/LICENSE-2.0">
 <img src="https://img.shields.io/badge/License-Apache%202.0-red.svg" alt="License">
@@ -87,14 +87,14 @@ Maven仓库：
 <dependency>
   <groupId>com.kongzue.dialog_v3</groupId>
   <artifactId>dialog</artifactId>
-  <version>2.9.8.5</version>
+  <version>2.9.8.4</version>
   <type>pom</type>
 </dependency>
 ```
 Gradle：
 在dependencies{}中添加引用：
 ```
-implementation 'com.kongzue.dialog_v3:dialog:2.9.8.5'
+implementation 'com.kongzue.dialog_v3:dialog:2.9.8.4'
 ```
 
 从 Kongzue Dialog V2 升级至 Kongzue Dialog V3，请参考 [Kongzue Dialog V2升级注意事项](kongzue_dialog_v2_upto_v3.md)
@@ -361,16 +361,16 @@ itemList.add(new ShareDialog.Item(me,R.mipmap.img_remind_ios,"提醒事项"));
 
 然后创建分享对话框及监听点击事件：
 ```
-ShareDialog.build(me).setItems(itemList).setOnItemClickListener(new ShareDialog.OnItemClickListener() {
+ShareDialog.show(me, itemList, new ShareDialog.OnItemClickListener() {
     @Override
     public boolean onClick(ShareDialog shareDialog, int index, ShareDialog.Item item) {
-        log("点击了：" + item.getText());
+        toast("点击了：" + item.getText());
         return false;
     }
-}).show();
+});
 ```
 
-额外需要注意，iOS风格模式下，默认会自动对图片进行圆角裁切，使用时只需要直接提供方形图标即可。
+额外需要注意，iOS 风格模式下，默认会自动对图片进行圆角裁切，使用时只需要直接提供方形图标即可。
 
 ## 定制化
 

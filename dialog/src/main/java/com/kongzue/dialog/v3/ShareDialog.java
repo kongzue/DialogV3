@@ -95,6 +95,14 @@ public class ShareDialog extends BaseDialog {
         }
     }
     
+    public static ShareDialog show(@NonNull AppCompatActivity context, List<ShareDialog.Item> itemList,OnItemClickListener onItemClickListener) {
+        ShareDialog shareDialog = build(context);
+        shareDialog.items = itemList;
+        shareDialog.onItemClickListener = onItemClickListener;
+        shareDialog.show();
+        return shareDialog;
+    }
+    
     private View rootView;
     
     @Override
@@ -264,7 +272,7 @@ public class ShareDialog extends BaseDialog {
                 case STYLE_KONGZUE:
                     if (items != null) {
                         boxItem.removeAllViews();
-                        ((TableLayout)boxItem).setAutoHeight(true);
+                        ((TableLayout) boxItem).setAutoHeight(true);
                         for (int i = 0; i < items.size(); i++) {
                             final Item item = items.get(i);
                             final View itemView = LayoutInflater.from(context).inflate(R.layout.item_share_material, null);
@@ -455,6 +463,48 @@ public class ShareDialog extends BaseDialog {
     }
     
     //其他设置
+    public DialogSettings.STYLE getStyle() {
+        return style;
+    }
+    
+    public ShareDialog setStyle(DialogSettings.STYLE style) {
+        if (isAlreadyShown) {
+            error("必须使用 build(...) 方法创建时，才可以使用 setStyle(...) 来修改对话框主题或风格。");
+            return this;
+        }
+        
+        this.style = style;
+        switch (this.style) {
+            case STYLE_IOS:
+                build(this, R.layout.dialog_share_ios);
+                break;
+            case STYLE_KONGZUE:
+                build(this, R.layout.dialog_share_kongzue);
+                break;
+            case STYLE_MATERIAL:
+                build(this, R.layout.dialog_share_material);
+                break;
+        }
+        
+        return this;
+    }
+    
+    public DialogSettings.THEME getTheme() {
+        return theme;
+    }
+    
+    public ShareDialog setTheme(DialogSettings.THEME theme) {
+        
+        if (isAlreadyShown) {
+            error("必须使用 build(...) 方法创建时，才可以使用 setTheme(...) 来修改对话框主题或风格。");
+            return this;
+        }
+        
+        this.theme = theme;
+        refreshView();
+        return this;
+    }
+    
     public String getTitle() {
         return title;
     }

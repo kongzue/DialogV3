@@ -291,28 +291,35 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 List<ShareDialog.Item> itemList = new ArrayList<>();
-                if (DialogSettings.style== DialogSettings.STYLE.STYLE_IOS){
-                    itemList.add(new ShareDialog.Item(me,R.mipmap.img_email_ios,"邮件"));
-                    itemList.add(new ShareDialog.Item(me,R.mipmap.img_qq_ios,"QQ"));
-                    itemList.add(new ShareDialog.Item(me,R.mipmap.img_wechat_ios,"微信"));
-                    itemList.add(new ShareDialog.Item(me,R.mipmap.img_weibo_ios,"微博"));
-                    itemList.add(new ShareDialog.Item(me,R.mipmap.img_memorandum_ios,"添加到“备忘录”"));
-                    itemList.add(new ShareDialog.Item(me,R.mipmap.img_remind_ios,"提醒事项"));
-                }else{
-                    itemList.add(new ShareDialog.Item(me,R.mipmap.img_email_material,"邮件"));
-                    itemList.add(new ShareDialog.Item(me,R.mipmap.img_qq_material,"QQ"));
-                    itemList.add(new ShareDialog.Item(me,R.mipmap.img_wechat_material,"微信"));
-                    itemList.add(new ShareDialog.Item(me,R.mipmap.img_weibo_material,"微博"));
-                    itemList.add(new ShareDialog.Item(me,R.mipmap.img_hangout_material,"环聊"));
-                    itemList.add(new ShareDialog.Item(me,R.mipmap.img_remind_material,"Keep"));
+                if (DialogSettings.style == DialogSettings.STYLE.STYLE_IOS) {
+                    itemList.add(new ShareDialog.Item(me, R.mipmap.img_email_ios, "邮件"));
+                    itemList.add(new ShareDialog.Item(me, R.mipmap.img_qq_ios, "QQ"));
+                    itemList.add(new ShareDialog.Item(me, R.mipmap.img_wechat_ios, "微信"));
+                    itemList.add(new ShareDialog.Item(me, R.mipmap.img_weibo_ios, "微博"));
+                    itemList.add(new ShareDialog.Item(me, R.mipmap.img_memorandum_ios, "添加到“备忘录”"));
+                    itemList.add(new ShareDialog.Item(me, R.mipmap.img_remind_ios, "提醒事项"));
+                } else {
+                    itemList.add(new ShareDialog.Item(me, R.mipmap.img_email_material, "邮件"));
+                    itemList.add(new ShareDialog.Item(me, R.mipmap.img_qq_material, "QQ"));
+                    itemList.add(new ShareDialog.Item(me, R.mipmap.img_wechat_material, "微信"));
+                    itemList.add(new ShareDialog.Item(me, R.mipmap.img_weibo_material, "微博"));
+                    itemList.add(new ShareDialog.Item(me, R.mipmap.img_hangout_material, "环聊"));
+                    itemList.add(new ShareDialog.Item(me, R.mipmap.img_remind_material, "Keep"));
                 }
-                ShareDialog.build(me).setItems(itemList).setOnItemClickListener(new ShareDialog.OnItemClickListener() {
+                //ShareDialog.build(me).setItems(itemList).setOnItemClickListener(new ShareDialog.OnItemClickListener() {
+                //    @Override
+                //    public boolean onClick(ShareDialog shareDialog, int index, ShareDialog.Item item) {
+                //        log("点击了：" + item.getText());
+                //        return false;
+                //    }
+                //}).show();
+                ShareDialog.show(me, itemList, new ShareDialog.OnItemClickListener() {
                     @Override
                     public boolean onClick(ShareDialog shareDialog, int index, ShareDialog.Item item) {
-                        log("点击了：" + item.getText());
+                        toast("点击了：" + item.getText());
                         return false;
                     }
-                }).show();
+                });
             }
         });
         

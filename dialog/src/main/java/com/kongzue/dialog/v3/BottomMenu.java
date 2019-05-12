@@ -582,4 +582,46 @@ public class BottomMenu extends BaseDialog {
     public interface OnBindView {
         void onBind(BottomMenu bottomMenu, View v);
     }
+    
+    public DialogSettings.STYLE getStyle() {
+        return style;
+    }
+    
+    public BottomMenu setStyle(DialogSettings.STYLE style) {
+        if (isAlreadyShown) {
+            error("必须使用 build(...) 方法创建时，才可以使用 setStyle(...) 来修改对话框主题或风格。");
+            return this;
+        }
+        
+        this.style = style;
+        switch (this.style) {
+            case STYLE_IOS:
+                build(this, R.layout.bottom_menu_ios);
+                break;
+            case STYLE_KONGZUE:
+                build(this, R.layout.bottom_menu_kongzue);
+                break;
+            case STYLE_MATERIAL:
+                build(this, R.layout.bottom_menu_material);
+                break;
+        }
+        
+        return this;
+    }
+    
+    public DialogSettings.THEME getTheme() {
+        return theme;
+    }
+    
+    public BottomMenu setTheme(DialogSettings.THEME theme) {
+        
+        if (isAlreadyShown) {
+            error("必须使用 build(...) 方法创建时，才可以使用 setTheme(...) 来修改对话框主题或风格。");
+            return this;
+        }
+        
+        this.theme = theme;
+        refreshView();
+        return this;
+    }
 }
