@@ -270,7 +270,7 @@ public class MessageDialog extends BaseDialog {
                     if (customView != null) {
                         boxCustom.removeAllViews();
                         boxCustom.addView(customView);
-                        onBindView.onBind(this,customView);
+                        if (onBindView!=null)onBindView.onBind(this,customView);
                         boxCustom.setVisibility(View.VISIBLE);
                     } else {
                         boxCustom.setVisibility(View.GONE);
@@ -300,7 +300,7 @@ public class MessageDialog extends BaseDialog {
                     if (customView != null) {
                         boxCustom.removeAllViews();
                         boxCustom.addView(customView);
-                        onBindView.onBind(this,customView);
+                        if (onBindView!=null)onBindView.onBind(this,customView);
                         boxCustom.setVisibility(View.VISIBLE);
                     } else {
                         boxCustom.setVisibility(View.GONE);

@@ -526,7 +526,7 @@ public class Notification {
                 boxCustom.setVisibility(View.VISIBLE);
                 boxCustom.addView(customView);
                 rootView.setDispatchTouchEvent(false);
-                onBindView.onBind(this,customView);
+                if (onBindView!=null)onBindView.onBind(this,customView);
             } else {
                 boxCustom.setVisibility(View.GONE);
                 rootView.setDispatchTouchEvent(true);

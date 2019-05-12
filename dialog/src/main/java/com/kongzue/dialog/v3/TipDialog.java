@@ -336,7 +336,7 @@ public class TipDialog extends BaseDialog {
                 boxTip.setBackground(null);
                 boxTip.setVisibility(View.VISIBLE);
                 boxTip.addView(customView);
-                onBindView.onBind(this,customView);
+                if (onBindView!=null)onBindView.onBind(this,customView);
             }
         }
     }

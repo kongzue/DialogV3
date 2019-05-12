@@ -322,7 +322,7 @@ public class ShareDialog extends BaseDialog {
             if (customView != null) {
                 boxCustom.removeAllViews();
                 boxCustom.addView(customView);
-                onBindView.onBind(this, customView);
+                if (onBindView!=null)onBindView.onBind(this, customView);
                 boxCustom.setVisibility(View.VISIBLE);
                 if (titleSplitLine != null) titleSplitLine.setVisibility(View.VISIBLE);
             } else {

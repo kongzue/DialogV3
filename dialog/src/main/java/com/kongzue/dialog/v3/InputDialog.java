@@ -194,7 +194,7 @@ public class InputDialog extends MessageDialog {
                         viewBox.setOrientation(LinearLayout.VERTICAL);
                         viewBox.addView(customView);
                         viewBox.addView(txtInput);
-                        onBindView.onBind(this,customView);
+                        if (onBindView!=null)onBindView.onBind(this,customView);
                         
                         materialAlertDialog.setView(viewBox);
                     }

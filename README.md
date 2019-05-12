@@ -2,10 +2,10 @@
 献给要求安卓照着苹果设计稿做开发的产品们（手动滑稽
 
 <a href="https://github.com/kongzue/dialogV3/">
-<img src="https://img.shields.io/badge/Kongzue%20Dialog-2.9.8.4-green.svg" alt="Kongzue Dialog">
+<img src="https://img.shields.io/badge/Kongzue%20Dialog-2.9.8.3-green.svg" alt="Kongzue Dialog">
 </a> 
-<a href="https://bintray.com/myzchh/maven/dialogV3/2.9.8.4/link">
-<img src="https://img.shields.io/badge/Maven-2.9.8.4-blue.svg" alt="Maven">
+<a href="https://bintray.com/myzchh/maven/dialogV3/2.9.8.3/link">
+<img src="https://img.shields.io/badge/Maven-2.9.8.3-blue.svg" alt="Maven">
 </a> 
 <a href="http://www.apache.org/licenses/LICENSE-2.0">
 <img src="https://img.shields.io/badge/License-Apache%202.0-red.svg" alt="License">
@@ -87,14 +87,14 @@ Maven仓库：
 <dependency>
   <groupId>com.kongzue.dialog_v3</groupId>
   <artifactId>dialog</artifactId>
-  <version>2.9.8.4</version>
+  <version>2.9.8.3</version>
   <type>pom</type>
 </dependency>
 ```
 Gradle：
 在dependencies{}中添加引用：
 ```
-implementation 'com.kongzue.dialog_v3:dialog:2.9.8.4'
+implementation 'com.kongzue.dialog_v3:dialog:2.9.8.3'
 ```
 
 从 Kongzue Dialog V2 升级至 Kongzue Dialog V3，请参考 [Kongzue Dialog V2升级注意事项](kongzue_dialog_v2_upto_v3.md)
