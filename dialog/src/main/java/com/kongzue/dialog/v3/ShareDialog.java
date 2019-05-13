@@ -275,10 +275,10 @@ public class ShareDialog extends BaseDialog {
                         ((TableLayout) boxItem).setAutoHeight(true);
                         for (int i = 0; i < items.size(); i++) {
                             final Item item = items.get(i);
-                            final View itemView = LayoutInflater.from(context).inflate(R.layout.item_share_material, null);
+                            final View itemView = LayoutInflater.from(context).inflate(R.layout.item_share_kongzue, null);
                             itemView.setBackgroundColor(Color.WHITE);
                             
-                            final ImageView imgIcon = itemView.findViewById(R.id.img_icon);
+                            final IOSItemImageView imgIcon = itemView.findViewById(R.id.img_icon);
                             TextView txtLabel = itemView.findViewById(R.id.txt_label);
                             
                             imgIcon.setImageBitmap(item.getIcon());
@@ -295,6 +295,24 @@ public class ShareDialog extends BaseDialog {
                                     } else {
                                         doDismiss();
                                     }
+                                }
+                            });
+    
+                            itemView.setOnTouchListener(new View.OnTouchListener() {
+                                @Override
+                                public boolean onTouch(View v, MotionEvent event) {
+                                    switch (event.getAction()) {
+                                        case MotionEvent.ACTION_DOWN:
+                                            imgIcon.setFilter();
+                                            break;
+                                        case MotionEvent.ACTION_UP:
+                                            imgIcon.removeFilter();
+                                            break;
+                                        case MotionEvent.ACTION_CANCEL:
+                                            imgIcon.removeFilter();
+                                            break;
+                                    }
+                                    return false;
                                 }
                             });
                             
@@ -364,7 +382,7 @@ public class ShareDialog extends BaseDialog {
                                     break;
                             }
                         }
-                        if (deltaY > boxBody.getHeight() / 2) {
+                        if (deltaY > dip2px(150)) {
                             boxBody.animate().setDuration(300).translationY(boxBody.getHeight()).withEndAction(new Runnable() {
                                 @Override
                                 public void run() {
@@ -384,6 +402,17 @@ public class ShareDialog extends BaseDialog {
                                     break;
                                 case 1:
                                     boxBody.animate().setDuration(300).translationY(boxBody.getHeight() / 2);
+                                    step = 0;
+                                    break;
+                            }
+                        }
+                        if (deltaY>= -dip2px(50) && deltaY<= dip2px(50)){
+                            switch (step) {
+                                case 0:
+                                    boxBody.animate().setDuration(300).translationY(boxBody.getHeight() / 2);
+                                    break;
+                                case 1:
+                                    boxBody.animate().setDuration(300).translationY(0);
                                     step = 0;
                                     break;
                             }

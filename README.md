@@ -2,10 +2,10 @@
 献给要求安卓照着苹果设计稿做开发的产品们（手动滑稽
 
 <a href="https://github.com/kongzue/dialogV3/">
-<img src="https://img.shields.io/badge/Kongzue%20Dialog-2.9.8.3-green.svg" alt="Kongzue Dialog">
+<img src="https://img.shields.io/badge/Kongzue%20Dialog-3.0.0-green.svg" alt="Kongzue Dialog">
 </a> 
-<a href="https://bintray.com/myzchh/maven/dialogV3/2.9.8.3/link">
-<img src="https://img.shields.io/badge/Maven-2.9.8.3-blue.svg" alt="Maven">
+<a href="https://bintray.com/myzchh/maven/dialogV3/3.0.0/link">
+<img src="https://img.shields.io/badge/Maven-3.0.0-blue.svg" alt="Maven">
 </a> 
 <a href="http://www.apache.org/licenses/LICENSE-2.0">
 <img src="https://img.shields.io/badge/License-Apache%202.0-red.svg" alt="License">
@@ -80,21 +80,19 @@ MessageDialog.show(me, R.string.error_title, R.string.error_not_install_tip, R.s
 
 ## 引入
 
-⚠ 当前 V3 库处于 beta 测试阶段，如果需要稳定版本请前往 [Kongzue Dialog V2](https://github.com/kongzue/Dialog)
-
 Maven仓库：
 ```
 <dependency>
   <groupId>com.kongzue.dialog_v3</groupId>
   <artifactId>dialog</artifactId>
-  <version>2.9.8.3</version>
+  <version>3.0.0</version>
   <type>pom</type>
 </dependency>
 ```
 Gradle：
 在dependencies{}中添加引用：
 ```
-implementation 'com.kongzue.dialog_v3:dialog:2.9.8.3'
+implementation 'com.kongzue.dialog_v3:dialog:3.0.0'
 ```
 
 从 Kongzue Dialog V2 升级至 Kongzue Dialog V3，请参考 [Kongzue Dialog V2升级注意事项](kongzue_dialog_v2_upto_v3.md)
@@ -305,7 +303,7 @@ BottomMenu.show(MainActivity.this, new String[]{"菜单1", "菜单2", "菜单3"}
 
 BottomMenu 可以通过 String[] 集合创建，也可以通过 List<String> 创建。
 
-要为底部菜单加上标题，可以使用一下语句：
+要为底部菜单加上标题，可以使用以下语句：
 ```
 BottomMenu.show(MainActivity.this, new String[]{"菜单1", "菜单2", "菜单3"}, new OnMenuItemClickListener() {
     @Override
@@ -314,6 +312,29 @@ BottomMenu.show(MainActivity.this, new String[]{"菜单1", "菜单2", "菜单3"}
     }
 })
 .setTitle("这里是标题文字");
+```
+
+底部菜单也允许自定义菜单 Adapter 以支持您自己的菜单样式，您可以设置自定义的继承自 BaseAdapter 的菜单 Adapter 给菜单 ListView，此时您无需设置 StringArray 或 List<String> 的集合。
+
+另外请注意，使用自定义菜单 Adapter 的情况下可能导致使用 iOS 风格时无法有效的支持顶部菜单、底部菜单的上下圆角裁切，您可以尝试参考 BottomMenu.IOSMenuArrayAdapter 来编写您的自定义 Adapter。
+
+使用自定义菜单 Adapter 可以使用以下语句：
+```
+List<String> datas = new ArrayList<>();
+datas.add("菜单1");
+datas.add("菜单2");
+datas.add("菜单3");
+
+//您自己的Adapter
+BaseAdapter baseAdapter = new ArrayAdapter(me, com.kongzue.dialog.R.layout.item_bottom_menu_kongzue, datas);    
+
+BottomMenu.show(me, baseAdapter, new OnMenuItemClickListener() {
+    @Override
+    public void onClick(String text, int index) {
+        //注意此处的 text 返回为自定义 Adapter.getItem(position).toString()，如需获取自定义Object，请尝试 datas.get(index)
+        toast(text);
+    }
+});
 ```
 
 ### 通知
@@ -473,5 +494,5 @@ limitations under the License.
 ```
 
 ## 更新日志：
-
-测试阶段。
+v3.0.0：
+- 全新发布。

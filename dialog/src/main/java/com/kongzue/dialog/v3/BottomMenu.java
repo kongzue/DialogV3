@@ -2,20 +2,16 @@ package com.kongzue.dialog.v3;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Display;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -42,6 +38,8 @@ import java.util.List;
  * CreateTime: 2019/4/12 18:33
  */
 public class BottomMenu extends BaseDialog {
+    
+    private BaseAdapter customAdapter;      //允许用户自定义 Menu 的 Adapter
     
     private List<String> menuTextList;
     private String title;
@@ -94,9 +92,26 @@ public class BottomMenu extends BaseDialog {
         return bottomMenu;
     }
     
+    public static BottomMenu show(@NonNull AppCompatActivity context, BaseAdapter customAdapter, OnMenuItemClickListener onMenuItemClickListener) {
+        BottomMenu bottomMenu = build(context);
+        bottomMenu.customAdapter = customAdapter;
+        bottomMenu.onMenuItemClickListener = onMenuItemClickListener;
+        bottomMenu.showDialog();
+        return bottomMenu;
+    }
+    
     public static BottomMenu show(@NonNull AppCompatActivity context, String title, List<String> menuTextList, OnMenuItemClickListener onMenuItemClickListener) {
         BottomMenu bottomMenu = build(context);
         bottomMenu.menuTextList = menuTextList;
+        bottomMenu.title = title;
+        bottomMenu.onMenuItemClickListener = onMenuItemClickListener;
+        bottomMenu.showDialog();
+        return bottomMenu;
+    }
+    
+    public static BottomMenu show(@NonNull AppCompatActivity context, String title, BaseAdapter customAdapter, OnMenuItemClickListener onMenuItemClickListener) {
+        BottomMenu bottomMenu = build(context);
+        bottomMenu.customAdapter = customAdapter;
         bottomMenu.title = title;
         bottomMenu.onMenuItemClickListener = onMenuItemClickListener;
         bottomMenu.showDialog();
@@ -170,10 +185,15 @@ public class BottomMenu extends BaseDialog {
             switch (style) {
                 case STYLE_MATERIAL:
                     boxCancel.setVisibility(View.GONE);
-                    menuArrayAdapter = new NormalMenuArrayAdapter(context, R.layout.item_bottom_menu_material, menuTextList);
+                    
+                    if (customAdapter != null) {
+                        menuArrayAdapter = customAdapter;
+                    } else {
+                        menuArrayAdapter = new NormalMenuArrayAdapter(context, R.layout.item_bottom_menu_material, menuTextList);
+                    }
                     listMenu.setAdapter(menuArrayAdapter);
                     
-                    listMenu.setOnTouchListener(new View.OnTouchListener() {
+                    boxBody.setOnTouchListener(new View.OnTouchListener() {
                         @Override
                         public boolean onTouch(View v, MotionEvent event) {
                             if (!listMenu.canScrollVertically(-1)) {
@@ -239,8 +259,13 @@ public class BottomMenu extends BaseDialog {
                     });
                     break;
                 case STYLE_KONGZUE:
-                    menuArrayAdapter = new NormalMenuArrayAdapter(context, R.layout.item_bottom_menu_kongzue, menuTextList);
+                    if (customAdapter != null) {
+                        menuArrayAdapter = customAdapter;
+                    } else {
+                        menuArrayAdapter = new NormalMenuArrayAdapter(context, R.layout.item_bottom_menu_kongzue, menuTextList);
+                    }
                     listMenu.setAdapter(menuArrayAdapter);
+                    
                     break;
                 case STYLE_IOS:
                     if (DialogSettings.isUseBlur) {
@@ -269,7 +294,11 @@ public class BottomMenu extends BaseDialog {
                         boxCancel.setBackgroundResource(R.drawable.rect_menu_bkg_ios);
                     }
                     
-                    menuArrayAdapter = new IOSMenuArrayAdapter(context, R.layout.item_bottom_menu_ios, menuTextList);
+                    if (customAdapter != null) {
+                        menuArrayAdapter = customAdapter;
+                    } else {
+                        menuArrayAdapter = new IOSMenuArrayAdapter(context, R.layout.item_bottom_menu_ios, menuTextList);
+                    }
                     listMenu.setAdapter(menuArrayAdapter);
                     
                     break;
@@ -277,7 +306,7 @@ public class BottomMenu extends BaseDialog {
             if (customView != null) {
                 boxCustom.removeAllViews();
                 boxCustom.addView(customView);
-                if (onBindView!=null)onBindView.onBind(this,customView);
+                if (onBindView != null) onBindView.onBind(this, customView);
                 boxCustom.setVisibility(View.VISIBLE);
                 if (titleSplitLine != null) titleSplitLine.setVisibility(View.VISIBLE);
             } else {
@@ -293,8 +322,13 @@ public class BottomMenu extends BaseDialog {
             listMenu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    if (onMenuItemClickListener != null)
-                        onMenuItemClickListener.onClick(menuTextList.get(position), position);
+                    if (onMenuItemClickListener != null) {
+                        if (customAdapter != null) {
+                            onMenuItemClickListener.onClick(customAdapter.getItem(position).toString(), position);
+                        } else {
+                            onMenuItemClickListener.onClick(menuTextList.get(position), position);
+                        }
+                    }
                     doDismiss();
                 }
             });
@@ -316,9 +350,9 @@ public class BottomMenu extends BaseDialog {
         showDialog();
     }
     
-    private ArrayAdapter menuArrayAdapter;
+    private BaseAdapter menuArrayAdapter;
     
-    private class IOSMenuArrayAdapter extends NormalMenuArrayAdapter {
+    public class IOSMenuArrayAdapter extends NormalMenuArrayAdapter {
         
         public IOSMenuArrayAdapter(Context context, int resourceId, List<String> objects) {
             super(context, resourceId, objects);
@@ -375,7 +409,7 @@ public class BottomMenu extends BaseDialog {
         }
     }
     
-    private class NormalMenuArrayAdapter extends ArrayAdapter {
+    public class NormalMenuArrayAdapter extends ArrayAdapter {
         public int resoureId;
         public List<String> objects;
         public Context context;
@@ -622,6 +656,15 @@ public class BottomMenu extends BaseDialog {
         
         this.theme = theme;
         refreshView();
+        return this;
+    }
+    
+    public BaseAdapter getCustomAdapter() {
+        return customAdapter;
+    }
+    
+    public BottomMenu setCustomAdapter(BaseAdapter customAdapter) {
+        this.customAdapter = customAdapter;
         return this;
     }
 }

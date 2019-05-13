@@ -11,6 +11,8 @@ import android.os.Handler;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -267,9 +269,23 @@ public class MainActivity extends BaseActivity {
                 BottomMenu.show(me, new String[]{"菜单1", "菜单2", "菜单3"}, new OnMenuItemClickListener() {
                     @Override
                     public void onClick(String text, int index) {
-                    
+                        toast(text);
                     }
                 });
+                
+                //List<String> datas = new ArrayList<>();
+                //datas.add("菜单1");
+                //datas.add("菜单2");
+                //datas.add("菜单3");
+                //
+                //BaseAdapter baseAdapter = new ArrayAdapter(me, com.kongzue.dialog.R.layout.item_bottom_menu_kongzue, datas);
+                //
+                //BottomMenu.show(me, baseAdapter, new OnMenuItemClickListener() {
+                //    @Override
+                //    public void onClick(String text, int index) {
+                //        toast(text);
+                //    }
+                //});
             }
         });
         
@@ -306,13 +322,7 @@ public class MainActivity extends BaseActivity {
                     itemList.add(new ShareDialog.Item(me, R.mipmap.img_hangout_material, "环聊"));
                     itemList.add(new ShareDialog.Item(me, R.mipmap.img_remind_material, "Keep"));
                 }
-                //ShareDialog.build(me).setItems(itemList).setOnItemClickListener(new ShareDialog.OnItemClickListener() {
-                //    @Override
-                //    public boolean onClick(ShareDialog shareDialog, int index, ShareDialog.Item item) {
-                //        log("点击了：" + item.getText());
-                //        return false;
-                //    }
-                //}).show();
+                
                 ShareDialog.show(me, itemList, new ShareDialog.OnItemClickListener() {
                     @Override
                     public boolean onClick(ShareDialog shareDialog, int index, ShareDialog.Item item) {
