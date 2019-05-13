@@ -97,7 +97,7 @@ implementation 'com.kongzue.dialog_v3:dialog:3.0.0'
 
 从 Kongzue Dialog V2 升级至 Kongzue Dialog V3，请参考 [Kongzue Dialog V2升级注意事项](kongzue_dialog_v2_upto_v3.md)
 
-## 配置
+## 全局配置
 在完成引入 Kongzue Dialog V3 库后，首先需要进行一些预先配置，诸如对话框组件整体的风格、主题和字体等，它们都可以在一个工具类中进行配置，说明如下：
 ```
 import com.kongzue.dialog.util.DialogSettings;
@@ -460,13 +460,86 @@ CustomDialog.show(MainActivity.this, customView, new CustomDialog.OnBindView() {
 });
 ```
 
+## 其他设置
+
+### 文字样式
+因文字样式牵扯的属性较多，因此提供了封装类 `TextInfo（com.kongzue.dialog.util.TextInfo）`来进行。
+
+该类提供了以下属性进行设置：
+
+| 属性 | 用途 | 默认值 |
+| ------ | ------ | ------ |
+| fontSize | 文字大小(单位：dp) | 值为-1时不生效 |
+| gravity | 对齐方式 | Gravity.Left，值为-1时不生效 |
+| fontColor | 文字颜色 | 值为1时不生效 |
+| bold | 是否粗体 | - |
+
+以上属性可通过对应的 get、set方法设置或获取
+
+您可以直接进行 <a href="#全局配置">全局设置</a> 也可以单独对某个组件的标题、内容、按钮等进行设置：
+```
+MessageDialog.show(MainActivity.this, "提示", "这个窗口附带自定义布局", "知道了")
+    .setTitleTextInfo(new TextInfo().setBold(true).setFontColor(Color.RED))     //设置标题文字样式
+;
+```
+
+### 输入内容设置
+对于输入对话框 InputDialog，提供额外的 `InputInfo（com.kongzue.dialog.util.InputInfo）` 工具类控制输入内容的属性，其中各属性介绍如下：
+
+| 属性 | 用途 | 默认值 |
+| ------ | ------ | ------ |
+| MAX_LENGTH | 可输入最大长度 | 值为-1时不生效 |
+| inputType | 输入类型 | 类型详见 android.text.InputType |
+| textInfo | 文字样式 | null时不生效 |
+
+您可以直接进行 <a href="#全局配置">全局设置</a> 也可以单独对某个输入对话框进行设置：
+```
+InputDialog.show(MainActivity.this, "提示", "请输入密码（123456）", "确定", "取消")
+    .setInputInfo(new InputInfo()       //设置输入样式
+        .setMAX_LENGTH(6)
+        .setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD)
+        .setTextInfo(new TextInfo()
+                             .setFontColor(Color.RED)
+        )
+;
+```
+
+### 监听事件
+如果需要全局的控制所有对话框显示、隐藏触发事件，可以设置 <a href="#全局配置">全局设置</a> 中的 dialogLifeCycleListener 监听器，其中会返回所有对话框的生命周期管理，以便做相应处理：
+```
+DialogSettings.dialogLifeCycleListener = new DialogLifeCycleListener() {
+    @Override
+    public void onCreate(BaseDialog alertDialog) {
+    
+    }
+    @Override
+    public void onShow(BaseDialog alertDialog) {
+    
+    }
+    @Override
+    public void onDismiss(BaseDialog alertDialog) {
+    
+    }
+}
+```
+
+要单独对某个对话框进行监听，可使用对应的 setOnShowListener(...) 及 setOnDismissListener(...) 进行处理，例如，在提示过后关闭本界面可以这样写：
+```
+TipDialog.show(MainActivity.this, "成功！", TipDialog.TYPE.SUCCESS).setOnDismissListener(new OnDismissListener() {
+    @Override
+    public void onDismiss() {
+        finish();
+    }
+});
+```
+
 ## 一些建议
 由于采用了模态化的对话框展示模式、等待提示框延时关闭以及事件重绑定等技术，可能会被某些 BUG 检测软件定性为“内存泄漏”的问题，但实际并不会引发任何崩溃和错误，如有不放心可以在您的程序退出时通过以下语句彻底清空所有 Kongzue Dialog V3 使用的内存句柄：
 ```
 BaseDialog.unload();
 ```
 
-## 混淆
+## 混淆设置
 为避免不必要的问题，可以将以下代码加入 proguard-rules.pro 文件中。
 ```
 -keep class com.kongzue.dialog.** { *; }
