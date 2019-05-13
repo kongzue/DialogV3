@@ -52,19 +52,19 @@ android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.
 builder.setTitle(R.string.error_title);
 builder.setCancelable(false);                                                                                                   //每次都需要指定的设置
 builder.setMessage(R.string.error_not_install_tip);
-builder.setPositiveButton(me.getString(R.string.dialog_iknow_button), new DialogInterface.OnClickListener() {                  
+builder.setPositiveButton(context.getString(R.string.dialog_iknow_button), new DialogInterface.OnClickListener() {                  
     @Override
     public void onClick(DialogInterface dialogInterface, int i) {
         //处理确定按钮事务
     }
 });
-builder.setNegativeButton(me.getString(R.string.cancel), null);
+builder.setNegativeButton(context.getString(R.string.cancel), null);
 builder.show();                                                                                                                 //不要忘记.show()
 ```
 
 使用 Kongzue Dialog V3：
 ```
-MessageDialog.show(me, R.string.error_title, R.string.error_not_install_tip, R.string.dialog_iknow_button, R.string.cancel)     //一次性完成所有赋值操作
+MessageDialog.show(MainActivity.this, R.string.error_title, R.string.error_not_install_tip, R.string.dialog_iknow_button, R.string.cancel)     //一次性完成所有赋值操作
         .setOkButton(new OnDialogButtonClickListener() {                                                                        //仅需要对需要处理的按钮进行操作
             @Override
             public boolean onClick(BaseDialog baseDialog, View v) {
@@ -326,9 +326,9 @@ datas.add("菜单2");
 datas.add("菜单3");
 
 //您自己的Adapter
-BaseAdapter baseAdapter = new ArrayAdapter(me, com.kongzue.dialog.R.layout.item_bottom_menu_kongzue, datas);    
+BaseAdapter baseAdapter = new ArrayAdapter(MainActivity.this, com.kongzue.dialog.R.layout.item_bottom_menu_kongzue, datas);    
 
-BottomMenu.show(me, baseAdapter, new OnMenuItemClickListener() {
+BottomMenu.show(MainActivity.this, baseAdapter, new OnMenuItemClickListener() {
     @Override
     public void onClick(String text, int index) {
         //注意此处的 text 返回为自定义 Adapter.getItem(position).toString()，如需获取自定义Object，请尝试 datas.get(index)
@@ -372,17 +372,17 @@ Notification.show(MainActivity.this, "提示", "提示信息", R.mipmap.ico_wech
 要使用分享对话框，需要先创建分享 Item：
 ```
 List<ShareDialog.Item> itemList = new ArrayList<>();
-itemList.add(new ShareDialog.Item(me,R.mipmap.img_email_ios,"邮件"));
-itemList.add(new ShareDialog.Item(me,R.mipmap.img_qq_ios,"QQ"));
-itemList.add(new ShareDialog.Item(me,R.mipmap.img_wechat_ios,"微信"));
-itemList.add(new ShareDialog.Item(me,R.mipmap.img_weibo_ios,"微博"));
-itemList.add(new ShareDialog.Item(me,R.mipmap.img_memorandum_ios,"添加到“备忘录”"));
-itemList.add(new ShareDialog.Item(me,R.mipmap.img_remind_ios,"提醒事项"));
+itemList.add(new ShareDialog.Item(MainActivity.this ,R.mipmap.img_email_ios,"邮件"));
+itemList.add(new ShareDialog.Item(MainActivity.this ,R.mipmap.img_qq_ios,"QQ"));
+itemList.add(new ShareDialog.Item(MainActivity.this ,R.mipmap.img_wechat_ios,"微信"));
+itemList.add(new ShareDialog.Item(MainActivity.this ,R.mipmap.img_weibo_ios,"微博"));
+itemList.add(new ShareDialog.Item(MainActivity.this ,R.mipmap.img_memorandum_ios,"添加到“备忘录”"));
+itemList.add(new ShareDialog.Item(MainActivity.this ,R.mipmap.img_remind_ios,"提醒事项"));
 ```
 
 然后创建分享对话框及监听点击事件：
 ```
-ShareDialog.show(me, itemList, new ShareDialog.OnItemClickListener() {
+ShareDialog.show(MainActivity.this, itemList, new ShareDialog.OnItemClickListener() {
     @Override
     public boolean onClick(ShareDialog shareDialog, int index, ShareDialog.Item item) {
         toast("点击了：" + item.getText());
