@@ -4,10 +4,10 @@ import com.kongzue.dialog.util.BaseDialog;
 
 public interface DialogLifeCycleListener {
 
-    void onCreate(BaseDialog alertDialog);
+    void onCreate(BaseDialog dialog);
 
-    void onShow(BaseDialog alertDialog);
+    void onShow(BaseDialog dialog);
 
-    void onDismiss(BaseDialog alertDialog);
+    void onDismiss(BaseDialog dialog);
 
 }

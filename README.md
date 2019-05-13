@@ -509,15 +509,15 @@ InputDialog.show(MainActivity.this, "提示", "请输入密码（123456）", "�
 ```
 DialogSettings.dialogLifeCycleListener = new DialogLifeCycleListener() {
     @Override
-    public void onCreate(BaseDialog alertDialog) {
+    public void onCreate(BaseDialog dialog) {
     
     }
     @Override
-    public void onShow(BaseDialog alertDialog) {
+    public void onShow(BaseDialog dialog) {
     
     }
     @Override
-    public void onDismiss(BaseDialog alertDialog) {
+    public void onDismiss(BaseDialog dialog) {
     
     }
 }
