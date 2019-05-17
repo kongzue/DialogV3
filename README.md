@@ -280,7 +280,7 @@ TipDialog.show(MainActivity.this, "成功！", TipDialog.TYPE.SUCCESS)
 
 需要注意的是，WaitDialog 本质上继承自 TipDialog，它们属于长时间提示功能的组件，且内存中只会创建一次，不会重复创建直到被 dismiss() 关闭，但因为该组件使用 DialogFragment 构建，请勿需担心造成 WindowLeaked 错误问题。
 
-另外注意 WaitDialog 和 TipDialog 的主题和全局主题（DialogSettings.theme）是相反的，即对话框处于亮色模式时等待和提示对话框是暗色模式的，可以通过以下代码自定义：
+WaitDialog 和 TipDialog 的主题可以通过以下代码自定义：
 ```
 WaitDialog.show(MainActivity.this, null)
         .setTheme(DialogSettings.THEME.LIGHT);      //强制指定为亮色模式
@@ -551,7 +551,7 @@ BaseDialog.unload();
 
 ## 开源协议
 ```
-Copyright Kongzue Dialog
+Copyright Kongzue DialogV3
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
