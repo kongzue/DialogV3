@@ -270,7 +270,7 @@ public class MessageDialog extends BaseDialog {
                     if (customView != null) {
                         boxCustom.removeAllViews();
                         boxCustom.addView(customView);
-                        if (onBindView!=null)onBindView.onBind(this,customView);
+                        if (onBindView != null) onBindView.onBind(this, customView);
                         boxCustom.setVisibility(View.VISIBLE);
                     } else {
                         boxCustom.setVisibility(View.GONE);
@@ -300,7 +300,7 @@ public class MessageDialog extends BaseDialog {
                     if (customView != null) {
                         boxCustom.removeAllViews();
                         boxCustom.addView(customView);
-                        if (onBindView!=null)onBindView.onBind(this,customView);
+                        if (onBindView != null) onBindView.onBind(this, customView);
                         boxCustom.setVisibility(View.VISIBLE);
                     } else {
                         boxCustom.setVisibility(View.GONE);
@@ -309,7 +309,12 @@ public class MessageDialog extends BaseDialog {
                     break;
                 case STYLE_MATERIAL:
                     materialAlertDialog.setTitle(title);
-                    if (customView != null) materialAlertDialog.setView(customView);
+    
+                    if (customView != null) {
+                        if (onBindView != null) onBindView.onBind(this, customView);
+                        materialAlertDialog.setView(customView);
+                    }
+                    
                     if (backgroundColor != 0)
                         materialAlertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(backgroundColor));
                     materialAlertDialog.setMessage(message);
