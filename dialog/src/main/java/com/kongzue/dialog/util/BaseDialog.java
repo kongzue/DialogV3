@@ -96,6 +96,7 @@ public abstract class BaseDialog {
     }
     
     protected void showDialog(int style) {
+        dismissedFlag = false;
         if (DialogSettings.dialogLifeCycleListener != null)
             DialogSettings.dialogLifeCycleListener.onCreate(this);
         isAlreadyShown = true;
@@ -103,9 +104,10 @@ public abstract class BaseDialog {
         dismissEvent = new OnDismissListener() {
             @Override
             public void onDismiss() {
+                log("## dismissEvent");
                 isShow = false;
                 dialogList.remove(baseDialog);
-                showNext();
+                if (!(baseDialog instanceof TipDialog))showNext();
                 if (onDismissListener != null) onDismissListener.onDismiss();
                 if (DialogSettings.dialogLifeCycleListener != null)
                     DialogSettings.dialogLifeCycleListener.onDismiss(BaseDialog.this);
@@ -119,7 +121,7 @@ public abstract class BaseDialog {
         }
     }
     
-    private void showNext() {
+    protected void showNext() {
         List<BaseDialog> cache = new ArrayList<>();
         cache.addAll(BaseDialog.dialogList);
         for (BaseDialog dialog : cache) {
@@ -192,7 +194,10 @@ public abstract class BaseDialog {
     
     public abstract void show();
     
+    protected boolean dismissedFlag = false;
+    
     public void doDismiss() {
+        dismissedFlag = true;
         dialog.dismiss();
     }
     

@@ -1,11 +1,13 @@
 package com.kongzue.dialog.util;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
@@ -24,6 +26,7 @@ import com.kongzue.dialog.interfaces.OnShowListener;
 import com.kongzue.dialog.interfaces.OnDismissListener;
 import com.kongzue.dialog.v3.BottomMenu;
 import com.kongzue.dialog.v3.ShareDialog;
+import com.kongzue.dialog.v3.TipDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,7 +97,7 @@ public class DialogHelper extends DialogFragment {
             if (parent instanceof BottomMenu || parent instanceof ShareDialog) {
                 dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
                 Window window = dialog.getWindow();
-                window.getDecorView().setPadding(0,0,0,0);
+                window.getDecorView().setPadding(0, 0, 0, 0);
                 WindowManager windowManager = getActivity().getWindowManager();
                 Display display = windowManager.getDefaultDisplay();
                 WindowManager.LayoutParams lp = window.getAttributes();
@@ -215,5 +218,30 @@ public class DialogHelper extends DialogFragment {
     
     public void setAnim(int animResId) {
         this.animResId = animResId;
+    }
+    
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+    
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (parent instanceof TipDialog) {
+            if (parent.dismissedFlag) {
+                if (getDialog() != null) if (getDialog().isShowing()) getDialog().dismiss();
+                if (parent.dismissEvent != null) parent.dismissEvent.onDismiss();
+            }
+        } else {
+            if (getDialog() != null) if (getDialog().isShowing()) {
+                getDialog().setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        parent.dismissEvent.onDismiss();
+                    }
+                });
+            }
+        }
     }
 }
