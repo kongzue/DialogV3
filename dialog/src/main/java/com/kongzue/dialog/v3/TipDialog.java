@@ -90,7 +90,6 @@ public class TipDialog extends BaseDialog {
     }
     
     public static TipDialog showWait(AppCompatActivity context, String message) {
-        Log.e("@@@", "show: " + (waitDialogTemp == null));
         synchronized (TipDialog.class) {
             TipDialog waitDialog = build(context);
             
@@ -120,7 +119,6 @@ public class TipDialog extends BaseDialog {
     }
     
     public static TipDialog showWait(AppCompatActivity context, int messageResId) {
-        Log.e("@@@", "show: " + (waitDialogTemp == null));
         synchronized (TipDialog.class) {
             TipDialog waitDialog = build(context);
             
@@ -150,7 +148,6 @@ public class TipDialog extends BaseDialog {
     }
     
     public static TipDialog show(AppCompatActivity context, String message, TYPE type) {
-        Log.e("@@@", "show: " + (waitDialogTemp == null));
         synchronized (TipDialog.class) {
             TipDialog waitDialog = build(context);
             
@@ -172,6 +169,7 @@ public class TipDialog extends BaseDialog {
                 waitDialog.message = message;
                 waitDialog.setTip(type);
                 waitDialog.showDialog();
+                waitDialog.autoDismiss();
                 return waitDialog;
             }
         }

@@ -2,10 +2,10 @@
 献给要求安卓照着苹果设计稿做开发的产品们（手动滑稽
 
 <a href="https://github.com/kongzue/dialogV3/">
-<img src="https://img.shields.io/badge/Kongzue%20Dialog-3.0.2-green.svg" alt="Kongzue Dialog">
+<img src="https://img.shields.io/badge/Kongzue%20Dialog-3.0.3-green.svg" alt="Kongzue Dialog">
 </a> 
-<a href="https://bintray.com/myzchh/maven/dialogV3/3.0.2/link">
-<img src="https://img.shields.io/badge/Maven-3.0.2-blue.svg" alt="Maven">
+<a href="https://bintray.com/myzchh/maven/dialogV3/3.0.3/link">
+<img src="https://img.shields.io/badge/Maven-3.0.3-blue.svg" alt="Maven">
 </a> 
 <a href="http://www.apache.org/licenses/LICENSE-2.0">
 <img src="https://img.shields.io/badge/License-Apache%202.0-red.svg" alt="License">
@@ -85,14 +85,14 @@ Maven仓库：
 <dependency>
   <groupId>com.kongzue.dialog_v3</groupId>
   <artifactId>dialog</artifactId>
-  <version>3.0.2</version>
+  <version>3.0.3</version>
   <type>pom</type>
 </dependency>
 ```
 Gradle：
 在dependencies{}中添加引用：
 ```
-implementation 'com.kongzue.dialog_v3:dialog:3.0.2'
+implementation 'com.kongzue.dialog_v3:dialog:3.0.3'
 ```
 
 从 Kongzue Dialog V2 升级至 Kongzue Dialog V3，请参考 [Kongzue Dialog V2升级注意事项](kongzue_dialog_v2_upto_v3.md)
@@ -567,6 +567,9 @@ limitations under the License.
 ```
 
 ## 更新日志：
+v3.0.3:
+- 修复 TipDialog 不会自动消失的问题。
+
 v3.0.2:
 - 修复切换后台可能导致的序列化对话框恢复显示队列问题；
 - 修复切换后台可能导致等待、提示对话框出现的无法关闭或显示的问题；
