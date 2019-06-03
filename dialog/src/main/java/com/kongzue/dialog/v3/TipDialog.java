@@ -351,8 +351,8 @@ public class TipDialog extends BaseDialog {
         onDismissListener = new OnDismissListener() {
             @Override
             public void onDismiss() {
-                if (waitDialogTemp != null && waitDialogTemp.dismissListener != null)
-                    waitDialogTemp.dismissListener.onDismiss();
+                if (dismissListener != null)
+                    dismissListener.onDismiss();
                 waitDialogTemp = null;
             }
         };
@@ -379,6 +379,7 @@ public class TipDialog extends BaseDialog {
     
     public TipDialog setOnDismissListener(OnDismissListener onDismissListener) {
         this.dismissListener = onDismissListener;
+        setDismissEvent();
         return this;
     }
     

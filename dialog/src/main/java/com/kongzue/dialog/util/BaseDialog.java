@@ -104,7 +104,6 @@ public abstract class BaseDialog {
         dismissEvent = new OnDismissListener() {
             @Override
             public void onDismiss() {
-                log("## dismissEvent");
                 isShow = false;
                 dialogList.remove(baseDialog);
                 if (!(baseDialog instanceof TipDialog))showNext();
