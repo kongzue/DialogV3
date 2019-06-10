@@ -3,6 +3,7 @@ package com.kongzue.dialog.v3;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -29,6 +30,8 @@ import com.kongzue.dialog.util.view.BlurView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.kongzue.dialog.util.DialogSettings.blurAlpha;
 
 /**
  * Author: @Kongzue
@@ -268,13 +271,29 @@ public class BottomMenu extends BaseDialog {
                     
                     break;
                 case STYLE_IOS:
+                    final int bkgResId, blurFrontColor;
+                    if (theme == DialogSettings.THEME.LIGHT) {
+                        bkgResId = R.drawable.rect_menu_bkg_ios;
+                        blurFrontColor = Color.argb(blurAlpha, 244, 245, 246);
+                        btnCancel.setBackgroundResource(R.drawable.button_menu_ios_light);
+                        listMenu.setDivider(new ColorDrawable(context.getResources().getColor(R.color.dialogSplitIOSLight)));
+                        listMenu.setDividerHeight(1);
+                        titleSplitLine.setBackgroundColor(context.getResources().getColor(R.color.dialogSplitIOSLight));
+                    } else {
+                        bkgResId = R.drawable.rect_menu_bkg_ios;
+                        blurFrontColor = Color.argb(blurAlpha + 10, 22, 22, 22);
+                        btnCancel.setBackgroundResource(R.drawable.button_menu_ios_dark);
+                        listMenu.setDivider(new ColorDrawable(context.getResources().getColor(R.color.dialogSplitIOSDark)));
+                        listMenu.setDividerHeight(1);
+                        titleSplitLine.setBackgroundColor(context.getResources().getColor(R.color.dialogSplitIOSDark));
+                    }
                     if (DialogSettings.isUseBlur) {
                         boxList.post(new Runnable() {
                             @Override
                             public void run() {
                                 blurList = new BlurView(context, null);
                                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, boxList.getHeight());
-                                blurList.setOverlayColor(Color.argb(DialogSettings.blurAlpha, 255, 255, 255));
+                                blurList.setOverlayColor(blurFrontColor);
                                 blurList.setRadius(context, 11, 11);
                                 boxList.addView(blurList, 0, params);
                             }
@@ -284,14 +303,14 @@ public class BottomMenu extends BaseDialog {
                             public void run() {
                                 blurCancel = new BlurView(context, null);
                                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, boxCancel.getHeight());
-                                blurCancel.setOverlayColor(Color.argb(DialogSettings.blurAlpha, 255, 255, 255));
+                                blurCancel.setOverlayColor(blurFrontColor);
                                 blurCancel.setRadius(context, 11, 11);
                                 boxCancel.addView(blurCancel, 0, params);
                             }
                         });
                     } else {
-                        boxList.setBackgroundResource(R.drawable.rect_menu_bkg_ios);
-                        boxCancel.setBackgroundResource(R.drawable.rect_menu_bkg_ios);
+                        boxList.setBackgroundResource(bkgResId);
+                        boxCancel.setBackgroundResource(bkgResId);
                     }
                     
                     if (customAdapter != null) {
@@ -377,30 +396,60 @@ public class BottomMenu extends BaseDialog {
                 useTextInfo(viewHolder.textView, menuTextInfo);
                 
                 if (objects.size() == 1) {
-                    if (title != null && !title.trim().isEmpty()) {
-                        viewHolder.textView.setBackgroundResource(R.drawable.button_menu_ios_bottom);
-                    } else {
-                        if (boxCustom.getVisibility() == View.VISIBLE) {
-                            viewHolder.textView.setBackgroundResource(R.drawable.button_menu_ios_bottom);
+                    if (theme== DialogSettings.THEME.LIGHT){
+                        if (title != null && !title.trim().isEmpty()) {
+                            viewHolder.textView.setBackgroundResource(R.drawable.button_menu_ios_bottom_light);
                         } else {
-                            viewHolder.textView.setBackgroundResource(R.drawable.button_menu_ios);
+                            if (boxCustom.getVisibility() == View.VISIBLE) {
+                                viewHolder.textView.setBackgroundResource(R.drawable.button_menu_ios_bottom_light);
+                            } else {
+                                viewHolder.textView.setBackgroundResource(R.drawable.button_menu_ios_light);
+                            }
+                        }
+                    }else{
+                        if (title != null && !title.trim().isEmpty()) {
+                            viewHolder.textView.setBackgroundResource(R.drawable.button_menu_ios_bottom_dark);
+                        } else {
+                            if (boxCustom.getVisibility() == View.VISIBLE) {
+                                viewHolder.textView.setBackgroundResource(R.drawable.button_menu_ios_bottom_dark);
+                            } else {
+                                viewHolder.textView.setBackgroundResource(R.drawable.button_menu_ios_dark);
+                            }
                         }
                     }
                 } else {
-                    if (position == 0) {
-                        if (title != null && !title.trim().isEmpty()) {
-                            viewHolder.textView.setBackgroundResource(R.drawable.button_menu_ios_middle);
-                        } else {
-                            if (boxCustom.getVisibility() == View.VISIBLE) {
-                                viewHolder.textView.setBackgroundResource(R.drawable.button_menu_ios_middle);
+                    if (theme== DialogSettings.THEME.LIGHT) {
+                        if (position == 0) {
+                            if (title != null && !title.trim().isEmpty()) {
+                                viewHolder.textView.setBackgroundResource(R.drawable.button_menu_ios_center_light);
                             } else {
-                                viewHolder.textView.setBackgroundResource(R.drawable.button_menu_ios_top);
+                                if (boxCustom.getVisibility() == View.VISIBLE) {
+                                    viewHolder.textView.setBackgroundResource(R.drawable.button_menu_ios_center_light);
+                                } else {
+                                    viewHolder.textView.setBackgroundResource(R.drawable.button_menu_ios_top_light);
+                                }
                             }
+                        } else if (position == objects.size() - 1) {
+                            viewHolder.textView.setBackgroundResource(R.drawable.button_menu_ios_bottom_light);
+                        } else {
+                            viewHolder.textView.setBackgroundResource(R.drawable.button_menu_ios_center_light);
                         }
-                    } else if (position == objects.size() - 1) {
-                        viewHolder.textView.setBackgroundResource(R.drawable.button_menu_ios_bottom);
-                    } else {
-                        viewHolder.textView.setBackgroundResource(R.drawable.button_menu_ios_middle);
+                    }else{
+                        if (position == 0) {
+                            if (title != null && !title.trim().isEmpty()) {
+                                viewHolder.textView.setBackgroundResource(R.drawable.button_menu_ios_center_dark);
+                            } else {
+                                if (boxCustom.getVisibility() == View.VISIBLE) {
+                                    viewHolder.textView.setBackgroundResource(R.drawable.button_menu_ios_center_dark);
+                                } else {
+                                    viewHolder.textView.setBackgroundResource(R.drawable.button_menu_ios_top_dark);
+                                }
+                            }
+                        } else if (position == objects.size() - 1) {
+                            viewHolder.textView.setBackgroundResource(R.drawable.button_menu_ios_bottom_dark);
+                        } else {
+                            viewHolder.textView.setBackgroundResource(R.drawable.button_menu_ios_center_dark);
+                        }
                     }
                 }
             }

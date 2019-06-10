@@ -431,7 +431,7 @@ public class MainActivity extends BaseActivity {
                                 TipDialog.show(me, "成功！", TipDialog.TYPE.SUCCESS).setOnDismissListener(new OnDismissListener() {
                                     @Override
                                     public void onDismiss() {
-                                        finish();
+                                    
                                     }
                                 });
                             }

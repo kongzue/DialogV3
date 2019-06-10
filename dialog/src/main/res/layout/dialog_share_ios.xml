@@ -91,7 +91,7 @@
                 android:id="@+id/btn_cancel"
                 android:layout_width="match_parent"
                 android:layout_height="53dp"
-                android:background="@drawable/button_menu_ios"
+                android:background="@drawable/button_menu_ios_light"
                 android:gravity="center"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"

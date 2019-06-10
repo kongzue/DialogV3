@@ -5,6 +5,8 @@
     <solid android:color="@color/dialogButtonIOSLightPress"></solid>
 
     <!-- 矩形的圆角半径 -->
-    <corners android:radius="11dp" />
+    <corners
+        android:topRightRadius="15dp"
+        android:topLeftRadius="15dp"/>
 
 </shape>

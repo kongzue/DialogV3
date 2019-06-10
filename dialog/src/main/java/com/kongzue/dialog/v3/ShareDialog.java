@@ -43,6 +43,8 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.kongzue.dialog.util.DialogSettings.blurAlpha;
+
 /**
  * Author: @Kongzue
  * Github: https://github.com/kongzue/
@@ -95,7 +97,7 @@ public class ShareDialog extends BaseDialog {
         }
     }
     
-    public static ShareDialog show(@NonNull AppCompatActivity context, List<ShareDialog.Item> itemList,OnItemClickListener onItemClickListener) {
+    public static ShareDialog show(@NonNull AppCompatActivity context, List<ShareDialog.Item> itemList, OnItemClickListener onItemClickListener) {
         ShareDialog shareDialog = build(context);
         shareDialog.items = itemList;
         shareDialog.onItemClickListener = onItemClickListener;
@@ -136,13 +138,27 @@ public class ShareDialog extends BaseDialog {
         if (rootView != null) {
             switch (style) {
                 case STYLE_IOS:
+                    
+                    final int bkgResId, blurFrontColor;
+                    if (theme == DialogSettings.THEME.LIGHT) {
+                        bkgResId = R.drawable.rect_menu_bkg_ios;
+                        blurFrontColor = Color.argb(blurAlpha, 244, 245, 246);
+                        btnCancel.setBackgroundResource(R.drawable.button_menu_ios_light);
+                        titleSplitLine.setBackgroundColor(context.getResources().getColor(R.color.dialogSplitIOSLight));
+                    } else {
+                        bkgResId = R.drawable.rect_menu_bkg_ios;
+                        blurFrontColor = Color.argb(blurAlpha + 10, 22, 22, 22);
+                        btnCancel.setBackgroundResource(R.drawable.button_menu_ios_dark);
+                        titleSplitLine.setBackgroundColor(context.getResources().getColor(R.color.dialogSplitIOSDark));
+                    }
+                    
                     if (DialogSettings.isUseBlur) {
                         boxShare.post(new Runnable() {
                             @Override
                             public void run() {
                                 blurContent = new BlurView(context, null);
                                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, boxShare.getHeight());
-                                blurContent.setOverlayColor(Color.argb(DialogSettings.blurAlpha, 245, 245, 245));
+                                blurContent.setOverlayColor(blurFrontColor);
                                 blurContent.setRadius(context, 11, 11);
                                 boxShare.addView(blurContent, 0, params);
                             }
@@ -152,14 +168,14 @@ public class ShareDialog extends BaseDialog {
                             public void run() {
                                 blurCancel = new BlurView(context, null);
                                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, boxCancel.getHeight());
-                                blurCancel.setOverlayColor(Color.argb(DialogSettings.blurAlpha, 255, 255, 255));
+                                blurCancel.setOverlayColor(blurFrontColor);
                                 blurCancel.setRadius(context, 11, 11);
                                 boxCancel.addView(blurCancel, 0, params);
                             }
                         });
                     } else {
-                        boxShare.setBackgroundResource(R.drawable.rect_menu_bkg_ios);
-                        boxCancel.setBackgroundResource(R.drawable.rect_menu_bkg_ios);
+                        boxShare.setBackgroundResource(bkgResId);
+                        boxCancel.setBackgroundResource(bkgResId);
                     }
                     
                     if (items != null) {
@@ -175,6 +191,12 @@ public class ShareDialog extends BaseDialog {
                             roundedBitmapDrawable.setCornerRadius(dip2px(13));
                             imgIcon.setImageDrawable(roundedBitmapDrawable);
                             txtLabel.setText(item.getText());
+                            
+                            if (theme == DialogSettings.THEME.DARK) {
+                                txtLabel.setTextColor(Color.WHITE);
+                            } else {
+                                txtLabel.setTextColor(Color.BLACK);
+                            }
                             
                             final int index = i;
                             itemView.setOnClickListener(new View.OnClickListener() {
@@ -297,7 +319,7 @@ public class ShareDialog extends BaseDialog {
                                     }
                                 }
                             });
-    
+                            
                             itemView.setOnTouchListener(new View.OnTouchListener() {
                                 @Override
                                 public boolean onTouch(View v, MotionEvent event) {
@@ -340,7 +362,7 @@ public class ShareDialog extends BaseDialog {
             if (customView != null) {
                 boxCustom.removeAllViews();
                 boxCustom.addView(customView);
-                if (onBindView!=null)onBindView.onBind(this, customView);
+                if (onBindView != null) onBindView.onBind(this, customView);
                 boxCustom.setVisibility(View.VISIBLE);
                 if (titleSplitLine != null) titleSplitLine.setVisibility(View.VISIBLE);
             } else {
@@ -406,7 +428,7 @@ public class ShareDialog extends BaseDialog {
                                     break;
                             }
                         }
-                        if (deltaY>= -dip2px(50) && deltaY<= dip2px(50)){
+                        if (deltaY >= -dip2px(50) && deltaY <= dip2px(50)) {
                             switch (step) {
                                 case 0:
                                     boxBody.animate().setDuration(300).translationY(boxBody.getHeight() / 2);

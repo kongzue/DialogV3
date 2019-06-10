@@ -104,9 +104,11 @@ public abstract class BaseDialog {
         dismissEvent = new OnDismissListener() {
             @Override
             public void onDismiss() {
+                log("# dismissEvent");
+                dismissedFlag = true;
                 isShow = false;
                 dialogList.remove(baseDialog);
-                if (!(baseDialog instanceof TipDialog))showNext();
+                if (!(baseDialog instanceof TipDialog)) showNext();
                 if (onDismissListener != null) onDismissListener.onDismiss();
                 if (DialogSettings.dialogLifeCycleListener != null)
                     DialogSettings.dialogLifeCycleListener.onDismiss(BaseDialog.this);
@@ -121,6 +123,7 @@ public abstract class BaseDialog {
     }
     
     protected void showNext() {
+        log("# showNext");
         List<BaseDialog> cache = new ArrayList<>();
         cache.addAll(BaseDialog.dialogList);
         for (BaseDialog dialog : cache) {
@@ -144,7 +147,7 @@ public abstract class BaseDialog {
     }
     
     private void showNow() {
-        log("showNow");
+        log("# showNow");
         isShow = true;
         if (context.isDestroyed()) {
             if (newContext == null) {
@@ -171,7 +174,7 @@ public abstract class BaseDialog {
                     DialogSettings.dialogLifeCycleListener.onShow(BaseDialog.this);
             }
         });
-        if (DialogSettings.systemDialogStyle == 0 && style == DialogSettings.STYLE.STYLE_IOS && !(baseDialog instanceof TipDialog) && !(baseDialog instanceof BottomMenu)&& !(baseDialog instanceof ShareDialog))
+        if (DialogSettings.systemDialogStyle == 0 && style == DialogSettings.STYLE.STYLE_IOS && !(baseDialog instanceof TipDialog) && !(baseDialog instanceof BottomMenu) && !(baseDialog instanceof ShareDialog))
             dialog.setAnim(R.style.iOSDialogAnimStyle);
         dialog.setOnDismissListener(dismissEvent);
         
@@ -256,5 +259,9 @@ public abstract class BaseDialog {
         dialogList = new ArrayList<>();
         newContext = null;
         WaitDialog.waitDialogTemp = null;
+    }
+    
+    public static int getSize() {
+        return dialogList.size();
     }
 }

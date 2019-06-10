@@ -24,6 +24,7 @@
     <color name="dialogButtonGrayDarkPress">#1ec0d4f1</color>
     <color name="whiteAlpha50">#80FFFFFF</color>
     <color name="whiteAlpha30">#4DFFFFFF</color>
+    <color name="whiteAlpha10">#1AFFFFFF</color>
     <color name="blackAlpha30">#4D000000</color>
     <color name="blackAlpha10">#1A000000</color>
     <color name="notificationNormal">#353535</color>

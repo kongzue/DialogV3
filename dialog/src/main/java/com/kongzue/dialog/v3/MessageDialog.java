@@ -22,7 +22,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kongzue.dialog.R;
-import com.kongzue.dialog.interfaces.DialogLifeCycleListener;
 import com.kongzue.dialog.interfaces.OnDialogButtonClickListener;
 import com.kongzue.dialog.interfaces.OnShowListener;
 import com.kongzue.dialog.interfaces.OnDismissListener;
@@ -253,6 +252,10 @@ public class MessageDialog extends BaseDialog {
                         splitVertical1.setBackgroundColor(context.getResources().getColor(R.color.dialogSplitIOSDark));
                         splitVertical2.setBackgroundColor(context.getResources().getColor(R.color.dialogSplitIOSDark));
                         txtInput.setBackgroundResource(R.drawable.editbox_dialog_bkg_ios_dark);
+                        
+                        btnSelectPositive.setBackgroundResource(R.drawable.button_dialog_ios_right_dark);
+                        btnSelectOther.setBackgroundResource(R.drawable.button_menu_ios_center_dark);
+                        btnSelectNegative.setBackgroundResource(R.drawable.button_dialog_ios_left_dark);
                     }
                     if (DialogSettings.isUseBlur) {
                         bkg.post(new Runnable() {
@@ -309,7 +312,7 @@ public class MessageDialog extends BaseDialog {
                     break;
                 case STYLE_MATERIAL:
                     materialAlertDialog.setTitle(title);
-    
+                    
                     if (customView != null) {
                         if (onBindView != null) onBindView.onBind(this, customView);
                         materialAlertDialog.setView(customView);
@@ -441,10 +444,15 @@ public class MessageDialog extends BaseDialog {
         }
         if (btnSelectNegative != null) {
             if (isNull(cancelButton)) {
+                //单按钮情况
                 btnSelectNegative.setVisibility(View.GONE);
                 if (style == DialogSettings.STYLE.STYLE_IOS) {
                     splitVertical2.setVisibility(View.GONE);
-                    btnSelectPositive.setBackgroundResource(R.drawable.button_menu_ios_bottom);
+                    if (theme == DialogSettings.THEME.LIGHT) {
+                        btnSelectPositive.setBackgroundResource(R.drawable.button_dialog_ios_bottom_light);
+                    } else {
+                        btnSelectPositive.setBackgroundResource(R.drawable.button_dialog_ios_bottom_dark);
+                    }
                 }
             } else {
                 btnSelectNegative.setText(cancelButton);
@@ -500,6 +508,7 @@ public class MessageDialog extends BaseDialog {
         if (boxButton != null) {
             boxButton.setOrientation(buttonOrientation);
             if (buttonOrientation == LinearLayout.VERTICAL) {
+                //竖排排列的情况下
                 boxButton.removeAllViews();
                 
                 if (style == DialogSettings.STYLE.STYLE_IOS) {
@@ -510,12 +519,22 @@ public class MessageDialog extends BaseDialog {
                     boxButton.addView(btnSelectOther);
                     
                     if (okButtonDrawable == null && cancelButtonDrawable == null && otherButtonDrawable == null) {
-                        btnSelectPositive.setBackgroundResource(R.drawable.button_menu_ios_center);
-                        if (btnSelectOther.getVisibility() == View.GONE) {
-                            btnSelectNegative.setBackgroundResource(R.drawable.button_menu_ios_bottom);
+                        if (theme == DialogSettings.THEME.LIGHT) {
+                            btnSelectPositive.setBackgroundResource(R.drawable.button_menu_ios_center_light);
+                            if (btnSelectOther.getVisibility() == View.GONE) {
+                                btnSelectNegative.setBackgroundResource(R.drawable.button_dialog_ios_bottom_light);
+                            } else {
+                                btnSelectNegative.setBackgroundResource(R.drawable.button_menu_ios_center_light);
+                                btnSelectOther.setBackgroundResource(R.drawable.button_dialog_ios_bottom_light);
+                            }
                         } else {
-                            btnSelectNegative.setBackgroundResource(R.drawable.button_menu_ios_center);
-                            btnSelectOther.setBackgroundResource(R.drawable.button_menu_ios_bottom);
+                            btnSelectPositive.setBackgroundResource(R.drawable.button_menu_ios_center_dark);
+                            if (btnSelectOther.getVisibility() == View.GONE) {
+                                btnSelectNegative.setBackgroundResource(R.drawable.button_dialog_ios_bottom_dark);
+                            } else {
+                                btnSelectNegative.setBackgroundResource(R.drawable.button_menu_ios_center_dark);
+                                btnSelectOther.setBackgroundResource(R.drawable.button_dialog_ios_bottom_dark);
+                            }
                         }
                     }
                     

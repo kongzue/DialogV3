@@ -364,7 +364,7 @@ public class BlurView extends View {
         }
         
         mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
-        if (!mRoundBitmap.isRecycled())canvas.drawBitmap(mRoundBitmap, 0, 0, mPaint);
+        if (!mRoundBitmap.isRecycled()) canvas.drawBitmap(mRoundBitmap, 0, 0, mPaint);
     }
     
     private static class StopException extends RuntimeException {

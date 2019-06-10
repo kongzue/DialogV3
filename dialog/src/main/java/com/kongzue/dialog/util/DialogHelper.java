@@ -205,6 +205,7 @@ public class DialogHelper extends DialogFragment {
     @Override
     public void dismiss() {
         try {
+            if (parent != null) parent.dismissedFlag = true;
             super.dismiss();
         } catch (Exception e) {
         }
@@ -234,13 +235,18 @@ public class DialogHelper extends DialogFragment {
                 if (parent.dismissEvent != null) parent.dismissEvent.onDismiss();
             }
         } else {
-            if (getDialog() != null) if (getDialog().isShowing()) {
-                getDialog().setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        parent.dismissEvent.onDismiss();
-                    }
-                });
+            if (getDialog() != null) {
+                if (getDialog().isShowing()) {
+                    getDialog().setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            if (parent.dismissEvent != null)parent.dismissEvent.onDismiss();
+                        }
+                    });
+                }
+            }
+            if (parent.dismissedFlag) {
+                dismiss();
             }
         }
     }
