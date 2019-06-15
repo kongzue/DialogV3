@@ -2,10 +2,10 @@
 献给要求安卓照着苹果设计稿做开发的产品们（手动滑稽
 
 <a href="https://github.com/kongzue/dialogV3/">
-<img src="https://img.shields.io/badge/Kongzue%20Dialog-3.0.5-green.svg" alt="Kongzue Dialog">
+<img src="https://img.shields.io/badge/Kongzue%20Dialog-3.0.6-green.svg" alt="Kongzue Dialog">
 </a> 
-<a href="https://bintray.com/myzchh/maven/dialogV3/3.0.5/link">
-<img src="https://img.shields.io/badge/Maven-3.0.5-blue.svg" alt="Maven">
+<a href="https://bintray.com/myzchh/maven/dialogV3/3.0.6/link">
+<img src="https://img.shields.io/badge/Maven-3.0.6-blue.svg" alt="Maven">
 </a> 
 <a href="http://www.apache.org/licenses/LICENSE-2.0">
 <img src="https://img.shields.io/badge/License-Apache%202.0-red.svg" alt="License">
@@ -85,14 +85,14 @@ Maven仓库：
 <dependency>
   <groupId>com.kongzue.dialog_v3</groupId>
   <artifactId>dialog</artifactId>
-  <version>3.0.5</version>
+  <version>3.0.6</version>
   <type>pom</type>
 </dependency>
 ```
 Gradle：
 在dependencies{}中添加引用：
 ```
-implementation 'com.kongzue.dialog_v3:dialog:3.0.5'
+implementation 'com.kongzue.dialog_v3:dialog:3.0.6'
 ```
 
 从 Kongzue Dialog V2 升级至 Kongzue Dialog V3，请参考 [Kongzue Dialog V2升级注意事项](kongzue_dialog_v2_upto_v3.md)
@@ -567,6 +567,11 @@ limitations under the License.
 ```
 
 ## 更新日志：
+v3.0.6:
+- 自定义布局在 MessageDialog、InputDialog 的 Material 风格使用时宽度未顶头的问题修复；
+- 自定义布局在 MessageDialog、InputDialog 的 Material 风格使用时存在的未 removeView 问题修复；
+- 重复旋转屏幕导致空指针问题修复；
+
 v3.0.5:
 - BottomMenu 和 ShareDialog 的 IOS 风格新增暗色模式，其他风格后续跟进；
 - 根据 IOS13 实际效果对所有暗色模式颜色进行了调整；

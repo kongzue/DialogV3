@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kongzue.dialog.R;
@@ -159,6 +160,8 @@ public class InputDialog extends MessageDialog {
         }
     }
     
+    private LinearLayout materialCustomViewBox;
+    
     @Override
     public void refreshView() {
         super.refreshView();
@@ -189,14 +192,17 @@ public class InputDialog extends MessageDialog {
                                 txtInput.requestLayout();
                             }
                         });
+    
+                        if (boxCustom!=null)boxCustom.removeAllViews();
+                        if (materialCustomViewBox!=null)materialCustomViewBox.removeAllViews();
+                        materialCustomViewBox = new LinearLayout(context);
+                        materialCustomViewBox.setOrientation(LinearLayout.VERTICAL);
+                        materialCustomViewBox.addView(customView);
+                        materialCustomViewBox.addView(txtInput);
                         
-                        LinearLayout viewBox = new LinearLayout(context);
-                        viewBox.setOrientation(LinearLayout.VERTICAL);
-                        viewBox.addView(customView);
-                        viewBox.addView(txtInput);
-                        if (onBindView != null) onBindView.onBind(this, customView);
+                        if (onBindView != null) onBindView.onBind(this, materialCustomViewBox);
                         
-                        materialAlertDialog.setView(viewBox);
+                        materialAlertDialog.setView(materialCustomViewBox);
                     }
                 }
                 materialAlertDialog.setOnShowListener(new DialogInterface.OnShowListener() {

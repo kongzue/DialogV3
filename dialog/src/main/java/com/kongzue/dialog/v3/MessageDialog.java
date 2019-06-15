@@ -315,7 +315,15 @@ public class MessageDialog extends BaseDialog {
                     
                     if (customView != null) {
                         if (onBindView != null) onBindView.onBind(this, customView);
-                        materialAlertDialog.setView(customView);
+                        
+                        if (boxCustom != null) boxCustom.removeAllViews();
+                        boxCustom = new RelativeLayout(context);
+                        boxCustom.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                        customView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                        boxCustom.addView(customView);
+                        boxCustom.requestLayout();
+                        
+                        materialAlertDialog.setView(boxCustom);
                     }
                     
                     if (backgroundColor != 0)

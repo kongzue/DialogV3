@@ -169,6 +169,24 @@ public class DialogHelper extends DialogFragment {
         }
     }
     
+    private boolean findMyParent() {
+        boolean flag = false;
+        List<BaseDialog> cache = new ArrayList<>();
+        cache.addAll(BaseDialog.dialogList);
+        BaseDialog.newContext = (AppCompatActivity) getContext();
+        for (BaseDialog baseDialog : cache) {
+            baseDialog.context = (AppCompatActivity) getContext();
+            if (baseDialog.toString().equals(parentId)) {
+                flag = true;
+                parent = baseDialog;
+                parent.dialog = this;
+                refreshDialogPosition(getDialog());
+                setOnDismissListener(baseDialog.dismissEvent);
+            }
+        }
+        return flag;
+    }
+    
     @Override
     public void onDismiss(DialogInterface dialog) {
         super.onDismiss(dialog);
@@ -229,25 +247,25 @@ public class DialogHelper extends DialogFragment {
     @Override
     public void onResume() {
         super.onResume();
+        if (parent==null){
+            if (!findMyParent()){
+                return;
+            }
+        }
         if (parent instanceof TipDialog) {
             if (parent.dismissedFlag) {
                 if (getDialog() != null) if (getDialog().isShowing()) getDialog().dismiss();
                 if (parent.dismissEvent != null) parent.dismissEvent.onDismiss();
             }
         } else {
-            if (getDialog() != null) {
-                if (getDialog().isShowing()) {
-                    getDialog().setOnDismissListener(new DialogInterface.OnDismissListener() {
-                        @Override
-                        public void onDismiss(DialogInterface dialog) {
-                            if (parent.dismissEvent != null)parent.dismissEvent.onDismiss();
-                        }
-                    });
-                }
-            }
             if (parent.dismissedFlag) {
                 dismiss();
             }
         }
+    }
+    
+    @Override
+    public void onStart() {
+        super.onStart();
     }
 }
