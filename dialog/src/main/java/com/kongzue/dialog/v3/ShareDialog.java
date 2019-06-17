@@ -39,6 +39,7 @@ import com.kongzue.dialog.util.view.IOSItemImageView;
 import com.kongzue.dialog.util.view.MaterialTouchView;
 import com.kongzue.dialog.util.view.TableLayout;
 
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -80,7 +81,7 @@ public class ShareDialog extends BaseDialog {
         synchronized (ShareDialog.class) {
             ShareDialog shareDialog = new ShareDialog();
             shareDialog.log("装载分享对话框");
-            shareDialog.context = context;
+            shareDialog.context = new WeakReference<>(context);
             
             switch (shareDialog.style) {
                 case STYLE_IOS:
@@ -144,32 +145,32 @@ public class ShareDialog extends BaseDialog {
                         bkgResId = R.drawable.rect_menu_bkg_ios;
                         blurFrontColor = Color.argb(blurAlpha, 244, 245, 246);
                         btnCancel.setBackgroundResource(R.drawable.button_menu_ios_light);
-                        titleSplitLine.setBackgroundColor(context.getResources().getColor(R.color.dialogSplitIOSLight));
+                        titleSplitLine.setBackgroundColor(context.get().getResources().getColor(R.color.dialogSplitIOSLight));
                     } else {
                         bkgResId = R.drawable.rect_menu_bkg_ios;
                         blurFrontColor = Color.argb(blurAlpha + 10, 22, 22, 22);
                         btnCancel.setBackgroundResource(R.drawable.button_menu_ios_dark);
-                        titleSplitLine.setBackgroundColor(context.getResources().getColor(R.color.dialogSplitIOSDark));
+                        titleSplitLine.setBackgroundColor(context.get().getResources().getColor(R.color.dialogSplitIOSDark));
                     }
                     
                     if (DialogSettings.isUseBlur) {
                         boxShare.post(new Runnable() {
                             @Override
                             public void run() {
-                                blurContent = new BlurView(context, null);
+                                blurContent = new BlurView(context.get(), null);
                                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, boxShare.getHeight());
                                 blurContent.setOverlayColor(blurFrontColor);
-                                blurContent.setRadius(context, 11, 11);
+                                blurContent.setRadius(context.get(), 11, 11);
                                 boxShare.addView(blurContent, 0, params);
                             }
                         });
                         boxCancel.post(new Runnable() {
                             @Override
                             public void run() {
-                                blurCancel = new BlurView(context, null);
+                                blurCancel = new BlurView(context.get(), null);
                                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, boxCancel.getHeight());
                                 blurCancel.setOverlayColor(blurFrontColor);
-                                blurCancel.setRadius(context, 11, 11);
+                                blurCancel.setRadius(context.get(), 11, 11);
                                 boxCancel.addView(blurCancel, 0, params);
                             }
                         });
@@ -182,12 +183,12 @@ public class ShareDialog extends BaseDialog {
                         boxItem.removeAllViews();
                         for (int i = 0; i < items.size(); i++) {
                             final Item item = items.get(i);
-                            View itemView = LayoutInflater.from(context).inflate(R.layout.item_share_ios, null);
+                            View itemView = LayoutInflater.from(context.get()).inflate(R.layout.item_share_ios, null);
                             
                             final IOSItemImageView imgIcon = itemView.findViewById(R.id.img_icon);
                             TextView txtLabel = itemView.findViewById(R.id.txt_label);
                             
-                            RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(context.getResources(), zoomImg(item.getIcon(), dip2px(57), dip2px(57)));
+                            RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(context.get().getResources(), zoomImg(item.getIcon(), dip2px(57), dip2px(57)));
                             roundedBitmapDrawable.setCornerRadius(dip2px(13));
                             imgIcon.setImageDrawable(roundedBitmapDrawable);
                             txtLabel.setText(item.getText());
@@ -239,7 +240,7 @@ public class ShareDialog extends BaseDialog {
                         boxItem.removeAllViews();
                         for (int i = 0; i < items.size(); i++) {
                             final Item item = items.get(i);
-                            final View itemView = LayoutInflater.from(context).inflate(R.layout.item_share_material, null);
+                            final View itemView = LayoutInflater.from(context.get()).inflate(R.layout.item_share_material, null);
                             
                             final ImageView imgIcon = itemView.findViewById(R.id.img_icon);
                             TextView txtLabel = itemView.findViewById(R.id.txt_label);
@@ -265,7 +266,7 @@ public class ShareDialog extends BaseDialog {
                         }
                         
                         Window window = dialog.getDialog().getWindow();
-                        WindowManager windowManager = context.getWindowManager();
+                        WindowManager windowManager = context.get().getWindowManager();
                         Display display = windowManager.getDefaultDisplay();
                         WindowManager.LayoutParams lp = window.getAttributes();
                         lp.width = display.getWidth();
@@ -297,7 +298,7 @@ public class ShareDialog extends BaseDialog {
                         ((TableLayout) boxItem).setAutoHeight(true);
                         for (int i = 0; i < items.size(); i++) {
                             final Item item = items.get(i);
-                            final View itemView = LayoutInflater.from(context).inflate(R.layout.item_share_kongzue, null);
+                            final View itemView = LayoutInflater.from(context.get()).inflate(R.layout.item_share_kongzue, null);
                             itemView.setBackgroundColor(Color.WHITE);
                             
                             final IOSItemImageView imgIcon = itemView.findViewById(R.id.img_icon);
@@ -567,7 +568,7 @@ public class ShareDialog extends BaseDialog {
     }
     
     public ShareDialog setTitle(int titleResId) {
-        this.title = context.getString(titleResId);
+        this.title = context.get().getString(titleResId);
         refreshView();
         return this;
     }
@@ -583,7 +584,7 @@ public class ShareDialog extends BaseDialog {
     }
     
     public ShareDialog setCancelButtonText(int cancelButtonTextResId) {
-        this.cancelButtonText = context.getString(cancelButtonTextResId);
+        this.cancelButtonText = context.get().getString(cancelButtonTextResId);
         refreshView();
         return this;
     }
@@ -659,7 +660,7 @@ public class ShareDialog extends BaseDialog {
     private OnBindView onBindView;
     
     public ShareDialog setCustomView(int customViewLayoutId, OnBindView onBindView) {
-        customView = LayoutInflater.from(context).inflate(customViewLayoutId, null);
+        customView = LayoutInflater.from(context.get()).inflate(customViewLayoutId, null);
         this.onBindView = onBindView;
         refreshView();
         return this;
@@ -688,7 +689,7 @@ public class ShareDialog extends BaseDialog {
             Object obj = c.newInstance();
             Field field = c.getField("status_bar_height");
             int x = Integer.parseInt(field.get(obj).toString());
-            return context.getResources().getDimensionPixelSize(x);
+            return context.get().getResources().getDimensionPixelSize(x);
         } catch (Exception e) {
             e.printStackTrace();
         }

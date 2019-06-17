@@ -26,6 +26,7 @@ import com.kongzue.dialog.util.TextInfo;
 import com.kongzue.dialog.util.view.BlurView;
 import com.kongzue.dialog.util.view.ProgressView;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -74,7 +75,7 @@ public class TipDialog extends BaseDialog {
             if (waitDialogTemp == null) {
                 waitDialogTemp = waitDialog;
             } else {
-                if (waitDialogTemp.context != context) {
+                if (waitDialogTemp.context.get() != context) {
                     dismiss();
                     waitDialogTemp = waitDialog;
                 } else {
@@ -83,7 +84,7 @@ public class TipDialog extends BaseDialog {
                 }
             }
             waitDialog.log("装载等待对话框");
-            waitDialog.context = context;
+            waitDialog.context = new WeakReference<>(context);
             waitDialog.build(waitDialog, R.layout.dialog_wait);
             return waitDialog;
         }
@@ -319,7 +320,7 @@ public class TipDialog extends BaseDialog {
                 boxBlur.post(new Runnable() {
                     @Override
                     public void run() {
-                        blurView = new BlurView(context, null);
+                        blurView = new BlurView(context.get(), null);
                         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(boxBlur.getWidth(), boxBlur.getHeight());
                         blurView.setOverlayColor(blurFrontColor);
                         boxBlur.addView(blurView, 0, params);
@@ -420,7 +421,7 @@ public class TipDialog extends BaseDialog {
     }
     
     public TipDialog setMessage(int messageResId) {
-        this.message = context.getString(messageResId);
+        this.message = context.get().getString(messageResId);
         log("启动等待对话框 -> " + message);
         if (txtInfo != null) txtInfo.setText(message);
         refreshView();
@@ -436,7 +437,7 @@ public class TipDialog extends BaseDialog {
     
     public TipDialog setTip(@DrawableRes int resId) {
         this.type = TYPE.OTHER;
-        tipImage = ContextCompat.getDrawable(context, resId);
+        tipImage = ContextCompat.getDrawable(context.get(), resId);
         refreshView();
         return this;
     }
@@ -478,7 +479,7 @@ public class TipDialog extends BaseDialog {
     private OnBindView onBindView;
     
     public TipDialog setCustomView(int customViewLayoutId, OnBindView onBindView) {
-        customView = LayoutInflater.from(context).inflate(customViewLayoutId, null);
+        customView = LayoutInflater.from(context.get()).inflate(customViewLayoutId, null);
         this.onBindView = onBindView;
         refreshView();
         return this;

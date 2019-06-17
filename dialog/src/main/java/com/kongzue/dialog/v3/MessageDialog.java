@@ -30,6 +30,7 @@ import com.kongzue.dialog.util.DialogSettings;
 import com.kongzue.dialog.util.TextInfo;
 import com.kongzue.dialog.util.view.BlurView;
 
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 
 import static android.content.DialogInterface.BUTTON_NEGATIVE;
@@ -84,7 +85,7 @@ public class MessageDialog extends BaseDialog {
         synchronized (MessageDialog.class) {
             MessageDialog messageDialog = new MessageDialog();
             messageDialog.log("装载对话框");
-            messageDialog.context = context;
+            messageDialog.context = new WeakReference<>(context);
             
             switch (messageDialog.style) {
                 case STYLE_IOS:
@@ -248,9 +249,9 @@ public class MessageDialog extends BaseDialog {
                         blurFrontColor = Color.argb(blurAlpha + 10, 22, 22, 22);
                         txtDialogTitle.setTextColor(Color.WHITE);
                         txtDialogTip.setTextColor(Color.WHITE);
-                        splitHorizontal.setBackgroundColor(context.getResources().getColor(R.color.dialogSplitIOSDark));
-                        splitVertical1.setBackgroundColor(context.getResources().getColor(R.color.dialogSplitIOSDark));
-                        splitVertical2.setBackgroundColor(context.getResources().getColor(R.color.dialogSplitIOSDark));
+                        splitHorizontal.setBackgroundColor(context.get().getResources().getColor(R.color.dialogSplitIOSDark));
+                        splitVertical1.setBackgroundColor(context.get().getResources().getColor(R.color.dialogSplitIOSDark));
+                        splitVertical2.setBackgroundColor(context.get().getResources().getColor(R.color.dialogSplitIOSDark));
                         txtInput.setBackgroundResource(R.drawable.editbox_dialog_bkg_ios_dark);
                         
                         btnSelectPositive.setBackgroundResource(R.drawable.button_dialog_ios_right_dark);
@@ -261,7 +262,7 @@ public class MessageDialog extends BaseDialog {
                         bkg.post(new Runnable() {
                             @Override
                             public void run() {
-                                blurView = new BlurView(context, null);
+                                blurView = new BlurView(context.get(), null);
                                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, bkg.getHeight());
                                 blurView.setOverlayColor(blurFrontColor);
                                 bkg.addView(blurView, 0, params);
@@ -317,7 +318,7 @@ public class MessageDialog extends BaseDialog {
                         if (onBindView != null) onBindView.onBind(this, customView);
                         
                         if (boxCustom != null) boxCustom.removeAllViews();
-                        boxCustom = new RelativeLayout(context);
+                        boxCustom = new RelativeLayout(context.get());
                         boxCustom.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
                         customView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                         boxCustom.addView(customView);
@@ -608,7 +609,7 @@ public class MessageDialog extends BaseDialog {
     }
     
     public MessageDialog setTitle(int titleResId) {
-        this.title = context.getString(titleResId);
+        this.title = context.get().getString(titleResId);
         return this;
     }
     
@@ -622,7 +623,7 @@ public class MessageDialog extends BaseDialog {
     }
     
     public MessageDialog setMessage(int contentResId) {
-        this.message = context.getString(contentResId);
+        this.message = context.get().getString(contentResId);
         return this;
     }
     
@@ -637,7 +638,7 @@ public class MessageDialog extends BaseDialog {
     }
     
     public MessageDialog setOkButton(int okButtonResId) {
-        setOkButton(context.getString(okButtonResId));
+        setOkButton(context.get().getString(okButtonResId));
         return this;
     }
     
@@ -649,7 +650,7 @@ public class MessageDialog extends BaseDialog {
     }
     
     public MessageDialog setOkButton(int okButtonResId, OnDialogButtonClickListener onOkButtonClickListener) {
-        setOkButton(context.getString(okButtonResId), onOkButtonClickListener);
+        setOkButton(context.get().getString(okButtonResId), onOkButtonClickListener);
         return this;
     }
     
@@ -670,7 +671,7 @@ public class MessageDialog extends BaseDialog {
     }
     
     public MessageDialog setCancelButton(int cancelButtonResId) {
-        setCancelButton(context.getString(cancelButtonResId));
+        setCancelButton(context.get().getString(cancelButtonResId));
         return this;
     }
     
@@ -682,7 +683,7 @@ public class MessageDialog extends BaseDialog {
     }
     
     public MessageDialog setCancelButton(int cancelButtonResId, OnDialogButtonClickListener onCancelButtonClickListener) {
-        setCancelButton(context.getString(cancelButtonResId), onCancelButtonClickListener);
+        setCancelButton(context.get().getString(cancelButtonResId), onCancelButtonClickListener);
         return this;
     }
     
@@ -703,7 +704,7 @@ public class MessageDialog extends BaseDialog {
     }
     
     public MessageDialog setOtherButton(int otherButtonResId) {
-        setOtherButton(context.getString(otherButtonResId));
+        setOtherButton(context.get().getString(otherButtonResId));
         return this;
     }
     
@@ -715,7 +716,7 @@ public class MessageDialog extends BaseDialog {
     }
     
     public MessageDialog setOtherButton(int otherButtonResId, OnDialogButtonClickListener onOtherButtonClickListener) {
-        setOtherButton(context.getString(otherButtonResId), onOtherButtonClickListener);
+        setOtherButton(context.get().getString(otherButtonResId), onOtherButtonClickListener);
         return this;
     }
     
@@ -756,7 +757,7 @@ public class MessageDialog extends BaseDialog {
     }
     
     public MessageDialog setOkButtonDrawable(@DrawableRes int okButtonDrawableResId) {
-        this.okButtonDrawable = ContextCompat.getDrawable(context, okButtonDrawableResId);
+        this.okButtonDrawable = ContextCompat.getDrawable(context.get(), okButtonDrawableResId);
         refreshView();
         return this;
     }
@@ -768,7 +769,7 @@ public class MessageDialog extends BaseDialog {
     }
     
     public MessageDialog setCancelButtonDrawable(@DrawableRes int okButtonDrawableResId) {
-        this.cancelButtonDrawable = ContextCompat.getDrawable(context, okButtonDrawableResId);
+        this.cancelButtonDrawable = ContextCompat.getDrawable(context.get(), okButtonDrawableResId);
         refreshView();
         return this;
     }
@@ -780,7 +781,7 @@ public class MessageDialog extends BaseDialog {
     }
     
     public MessageDialog setOtherButtonDrawable(@DrawableRes int okButtonDrawableResId) {
-        this.otherButtonDrawable = ContextCompat.getDrawable(context, okButtonDrawableResId);
+        this.otherButtonDrawable = ContextCompat.getDrawable(context.get(), okButtonDrawableResId);
         refreshView();
         return this;
     }
@@ -946,7 +947,7 @@ public class MessageDialog extends BaseDialog {
     private OnBindView onBindView;
     
     public MessageDialog setCustomView(int customViewLayoutId, OnBindView onBindView) {
-        customView = LayoutInflater.from(context).inflate(customViewLayoutId, null);
+        customView = LayoutInflater.from(context.get()).inflate(customViewLayoutId, null);
         this.onBindView = onBindView;
         refreshView();
         return this;

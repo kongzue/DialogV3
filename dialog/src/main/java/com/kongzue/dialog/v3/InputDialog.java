@@ -31,6 +31,7 @@ import com.kongzue.dialog.util.DialogSettings;
 import com.kongzue.dialog.util.InputInfo;
 import com.kongzue.dialog.util.TextInfo;
 
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 
 /**
@@ -56,7 +57,7 @@ public class InputDialog extends MessageDialog {
         synchronized (InputDialog.class) {
             InputDialog inputDialog = new InputDialog();
             inputDialog.log("装载输入对话框");
-            inputDialog.context = context;
+            inputDialog.context = new WeakReference<>(context);
             
             switch (inputDialog.style) {
                 case STYLE_IOS:
@@ -170,7 +171,7 @@ public class InputDialog extends MessageDialog {
             if (materialAlertDialog != null) {
                 if (inputText != null) {
                     if (customView == null) {
-                        txtInput = new EditText(context);
+                        txtInput = new EditText(context.get());
                         txtInput.setSingleLine();
                         txtInput.post(new Runnable() {
                             @Override
@@ -182,7 +183,7 @@ public class InputDialog extends MessageDialog {
                         });
                         materialAlertDialog.setView(txtInput);
                     } else {
-                        txtInput = new EditText(context);
+                        txtInput = new EditText(context.get());
                         txtInput.setSingleLine();
                         txtInput.post(new Runnable() {
                             @Override
@@ -195,7 +196,7 @@ public class InputDialog extends MessageDialog {
     
                         if (boxCustom!=null)boxCustom.removeAllViews();
                         if (materialCustomViewBox!=null)materialCustomViewBox.removeAllViews();
-                        materialCustomViewBox = new LinearLayout(context);
+                        materialCustomViewBox = new LinearLayout(context.get());
                         materialCustomViewBox.setOrientation(LinearLayout.VERTICAL);
                         materialCustomViewBox.addView(customView);
                         materialCustomViewBox.addView(txtInput);
@@ -326,7 +327,7 @@ public class InputDialog extends MessageDialog {
             if (txtInput != null) {
                 if (theme == DialogSettings.THEME.DARK) {
                     txtInput.setTextColor(Color.WHITE);
-                    txtInput.setHintTextColor(context.getResources().getColor(R.color.whiteAlpha30));
+                    txtInput.setHintTextColor(context.get().getResources().getColor(R.color.whiteAlpha30));
                 }
                 txtInput.setText(inputText);
                 txtInput.setHint(hintText);
@@ -351,7 +352,7 @@ public class InputDialog extends MessageDialog {
             if (txtInput != null) {
                 if (theme == DialogSettings.THEME.DARK) {
                     txtInput.setTextColor(Color.WHITE);
-                    txtInput.setHintTextColor(context.getResources().getColor(R.color.whiteAlpha30));
+                    txtInput.setHintTextColor(context.get().getResources().getColor(R.color.whiteAlpha30));
                 }
                 txtInput.setText(inputText);
                 txtInput.setHint(hintText);
@@ -388,7 +389,7 @@ public class InputDialog extends MessageDialog {
     }
     
     public InputDialog setTitle(int titleResId) {
-        this.title = context.getString(titleResId);
+        this.title = context.get().getString(titleResId);
         return this;
     }
     
@@ -402,7 +403,7 @@ public class InputDialog extends MessageDialog {
     }
     
     public InputDialog setMessage(int contentResId) {
-        this.message = context.getString(contentResId);
+        this.message = context.get().getString(contentResId);
         return this;
     }
     
@@ -417,7 +418,7 @@ public class InputDialog extends MessageDialog {
     }
     
     public InputDialog setOkButton(int okButtonResId) {
-        setOkButton(context.getString(okButtonResId));
+        setOkButton(context.get().getString(okButtonResId));
         return this;
     }
     
@@ -429,7 +430,7 @@ public class InputDialog extends MessageDialog {
     }
     
     public InputDialog setOkButton(int okButtonResId, OnInputDialogButtonClickListener onOkButtonClickListener) {
-        setOkButton(context.getString(okButtonResId), onOkButtonClickListener);
+        setOkButton(context.get().getString(okButtonResId), onOkButtonClickListener);
         return this;
     }
     
@@ -450,7 +451,7 @@ public class InputDialog extends MessageDialog {
     }
     
     public InputDialog setCancelButton(int cancelButtonResId) {
-        setCancelButton(context.getString(cancelButtonResId));
+        setCancelButton(context.get().getString(cancelButtonResId));
         return this;
     }
     
@@ -462,7 +463,7 @@ public class InputDialog extends MessageDialog {
     }
     
     public InputDialog setCancelButton(int cancelButtonResId, OnInputDialogButtonClickListener onCancelButtonClickListener) {
-        setCancelButton(context.getString(cancelButtonResId), onCancelButtonClickListener);
+        setCancelButton(context.get().getString(cancelButtonResId), onCancelButtonClickListener);
         return this;
     }
     
@@ -483,7 +484,7 @@ public class InputDialog extends MessageDialog {
     }
     
     public InputDialog setOtherButton(int otherButtonResId) {
-        setCancelButton(context.getString(otherButtonResId));
+        setCancelButton(context.get().getString(otherButtonResId));
         refreshView();
         return this;
     }
@@ -496,7 +497,7 @@ public class InputDialog extends MessageDialog {
     }
     
     public InputDialog setOtherButton(int otherButtonResId, OnInputDialogButtonClickListener onOtherButtonClickListener) {
-        setOtherButton(context.getString(otherButtonResId), onOtherButtonClickListener);
+        setOtherButton(context.get().getString(otherButtonResId), onOtherButtonClickListener);
         return this;
     }
     
@@ -555,7 +556,7 @@ public class InputDialog extends MessageDialog {
     }
     
     public InputDialog setOkButtonDrawable(@DrawableRes int okButtonDrawableResId) {
-        this.okButtonDrawable = ContextCompat.getDrawable(context, okButtonDrawableResId);
+        this.okButtonDrawable = ContextCompat.getDrawable(context.get(), okButtonDrawableResId);
         refreshView();
         return this;
     }
@@ -567,7 +568,7 @@ public class InputDialog extends MessageDialog {
     }
     
     public InputDialog setCancelButtonDrawable(@DrawableRes int okButtonDrawableResId) {
-        this.cancelButtonDrawable = ContextCompat.getDrawable(context, okButtonDrawableResId);
+        this.cancelButtonDrawable = ContextCompat.getDrawable(context.get(), okButtonDrawableResId);
         refreshView();
         return this;
     }
@@ -579,7 +580,7 @@ public class InputDialog extends MessageDialog {
     }
     
     public InputDialog setOtherButtonDrawable(@DrawableRes int okButtonDrawableResId) {
-        this.otherButtonDrawable = ContextCompat.getDrawable(context, okButtonDrawableResId);
+        this.otherButtonDrawable = ContextCompat.getDrawable(context.get(), okButtonDrawableResId);
         refreshView();
         return this;
     }
@@ -739,7 +740,7 @@ public class InputDialog extends MessageDialog {
     }
     
     public InputDialog setInputText(int inputTextResId) {
-        this.inputText = context.getString(inputTextResId);
+        this.inputText = context.get().getString(inputTextResId);
         refreshView();
         return this;
     }
@@ -755,7 +756,7 @@ public class InputDialog extends MessageDialog {
     }
     
     public InputDialog setHintText(int hintTextResId) {
-        this.hintText = context.getString(hintTextResId);
+        this.hintText = context.get().getString(hintTextResId);
         refreshView();
         return this;
     }
@@ -783,7 +784,7 @@ public class InputDialog extends MessageDialog {
     private OnBindView onBindView;
     
     public InputDialog setCustomView(int customViewLayoutId, OnBindView onBindView) {
-        customView = LayoutInflater.from(context).inflate(customViewLayoutId, null);
+        customView = LayoutInflater.from(context.get()).inflate(customViewLayoutId, null);
         this.onBindView = onBindView;
         refreshView();
         return this;

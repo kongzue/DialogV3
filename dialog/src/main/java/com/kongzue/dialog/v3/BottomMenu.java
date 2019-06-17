@@ -28,6 +28,7 @@ import com.kongzue.dialog.util.DialogSettings;
 import com.kongzue.dialog.util.TextInfo;
 import com.kongzue.dialog.util.view.BlurView;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,7 +71,7 @@ public class BottomMenu extends BaseDialog {
         synchronized (BottomMenu.class) {
             BottomMenu bottomMenu = new BottomMenu();
             bottomMenu.log("装载底部菜单");
-            bottomMenu.context = context;
+            bottomMenu.context = new WeakReference<>(context);
             
             switch (bottomMenu.style) {
                 case STYLE_IOS:
@@ -192,7 +193,7 @@ public class BottomMenu extends BaseDialog {
                     if (customAdapter != null) {
                         menuArrayAdapter = customAdapter;
                     } else {
-                        menuArrayAdapter = new NormalMenuArrayAdapter(context, R.layout.item_bottom_menu_material, menuTextList);
+                        menuArrayAdapter = new NormalMenuArrayAdapter(context.get(), R.layout.item_bottom_menu_material, menuTextList);
                     }
                     listMenu.setAdapter(menuArrayAdapter);
                     
@@ -265,7 +266,7 @@ public class BottomMenu extends BaseDialog {
                     if (customAdapter != null) {
                         menuArrayAdapter = customAdapter;
                     } else {
-                        menuArrayAdapter = new NormalMenuArrayAdapter(context, R.layout.item_bottom_menu_kongzue, menuTextList);
+                        menuArrayAdapter = new NormalMenuArrayAdapter(context.get(), R.layout.item_bottom_menu_kongzue, menuTextList);
                     }
                     listMenu.setAdapter(menuArrayAdapter);
                     
@@ -276,35 +277,35 @@ public class BottomMenu extends BaseDialog {
                         bkgResId = R.drawable.rect_menu_bkg_ios;
                         blurFrontColor = Color.argb(blurAlpha, 244, 245, 246);
                         btnCancel.setBackgroundResource(R.drawable.button_menu_ios_light);
-                        listMenu.setDivider(new ColorDrawable(context.getResources().getColor(R.color.dialogSplitIOSLight)));
+                        listMenu.setDivider(new ColorDrawable(context.get().getResources().getColor(R.color.dialogSplitIOSLight)));
                         listMenu.setDividerHeight(1);
-                        titleSplitLine.setBackgroundColor(context.getResources().getColor(R.color.dialogSplitIOSLight));
+                        titleSplitLine.setBackgroundColor(context.get().getResources().getColor(R.color.dialogSplitIOSLight));
                     } else {
                         bkgResId = R.drawable.rect_menu_bkg_ios;
                         blurFrontColor = Color.argb(blurAlpha + 10, 22, 22, 22);
                         btnCancel.setBackgroundResource(R.drawable.button_menu_ios_dark);
-                        listMenu.setDivider(new ColorDrawable(context.getResources().getColor(R.color.dialogSplitIOSDark)));
+                        listMenu.setDivider(new ColorDrawable(context.get().getResources().getColor(R.color.dialogSplitIOSDark)));
                         listMenu.setDividerHeight(1);
-                        titleSplitLine.setBackgroundColor(context.getResources().getColor(R.color.dialogSplitIOSDark));
+                        titleSplitLine.setBackgroundColor(context.get().getResources().getColor(R.color.dialogSplitIOSDark));
                     }
                     if (DialogSettings.isUseBlur) {
                         boxList.post(new Runnable() {
                             @Override
                             public void run() {
-                                blurList = new BlurView(context, null);
+                                blurList = new BlurView(context.get(), null);
                                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, boxList.getHeight());
                                 blurList.setOverlayColor(blurFrontColor);
-                                blurList.setRadius(context, 11, 11);
+                                blurList.setRadius(context.get(), 11, 11);
                                 boxList.addView(blurList, 0, params);
                             }
                         });
                         boxCancel.post(new Runnable() {
                             @Override
                             public void run() {
-                                blurCancel = new BlurView(context, null);
+                                blurCancel = new BlurView(context.get(), null);
                                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, boxCancel.getHeight());
                                 blurCancel.setOverlayColor(blurFrontColor);
-                                blurCancel.setRadius(context, 11, 11);
+                                blurCancel.setRadius(context.get(), 11, 11);
                                 boxCancel.addView(blurCancel, 0, params);
                             }
                         });
@@ -316,7 +317,7 @@ public class BottomMenu extends BaseDialog {
                     if (customAdapter != null) {
                         menuArrayAdapter = customAdapter;
                     } else {
-                        menuArrayAdapter = new IOSMenuArrayAdapter(context, R.layout.item_bottom_menu_ios, menuTextList);
+                        menuArrayAdapter = new IOSMenuArrayAdapter(context.get(), R.layout.item_bottom_menu_ios, menuTextList);
                     }
                     listMenu.setAdapter(menuArrayAdapter);
                     
@@ -544,7 +545,7 @@ public class BottomMenu extends BaseDialog {
     }
     
     public BottomMenu setTitle(int titleResId) {
-        this.title = context.getString(titleResId);
+        this.title = context.get().getString(titleResId);
         refreshView();
         return this;
     }
@@ -560,7 +561,7 @@ public class BottomMenu extends BaseDialog {
     }
     
     public BottomMenu setCancelButtonText(int cancelButtonTextResId) {
-        this.cancelButtonText = context.getString(cancelButtonTextResId);
+        this.cancelButtonText = context.get().getString(cancelButtonTextResId);
         refreshView();
         return this;
     }
@@ -656,7 +657,7 @@ public class BottomMenu extends BaseDialog {
     private OnBindView onBindView;
     
     public BottomMenu setCustomView(int customViewLayoutId, OnBindView onBindView) {
-        customView = LayoutInflater.from(context).inflate(customViewLayoutId, null);
+        customView = LayoutInflater.from(context.get()).inflate(customViewLayoutId, null);
         this.onBindView = onBindView;
         refreshView();
         return this;

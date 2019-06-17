@@ -21,6 +21,7 @@ import com.kongzue.dialog.v3.ShareDialog;
 import com.kongzue.dialog.v3.TipDialog;
 import com.kongzue.dialog.v3.WaitDialog;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +35,7 @@ import java.util.List;
 public abstract class BaseDialog {
     
     protected Handler mainHandler = new Handler(Looper.getMainLooper());
-    protected static AppCompatActivity newContext;
+    protected static WeakReference<AppCompatActivity> newContext;
     
     public BaseDialog() {
         initDefaultSettings();
@@ -46,7 +47,7 @@ public abstract class BaseDialog {
     
     protected static List<BaseDialog> dialogList = new ArrayList<>();           //对话框队列
     
-    public AppCompatActivity context;
+    public WeakReference<AppCompatActivity> context;
     public DialogHelper dialog;                                              //我才是本体！
     
     private BaseDialog baseDialog;
@@ -123,17 +124,17 @@ public abstract class BaseDialog {
     }
     
     protected void showNext() {
-        log("# showNext");
         List<BaseDialog> cache = new ArrayList<>();
         cache.addAll(BaseDialog.dialogList);
         for (BaseDialog dialog : cache) {
-            if (dialog.context.isDestroyed()) {
+            if (dialog.context.get().isDestroyed()) {
                 dialogList.remove(dialog);
             }
         }
         for (BaseDialog dialog : dialogList) {
             if (!(dialog instanceof TipDialog)) {
                 if (dialog.isShow) {
+                    
                     return;
                 }
             }
@@ -149,14 +150,14 @@ public abstract class BaseDialog {
     private void showNow() {
         log("# showNow");
         isShow = true;
-        if (context.isDestroyed()) {
-            if (newContext == null) {
+        if (context.get().isDestroyed()) {
+            if (newContext.get() == null) {
                 error("Context错误的指向了一个已被关闭的Activity或者Null，有可能是Activity因横竖屏切换被重启或者您手动执行了unload()方法，请确认其能够正确指向一个正在使用的Activity");
                 return;
             }
-            context = newContext;
+            context = new WeakReference<>(newContext.get());
         }
-        FragmentManager fragmentManager = context.getSupportFragmentManager();
+        FragmentManager fragmentManager = context.get().getSupportFragmentManager();
         dialog = new DialogHelper().setLayoutId(baseDialog, layoutId);
         if (baseDialog instanceof BottomMenu || baseDialog instanceof ShareDialog) {
             styleId = R.style.BottomDialog;
@@ -176,7 +177,6 @@ public abstract class BaseDialog {
         });
         if (DialogSettings.systemDialogStyle == 0 && style == DialogSettings.STYLE.STYLE_IOS && !(baseDialog instanceof TipDialog) && !(baseDialog instanceof BottomMenu) && !(baseDialog instanceof ShareDialog))
             dialog.setAnim(R.style.iOSDialogAnimStyle);
-        dialog.setOnDismissListener(dismissEvent);
         
         if (baseDialog instanceof TipDialog) {
             if (cancelable == null)
@@ -245,7 +245,7 @@ public abstract class BaseDialog {
     }
     
     protected int dip2px(float dpValue) {
-        final float scale = context.getResources().getDisplayMetrics().density;
+        final float scale = context.get().getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
     }
     

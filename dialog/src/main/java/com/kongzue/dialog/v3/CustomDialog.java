@@ -11,6 +11,8 @@ import com.kongzue.dialog.interfaces.OnShowListener;
 import com.kongzue.dialog.interfaces.OnDismissListener;
 import com.kongzue.dialog.util.BaseDialog;
 
+import java.lang.ref.WeakReference;
+
 /**
  * Author: @Kongzue
  * Github: https://github.com/kongzue/
@@ -28,7 +30,7 @@ public class CustomDialog extends BaseDialog {
     public static CustomDialog show(AppCompatActivity context, int layoutResId, OnBindView onBindView) {
         synchronized (CustomDialog.class) {
             CustomDialog customDialog = new CustomDialog();
-            customDialog.context = context;
+            customDialog.context = new WeakReference<>(context);
             customDialog.onBindView = onBindView;
             customDialog.customView = LayoutInflater.from(context).inflate(layoutResId, null);
             customDialog.build(customDialog, layoutResId);
@@ -40,7 +42,7 @@ public class CustomDialog extends BaseDialog {
     public static CustomDialog show(AppCompatActivity context, View customView, OnBindView onBindView) {
         synchronized (CustomDialog.class) {
             CustomDialog customDialog = new CustomDialog();
-            customDialog.context = context;
+            customDialog.context = new WeakReference<>(context);
             customDialog.onBindView = onBindView;
             customDialog.customView = customView;
             customDialog.build(customDialog, R.layout.dialog_custom);
@@ -52,7 +54,7 @@ public class CustomDialog extends BaseDialog {
     public static CustomDialog show(AppCompatActivity context, View customView) {
         synchronized (CustomDialog.class) {
             CustomDialog customDialog = new CustomDialog();
-            customDialog.context = context;
+            customDialog.context = new WeakReference<>(context);
             customDialog.customView = customView;
             customDialog.build(customDialog, R.layout.dialog_custom);
             customDialog.showDialog();

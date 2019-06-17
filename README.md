@@ -533,11 +533,25 @@ TipDialog.show(MainActivity.this, "成功！", TipDialog.TYPE.SUCCESS).setOnDism
 });
 ```
 
-## 一些建议
-由于采用了模态化的对话框展示模式、等待提示框延时关闭以及事件重绑定等技术，可能会被某些 BUG 检测软件定性为“内存泄漏”的问题，但实际并不会引发任何崩溃和错误，如有不放心可以在您的程序退出时通过以下语句彻底清空所有 Kongzue Dialog V3 使用的内存句柄：
+## 有关于内存泄漏和其他的一些建议
+
+### 关于内存泄漏问题
+
+由于采用了模态化的对话框展示模式、等待提示框延时关闭以及事件重绑定等技术，可能会被某些 BUG 检测软件定性为“内存泄漏”的问题，您可以通过以下语句彻底清空所有 Kongzue Dialog V3 使用的内存句柄：
 ```
 BaseDialog.unload();
 ```
+另外，从 3.0.7 版本起，我们对可能引用 Activity 的 Context 加入了弱引用，以尽可能保证它在 gc() 回收时能被正确释放。
+
+### 其他建议
+
+Kongzue Dialog V3 是基于 DialogFragment 的Dialog封装库，由于默认情况下 Android 会在屏幕横竖向切换时重启前台显示的 DialogFragment，这会不正常的触发 onDismiss() 事件，由于我们采用了模态化的对话框展示模式，在具有多个对话框等待序列的情况下可能造成下一个对话框被触发显示。
+
+基于此问题的影响，我们建议您在 AndroidManifest.xml 中的 Activity 加入以下属性：
+```
+android:configChanges="orientation|keyboardHidden|screenSize"
+```
+这可以确保您的 Activity 不受重启影响自动适应横竖屏切换并保证 Kongzue Dialog V3 能够正常运行。
 
 ## 混淆设置
 为避免不必要的问题，可以将以下代码加入 proguard-rules.pro 文件中。
@@ -567,6 +581,10 @@ limitations under the License.
 ```
 
 ## 更新日志：
+v3.0.7:
+- 对所有可能造成内存泄漏的 Activity 引用使用了弱引用处理；
+- 新增其他建议说明；
+
 v3.0.6:
 - 自定义布局在 MessageDialog、InputDialog 的 Material 风格使用时宽度未顶头的问题修复；
 - 自定义布局在 MessageDialog、InputDialog 的 Material 风格使用时存在的未 removeView 问题修复；

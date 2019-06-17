@@ -29,6 +29,7 @@ import com.kongzue.dialog.util.view.NotifyToastShadowView;
 import com.kongzue.dialog.util.SafelyHandlerWrapper;
 import com.kongzue.dialog.util.TextInfo;
 
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
@@ -53,7 +54,7 @@ public class Notification {
     private int backgroundColor;
     
     private Toast toast;
-    private Context context;
+    private WeakReference<Context> context;
     private String title;
     private String message;
     private int iconResId;
@@ -78,7 +79,7 @@ public class Notification {
     public static Notification build(Context context, String message) {
         synchronized (Notification.class) {
             Notification notification = new Notification();
-            notification.context = context;
+            notification.context = new WeakReference<>(context);
             notification.message = message;
             return notification;
         }
@@ -87,7 +88,7 @@ public class Notification {
     public static Notification build(Context context, int messageResId) {
         synchronized (Notification.class) {
             Notification notification = new Notification();
-            notification.context = context;
+            notification.context = new WeakReference<>(context);
             notification.message = context.getString(messageResId);
             return notification;
         }
@@ -256,7 +257,7 @@ public class Notification {
     }
     
     private void showMaterialNotification() {
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) context.get().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         rootView = (NotifyToastShadowView) inflater.inflate(R.layout.notification_material, null);
         
         boxBody = rootView.findViewById(R.id.box_body);
@@ -267,7 +268,7 @@ public class Notification {
         txtMessage = rootView.findViewById(R.id.txt_message);
         boxCustom = rootView.findViewById(R.id.box_custom);
         
-        rootView.setParent(context);
+        rootView.setParent(context.get());
         rootView.setOnNotificationClickListener(new OnNotificationClickListener() {
             @Override
             public void onClick() {
@@ -337,11 +338,11 @@ public class Notification {
             }
         });
         
-        new kToast().show(context, rootView);
+        new kToast().show(context.get(), rootView);
     }
     
     private void showIOSNotification() {
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) context.get().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         rootView = (NotifyToastShadowView) inflater.inflate(R.layout.notification_ios, null);
         
         boxBody = rootView.findViewById(R.id.box_body);
@@ -352,7 +353,7 @@ public class Notification {
         txtMessage = rootView.findViewById(R.id.txt_message);
         boxCustom = rootView.findViewById(R.id.box_custom);
         
-        rootView.setParent(context);
+        rootView.setParent(context.get());
         rootView.setOnNotificationClickListener(new OnNotificationClickListener() {
             @Override
             public void onClick() {
@@ -424,11 +425,11 @@ public class Notification {
             }
         });
         
-        new kToast().show(context, rootView);
+        new kToast().show(context.get(), rootView);
     }
     
     private void showKongzueNotification() {
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) context.get().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         rootView = (NotifyToastShadowView) inflater.inflate(R.layout.notification_kongzue, null);
         
         boxBody = rootView.findViewById(R.id.box_body);
@@ -438,7 +439,7 @@ public class Notification {
         txtMessage = rootView.findViewById(R.id.txt_message);
         boxCustom = rootView.findViewById(R.id.box_custom);
         
-        rootView.setParent(context);
+        rootView.setParent(context.get());
         rootView.setNotifyHeight(dip2px(50) + getStatusBarHeight());  //可触控区域高度
         rootView.setOnNotificationClickListener(new OnNotificationClickListener() {
             @Override
@@ -475,7 +476,7 @@ public class Notification {
         
         refreshView();
         
-        new kToast().show(context, rootView);
+        new kToast().show(context.get(), rootView);
     }
     
     private void refreshView() {
@@ -483,9 +484,9 @@ public class Notification {
             if (btnNotic != null) {
                 if (backgroundColor == 0)
                     if (style == DialogSettings.STYLE.STYLE_KONGZUE) {
-                        backgroundColor = context.getResources().getColor(R.color.notificationNormal);
+                        backgroundColor = context.get().getResources().getColor(R.color.notificationNormal);
                     } else {
-                        backgroundColor = context.getResources().getColor(R.color.white);
+                        backgroundColor = context.get().getResources().getColor(R.color.white);
                     }
                 btnNotic.setBackgroundColor(backgroundColor);
             }
@@ -551,7 +552,7 @@ public class Notification {
             Object obj = c.newInstance();
             Field field = c.getField("status_bar_height");
             int x = Integer.parseInt(field.get(obj).toString());
-            return context.getResources().getDimensionPixelSize(x);
+            return context.get().getResources().getDimensionPixelSize(x);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -685,7 +686,7 @@ public class Notification {
     }
     
     protected int dip2px(float dpValue) {
-        final float scale = context.getResources().getDisplayMetrics().density;
+        final float scale = context.get().getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
     }
     
@@ -744,7 +745,7 @@ public class Notification {
     }
     
     public Notification setTitle(int titleResId) {
-        this.title = context.getString(titleResId);
+        this.title = context.get().getString(titleResId);
         refreshView();
         return this;
     }
@@ -760,7 +761,7 @@ public class Notification {
     }
     
     public Notification setMessage(int messageResId) {
-        this.message = context.getString(messageResId);
+        this.message = context.get().getString(messageResId);
         refreshView();
         return this;
     }
@@ -817,7 +818,7 @@ public class Notification {
     private  OnBindView onBindView;
     
     public Notification setCustomView(int customViewLayoutId, OnBindView onBindView) {
-        customView = LayoutInflater.from(context).inflate(customViewLayoutId, null);
+        customView = LayoutInflater.from(context.get()).inflate(customViewLayoutId, null);
         this.onBindView=onBindView;
         refreshView();
         return this;

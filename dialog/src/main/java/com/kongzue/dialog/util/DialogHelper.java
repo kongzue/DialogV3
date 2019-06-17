@@ -28,6 +28,7 @@ import com.kongzue.dialog.v3.BottomMenu;
 import com.kongzue.dialog.v3.ShareDialog;
 import com.kongzue.dialog.v3.TipDialog;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,9 +43,7 @@ public class DialogHelper extends DialogFragment {
     
     private Dialog rootDialog;
     
-    private OnDismissListener onDismissListener;
     private OnShowListener onShowListener;
-    private boolean isRestartDialog = false;
     private AlertDialog materialDialog;
     
     private int layoutId;
@@ -133,19 +132,19 @@ public class DialogHelper extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         if (savedInstanceState != null) {
+            privateNotDismissFlag = false;
             layoutId = savedInstanceState.getInt("layoutId");
             parentId = savedInstanceState.getString("parentId");
             
-            isRestartDialog = false;
         }
         super.onCreate(savedInstanceState);
     }
     
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
+        privateNotDismissFlag = true;
         outState.putInt("layoutId", layoutId);
         outState.putString("parentId", parentId);
-        isRestartDialog = true;
         super.onSaveInstanceState(outState);
     }
     
@@ -155,16 +154,15 @@ public class DialogHelper extends DialogFragment {
     private void findMyParentAndBindView(View rootView) {
         List<BaseDialog> cache = new ArrayList<>();
         cache.addAll(BaseDialog.dialogList);
-        BaseDialog.newContext = (AppCompatActivity) getContext();
+        BaseDialog.newContext = new WeakReference<>((AppCompatActivity) getContext());
         for (BaseDialog baseDialog : cache) {
-            baseDialog.context = (AppCompatActivity) getContext();
+            baseDialog.context = new WeakReference<>((AppCompatActivity) getContext());
             if (baseDialog.toString().equals(parentId)) {
                 parent = baseDialog;
                 parent.dialog = this;
                 refreshDialogPosition(getDialog());
                 parent.bindView(rootView);
                 parent.initDefaultSettings();
-                setOnDismissListener(baseDialog.dismissEvent);
             }
         }
     }
@@ -173,24 +171,31 @@ public class DialogHelper extends DialogFragment {
         boolean flag = false;
         List<BaseDialog> cache = new ArrayList<>();
         cache.addAll(BaseDialog.dialogList);
-        BaseDialog.newContext = (AppCompatActivity) getContext();
+        BaseDialog.newContext = new WeakReference<>((AppCompatActivity) getContext());
         for (BaseDialog baseDialog : cache) {
-            baseDialog.context = (AppCompatActivity) getContext();
+            baseDialog.context = new WeakReference<>((AppCompatActivity) getContext());
             if (baseDialog.toString().equals(parentId)) {
                 flag = true;
                 parent = baseDialog;
                 parent.dialog = this;
                 refreshDialogPosition(getDialog());
-                setOnDismissListener(baseDialog.dismissEvent);
             }
         }
         return flag;
     }
     
+    private boolean privateNotDismissFlag;          //此标记用于标记Dialog是重启行为而不是真正需要关闭
+    
     @Override
     public void onDismiss(DialogInterface dialog) {
+        if (parent == null) {
+            if (!findMyParent()) {
+                return;
+            }
+        }
+        if (parent.dismissEvent!=null)parent.dismissEvent.onDismiss();
         super.onDismiss(dialog);
-        if (onDismissListener != null && !isRestartDialog) onDismissListener.onDismiss();
+        privateNotDismissFlag = false;
     }
     
     public int getLayoutId() {
@@ -204,14 +209,6 @@ public class DialogHelper extends DialogFragment {
         return this;
     }
     
-    public OnDismissListener getOnDismissListener() {
-        return onDismissListener;
-    }
-    
-    public void setOnDismissListener(OnDismissListener onDismissListener) {
-        this.onDismissListener = onDismissListener;
-    }
-    
     public OnShowListener getOnShowListener() {
         return onShowListener;
     }
@@ -223,7 +220,6 @@ public class DialogHelper extends DialogFragment {
     @Override
     public void dismiss() {
         try {
-            if (parent != null) parent.dismissedFlag = true;
             super.dismiss();
         } catch (Exception e) {
         }
@@ -247,8 +243,8 @@ public class DialogHelper extends DialogFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (parent==null){
-            if (!findMyParent()){
+        if (parent == null) {
+            if (!findMyParent()) {
                 return;
             }
         }
