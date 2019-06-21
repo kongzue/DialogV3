@@ -22,6 +22,7 @@ import java.lang.ref.WeakReference;
  */
 public class CustomDialog extends BaseDialog {
     
+    private boolean fullScreen = false;
     private OnBindView onBindView;
     
     private CustomDialog() {
@@ -34,7 +35,7 @@ public class CustomDialog extends BaseDialog {
             customDialog.onBindView = onBindView;
             customDialog.customView = LayoutInflater.from(context).inflate(layoutResId, null);
             customDialog.build(customDialog, layoutResId);
-            customDialog.showDialog();
+            customDialog.show();
             return customDialog;
         }
     }
@@ -46,7 +47,7 @@ public class CustomDialog extends BaseDialog {
             customDialog.onBindView = onBindView;
             customDialog.customView = customView;
             customDialog.build(customDialog, R.layout.dialog_custom);
-            customDialog.showDialog();
+            customDialog.show();
             return customDialog;
         }
     }
@@ -57,7 +58,39 @@ public class CustomDialog extends BaseDialog {
             customDialog.context = new WeakReference<>(context);
             customDialog.customView = customView;
             customDialog.build(customDialog, R.layout.dialog_custom);
-            customDialog.showDialog();
+            customDialog.show();
+            return customDialog;
+        }
+    }
+    
+    public static CustomDialog build(AppCompatActivity context, int layoutResId, OnBindView onBindView) {
+        synchronized (CustomDialog.class) {
+            CustomDialog customDialog = new CustomDialog();
+            customDialog.context = new WeakReference<>(context);
+            customDialog.onBindView = onBindView;
+            customDialog.customView = LayoutInflater.from(context).inflate(layoutResId, null);
+            customDialog.build(customDialog, layoutResId);
+            return customDialog;
+        }
+    }
+    
+    public static CustomDialog build(AppCompatActivity context, View customView, OnBindView onBindView) {
+        synchronized (CustomDialog.class) {
+            CustomDialog customDialog = new CustomDialog();
+            customDialog.context = new WeakReference<>(context);
+            customDialog.onBindView = onBindView;
+            customDialog.customView = customView;
+            customDialog.build(customDialog, R.layout.dialog_custom);
+            return customDialog;
+        }
+    }
+    
+    public static CustomDialog build(AppCompatActivity context, View customView) {
+        synchronized (CustomDialog.class) {
+            CustomDialog customDialog = new CustomDialog();
+            customDialog.context = new WeakReference<>(context);
+            customDialog.customView = customView;
+            customDialog.build(customDialog, R.layout.dialog_custom);
             return customDialog;
         }
     }
@@ -85,6 +118,10 @@ public class CustomDialog extends BaseDialog {
     @Override
     public void show() {
         showDialog();
+    }
+    
+    public void show(int styleResId) {
+        showDialog(styleResId);
     }
     
     public interface OnBindView {
@@ -116,6 +153,15 @@ public class CustomDialog extends BaseDialog {
     
     public CustomDialog setOnShowListener(OnShowListener onShowListener) {
         this.onShowListener = onShowListener;
+        return this;
+    }
+    
+    public boolean isFullScreen() {
+        return fullScreen;
+    }
+    
+    public CustomDialog setFullScreen(boolean fullScreen) {
+        this.fullScreen = fullScreen;
         return this;
     }
 }

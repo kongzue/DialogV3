@@ -193,9 +193,9 @@ public class InputDialog extends MessageDialog {
                                 txtInput.requestLayout();
                             }
                         });
-    
-                        if (boxCustom!=null)boxCustom.removeAllViews();
-                        if (materialCustomViewBox!=null)materialCustomViewBox.removeAllViews();
+                        
+                        if (boxCustom != null) boxCustom.removeAllViews();
+                        if (materialCustomViewBox != null) materialCustomViewBox.removeAllViews();
                         materialCustomViewBox = new LinearLayout(context.get());
                         materialCustomViewBox.setOrientation(LinearLayout.VERTICAL);
                         materialCustomViewBox.addView(customView);
@@ -792,5 +792,9 @@ public class InputDialog extends MessageDialog {
     
     public interface OnBindView {
         void onBind(InputDialog dialog, View v);
+    }
+    
+    public EditText getEditTextView() {
+        return txtInput;
     }
 }

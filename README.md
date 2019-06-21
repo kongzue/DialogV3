@@ -2,10 +2,10 @@
 献给要求安卓照着苹果设计稿做开发的产品们（手动滑稽
 
 <a href="https://github.com/kongzue/dialogV3/">
-<img src="https://img.shields.io/badge/Kongzue%20Dialog-3.0.7-green.svg" alt="Kongzue Dialog">
+<img src="https://img.shields.io/badge/Kongzue%20Dialog-3.0.8-green.svg" alt="Kongzue Dialog">
 </a> 
-<a href="https://bintray.com/myzchh/maven/dialogV3/3.0.7/link">
-<img src="https://img.shields.io/badge/Maven-3.0.7-blue.svg" alt="Maven">
+<a href="https://bintray.com/myzchh/maven/dialogV3/3.0.8/link">
+<img src="https://img.shields.io/badge/Maven-3.0.8-blue.svg" alt="Maven">
 </a> 
 <a href="http://www.apache.org/licenses/LICENSE-2.0">
 <img src="https://img.shields.io/badge/License-Apache%202.0-red.svg" alt="License">
@@ -85,14 +85,14 @@ Maven仓库：
 <dependency>
   <groupId>com.kongzue.dialog_v3</groupId>
   <artifactId>dialog</artifactId>
-  <version>3.0.7</version>
+  <version>3.0.8</version>
   <type>pom</type>
 </dependency>
 ```
 Gradle：
 在dependencies{}中添加引用：
 ```
-implementation 'com.kongzue.dialog_v3:dialog:3.0.7'
+implementation 'com.kongzue.dialog_v3:dialog:3.0.8'
 ```
 
 从 Kongzue Dialog V2 升级至 Kongzue Dialog V3，请参考 [Kongzue Dialog V2升级注意事项](kongzue_dialog_v2_upto_v3.md)
@@ -581,6 +581,12 @@ limitations under the License.
 ```
 
 ## 更新日志：
+v3.0.8:
+- CustomDialog 新增 build(...) 方法；
+- CustomDialog 新增 setFullScreen(boolean) 控制是否全屏；
+- InputDialog 新增 getEditTextView() 可以自行对文本框进行一些事件或属性处理；
+- 最低 API 支持版本从 19 下降至 17；
+
 v3.0.7:
 - 对所有可能造成内存泄漏的 Activity 引用使用了弱引用处理；
 - 新增其他建议说明；

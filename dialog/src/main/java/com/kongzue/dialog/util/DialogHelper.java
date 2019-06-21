@@ -25,6 +25,7 @@ import com.kongzue.dialog.R;
 import com.kongzue.dialog.interfaces.OnShowListener;
 import com.kongzue.dialog.interfaces.OnDismissListener;
 import com.kongzue.dialog.v3.BottomMenu;
+import com.kongzue.dialog.v3.CustomDialog;
 import com.kongzue.dialog.v3.ShareDialog;
 import com.kongzue.dialog.v3.TipDialog;
 
@@ -105,6 +106,19 @@ public class DialogHelper extends DialogFragment {
                 window.setGravity(Gravity.BOTTOM);
                 window.setWindowAnimations(R.style.bottomMenuAnim);
                 window.setAttributes(lp);
+            }
+            if (parent instanceof CustomDialog) {
+                CustomDialog customDialog = (CustomDialog) parent;
+                if (customDialog.isFullScreen()) {
+                    dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                    Window window = dialog.getWindow();
+                    window.getDecorView().setPadding(0, 0, 0, 0);
+                    WindowManager windowManager = getActivity().getWindowManager();
+                    Display display = windowManager.getDefaultDisplay();
+                    WindowManager.LayoutParams lp = window.getAttributes();
+                    lp.width = display.getWidth();
+                    window.setAttributes(lp);
+                }
             }
         }
     }

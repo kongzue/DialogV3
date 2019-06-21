@@ -138,7 +138,7 @@ public class MainActivity extends BaseActivity {
         btnCustomDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CustomDialog.show(me, R.layout.layout_custom_dialog, new CustomDialog.OnBindView() {
+                CustomDialog.build(me, R.layout.layout_custom_dialog, new CustomDialog.OnBindView() {
                     @Override
                     public void onBind(final CustomDialog dialog, View v) {
                         ImageView btnOk = v.findViewById(R.id.btn_ok);
@@ -150,7 +150,7 @@ public class MainActivity extends BaseActivity {
                             }
                         });
                     }
-                });
+                }).show();
             }
         });
         
