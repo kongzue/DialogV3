@@ -460,6 +460,13 @@ CustomDialog.show(MainActivity.this, customView, new CustomDialog.OnBindView() {
 });
 ```
 
+其他方法
+```
+//全屏幕宽高
+customDialog.setFullScreen(true);
+```
+
+
 ## 其他设置
 
 ### 文字样式
