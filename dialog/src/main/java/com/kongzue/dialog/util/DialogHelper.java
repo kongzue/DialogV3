@@ -44,7 +44,7 @@ public class DialogHelper extends DialogFragment {
     
     private Dialog rootDialog;
     
-    private OnShowListener onShowListener;
+    private PreviewOnShowListener onShowListener;
     private AlertDialog materialDialog;
     
     private int layoutId;
@@ -223,11 +223,11 @@ public class DialogHelper extends DialogFragment {
         return this;
     }
     
-    public OnShowListener getOnShowListener() {
+    public PreviewOnShowListener getOnShowListener() {
         return onShowListener;
     }
     
-    public void setOnShowListener(OnShowListener onShowListener) {
+    public void setOnShowListener(PreviewOnShowListener onShowListener) {
         this.onShowListener = onShowListener;
     }
     
@@ -278,4 +278,9 @@ public class DialogHelper extends DialogFragment {
     public void onStart() {
         super.onStart();
     }
+    
+    public interface PreviewOnShowListener {
+        void onShow(Dialog dialog);
+    }
+    
 }

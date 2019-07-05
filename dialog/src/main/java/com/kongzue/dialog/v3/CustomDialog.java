@@ -108,6 +108,8 @@ public class CustomDialog extends BaseDialog {
             boxCustom.addView(customView);
             if (onBindView != null) onBindView.onBind(this, customView);
         }
+        
+        if (onShowListener != null) onShowListener.onShow(this);
     }
     
     @Override
@@ -145,7 +147,7 @@ public class CustomDialog extends BaseDialog {
     public OnShowListener getOnShowListener() {
         return onShowListener == null ? new OnShowListener() {
             @Override
-            public void onShow(Dialog dialog) {
+            public void onShow(BaseDialog dialog) {
             
             }
         } : onShowListener;
@@ -162,6 +164,16 @@ public class CustomDialog extends BaseDialog {
     
     public CustomDialog setFullScreen(boolean fullScreen) {
         this.fullScreen = fullScreen;
+        return this;
+    }
+    
+    public boolean getCancelable() {
+        return cancelable == BOOLEAN.TRUE;
+    }
+    
+    public CustomDialog setCancelable(boolean enable) {
+        this.cancelable = enable ? BOOLEAN.TRUE : BOOLEAN.FALSE;
+        if (dialog != null) dialog.setCancelable(cancelable == BOOLEAN.TRUE);
         return this;
     }
 }

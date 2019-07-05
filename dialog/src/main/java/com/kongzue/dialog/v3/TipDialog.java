@@ -14,6 +14,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -234,6 +236,7 @@ public class TipDialog extends BaseDialog {
         txtInfo = rootView.findViewById(R.id.txt_info);
         
         refreshView();
+        if (onShowListener != null) onShowListener.onShow(this);
     }
     
     private Timer cancelTimer;
@@ -316,18 +319,32 @@ public class TipDialog extends BaseDialog {
                     blurFrontColor = Color.argb(blurAlpha, 0, 0, 0);
                     break;
             }
-            if (DialogSettings.isUseBlur) {
-                boxBlur.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        blurView = new BlurView(context.get(), null);
-                        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(boxBlur.getWidth(), boxBlur.getHeight());
-                        blurView.setOverlayColor(blurFrontColor);
-                        boxBlur.addView(blurView, 0, params);
-                    }
-                });
+            if (backgroundResId != -1) {
+                boxBody.setBackgroundResource(backgroundResId);
             } else {
-                boxBody.setBackgroundResource(bkgResId);
+                
+                if (DialogSettings.isUseBlur) {
+                    boxBlur.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            blurView = new BlurView(context.get(), null);
+                            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                            blurView.setOverlayColor(blurFrontColor);
+                            boxBlur.addView(blurView, 0, params);
+                        }
+                    });
+                    boxBody.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                        @Override
+                        public void onGlobalLayout() {
+                            if (boxBlur != null && boxBody != null) {
+                                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(boxBody.getWidth(), boxBody.getHeight());
+                                boxBlur.setLayoutParams(params);
+                            }
+                        }
+                    });
+                } else {
+                    boxBody.setBackgroundResource(bkgResId);
+                }
             }
             
             if (isNull(message)) {
@@ -387,7 +404,7 @@ public class TipDialog extends BaseDialog {
     public OnShowListener getOnShowListener() {
         return onShowListener == null ? new OnShowListener() {
             @Override
-            public void onShow(Dialog dialog) {
+            public void onShow(BaseDialog dialog) {
             
             }
         } : onShowListener;
@@ -505,6 +522,16 @@ public class TipDialog extends BaseDialog {
     
     public TipDialog setMessageTextInfo(TextInfo messageTextInfo) {
         this.messageTextInfo = messageTextInfo;
+        refreshView();
+        return this;
+    }
+    
+    public int getBackgroundResId() {
+        return backgroundResId;
+    }
+    
+    public TipDialog setBackgroundResId(int backgroundResId) {
+        this.backgroundResId = backgroundResId;
         refreshView();
         return this;
     }

@@ -2,6 +2,8 @@ package com.kongzue.dialog.interfaces;
 
 import android.app.Dialog;
 
+import com.kongzue.dialog.util.BaseDialog;
+
 /**
  * Author: @Kongzue
  * Github: https://github.com/kongzue/
@@ -11,6 +13,6 @@ import android.app.Dialog;
  */
 public interface OnShowListener {
     
-    void onShow(Dialog dialog);
+    void onShow(BaseDialog dialog);
     
 }

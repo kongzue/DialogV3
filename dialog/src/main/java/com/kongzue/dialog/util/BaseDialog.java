@@ -67,6 +67,7 @@ public abstract class BaseDialog {
     protected InputInfo inputInfo;
     protected int backgroundColor = 0;
     protected View customView;
+    protected int backgroundResId = -1;
     
     protected OnDismissListener onDismissListener;
     protected OnDismissListener dismissEvent;
@@ -167,10 +168,9 @@ public abstract class BaseDialog {
         }
         dialog.setStyle(DialogFragment.STYLE_NORMAL, styleId);
         dialog.show(fragmentManager, "kongzueDialog");
-        dialog.setOnShowListener(new OnShowListener() {
+        dialog.setOnShowListener(new DialogHelper.PreviewOnShowListener() {
             @Override
             public void onShow(Dialog dialog) {
-                if (onShowListener != null) onShowListener.onShow(dialog);
                 if (DialogSettings.dialogLifeCycleListener != null)
                     DialogSettings.dialogLifeCycleListener.onShow(BaseDialog.this);
             }

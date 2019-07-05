@@ -12,11 +12,13 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.os.Build;
 import android.support.v8.renderscript.Allocation;
 import android.support.v8.renderscript.Element;
 import android.support.v8.renderscript.RenderScript;
 import android.support.v8.renderscript.ScriptIntrinsicBlur;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -201,7 +203,7 @@ public class BlurView extends View {
                 mBlurringCanvas = new Canvas(mBitmapToBlur);
                 
                 mBlurInput = Allocation.createFromBitmap(mRenderScript, mBitmapToBlur,
-                                                         Allocation.MipmapControl.MIPMAP_NONE, Allocation.USAGE_SCRIPT
+                        Allocation.MipmapControl.MIPMAP_NONE, Allocation.USAGE_SCRIPT
                 );
                 mBlurOutput = Allocation.createTyped(mRenderScript, mBlurInput.getType());
                 
@@ -356,6 +358,8 @@ public class BlurView extends View {
             mRectF.bottom = getHeight();
             if (mRoundBitmap == null) {
                 mRoundBitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
+            } else {
+                mRoundBitmap = Bitmap.createScaledBitmap(mRoundBitmap, getWidth(), getHeight(), true);
             }
             if (mTmpCanvas == null) {
                 mTmpCanvas = new Canvas(mRoundBitmap);
@@ -364,7 +368,9 @@ public class BlurView extends View {
         }
         
         mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
-        if (!mRoundBitmap.isRecycled()) canvas.drawBitmap(mRoundBitmap, 0, 0, mPaint);
+        if (mRoundBitmap!=null && !mRoundBitmap.isRecycled()) {
+            canvas.drawBitmap(mRoundBitmap, 0, 0, mPaint);
+        }
     }
     
     private static class StopException extends RuntimeException {
@@ -377,7 +383,7 @@ public class BlurView extends View {
             BlurView.class.getClassLoader().loadClass("android.support.v8.renderscript.RenderScript");
         } catch (ClassNotFoundException e) {
             throw new RuntimeException("\n错误！\nRenderScript支持库未启用，要启用模糊效果，请在您的app的Gradle配置文件中添加以下语句：" +
-                                               "\nandroid { \n...\n  defaultConfig { \n    ...\n    renderscriptTargetApi 19 \n    renderscriptSupportModeEnabled true \n  }\n}");
+                    "\nandroid { \n...\n  defaultConfig { \n    ...\n    renderscriptTargetApi 19 \n    renderscriptSupportModeEnabled true \n  }\n}");
         }
     }
     

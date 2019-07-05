@@ -163,6 +163,7 @@ public class BottomMenu extends BaseDialog {
         btnCancel = rootView.findViewById(R.id.btn_cancel);
         
         refreshView();
+        if (onShowListener != null) onShowListener.onShow(this);
     }
     
     private BlurView blurList;
@@ -633,7 +634,7 @@ public class BottomMenu extends BaseDialog {
     public OnShowListener getOnShowListener() {
         return onShowListener == null ? new OnShowListener() {
             @Override
-            public void onShow(Dialog dialog) {
+            public void onShow(BaseDialog dialog) {
             
             }
         } : onShowListener;

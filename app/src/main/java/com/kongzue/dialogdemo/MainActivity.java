@@ -32,6 +32,7 @@ import com.kongzue.dialog.interfaces.OnDismissListener;
 import com.kongzue.dialog.interfaces.OnInputDialogButtonClickListener;
 import com.kongzue.dialog.interfaces.OnMenuItemClickListener;
 import com.kongzue.dialog.interfaces.OnNotificationClickListener;
+import com.kongzue.dialog.interfaces.OnShowListener;
 import com.kongzue.dialog.util.BaseDialog;
 import com.kongzue.dialog.util.DialogSettings;
 import com.kongzue.dialog.util.InputInfo;
@@ -150,7 +151,7 @@ public class MainActivity extends BaseActivity {
                             }
                         });
                     }
-                }).show();
+                }).setCancelable(false).show();
             }
         });
         
@@ -191,6 +192,23 @@ public class MainActivity extends BaseActivity {
                                 });
                             }
                         });
+//                InputDialog.build(me)
+//                        .setTitle("提示")
+//                        .setMessage("测试")
+//                        .setOnShowListener(new OnShowListener() {
+//                            @Override
+//                            public void onShow(BaseDialog dialog) {
+//                                InputDialog inputDialog = (InputDialog) dialog;
+//                                log("EditText is Null?" + (inputDialog.getEditTextView()==null));
+//                            }
+//                        })
+//                        .setOkButton("知道了", new OnDialogButtonClickListener() {
+//                            @Override
+//                            public boolean onClick(BaseDialog baseDialog, View v) {
+//                                return false;
+//                            }
+//                        })
+//                        .show();
             }
         });
         
@@ -428,10 +446,10 @@ public class MainActivity extends BaseActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                TipDialog.show(me, "成功！", TipDialog.TYPE.SUCCESS).setOnDismissListener(new OnDismissListener() {
+                                TipDialog.show(me, "当前为服务人员，无法请求服务！", TipDialog.TYPE.SUCCESS).setOnDismissListener(new OnDismissListener() {
                                     @Override
                                     public void onDismiss() {
-                                    
+
                                     }
                                 });
                             }

@@ -76,7 +76,7 @@ MessageDialog.show(MainActivity.this, R.string.error_title, R.string.error_not_i
 
 ## Demo
 
-现已提供 Kongzue Dialog V3 Demo 演示程序供下载体验： https://fir.im/DialogV3
+现已提供 Kongzue Dialog V3 Demo 演示程序供下载体验： <https://fir.im/DialogV3>
 
 ## 引入
 

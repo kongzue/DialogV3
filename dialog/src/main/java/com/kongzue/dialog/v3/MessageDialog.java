@@ -217,6 +217,7 @@ public class MessageDialog extends BaseDialog {
         }
         
         refreshView();
+        if (onShowListener != null) onShowListener.onShow(this);
     }
     
     public void refreshView() {
@@ -258,18 +259,22 @@ public class MessageDialog extends BaseDialog {
                         btnSelectOther.setBackgroundResource(R.drawable.button_menu_ios_center_dark);
                         btnSelectNegative.setBackgroundResource(R.drawable.button_dialog_ios_left_dark);
                     }
-                    if (DialogSettings.isUseBlur) {
-                        bkg.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                blurView = new BlurView(context.get(), null);
-                                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, bkg.getHeight());
-                                blurView.setOverlayColor(blurFrontColor);
-                                bkg.addView(blurView, 0, params);
-                            }
-                        });
-                    } else {
-                        bkg.setBackgroundResource(bkgResId);
+                    if (backgroundResId!=-1){
+                        bkg.setBackgroundResource(backgroundResId);
+                    }else{
+                        if (DialogSettings.isUseBlur) {
+                            bkg.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    blurView = new BlurView(context.get(), null);
+                                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, bkg.getHeight());
+                                    blurView.setOverlayColor(blurFrontColor);
+                                    bkg.addView(blurView, 0, params);
+                                }
+                            });
+                        } else {
+                            bkg.setBackgroundResource(bkgResId);
+                        }
                     }
                     if (customView != null) {
                         boxCustom.removeAllViews();
@@ -820,7 +825,7 @@ public class MessageDialog extends BaseDialog {
     public OnShowListener getOnShowListener() {
         return onShowListener == null ? new OnShowListener() {
             @Override
-            public void onShow(Dialog dialog) {
+            public void onShow(BaseDialog dialog) {
             
             }
         } : onShowListener;
@@ -955,5 +960,15 @@ public class MessageDialog extends BaseDialog {
     
     public interface OnBindView {
         void onBind(MessageDialog dialog, View v);
+    }
+    
+    public int getBackgroundResId() {
+        return backgroundResId;
+    }
+    
+    public MessageDialog setBackgroundResId(int backgroundResId) {
+        this.backgroundResId = backgroundResId;
+        refreshView();
+        return this;
     }
 }

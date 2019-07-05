@@ -122,6 +122,7 @@ public class ShareDialog extends BaseDialog {
         btnCancel = rootView.findViewById(R.id.btn_cancel);
         
         refreshView();
+        if (onShowListener != null) onShowListener.onShow(this);
     }
     
     private BlurView blurContent;
@@ -636,7 +637,7 @@ public class ShareDialog extends BaseDialog {
     public OnShowListener getOnShowListener() {
         return onShowListener == null ? new OnShowListener() {
             @Override
-            public void onShow(Dialog dialog) {
+            public void onShow(BaseDialog dialog) {
             
             }
         } : onShowListener;

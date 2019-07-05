@@ -619,7 +619,7 @@ public class InputDialog extends MessageDialog {
     public OnShowListener getOnShowListener() {
         return onShowListener == null ? new OnShowListener() {
             @Override
-            public void onShow(Dialog dialog) {
+            public void onShow(BaseDialog dialog) {
             
             }
         } : onShowListener;
@@ -796,5 +796,15 @@ public class InputDialog extends MessageDialog {
     
     public EditText getEditTextView() {
         return txtInput;
+    }
+    
+    public int getBackgroundResId() {
+        return backgroundResId;
+    }
+    
+    public InputDialog setBackgroundResId(int backgroundResId) {
+        this.backgroundResId = backgroundResId;
+        refreshView();
+        return this;
     }
 }
