@@ -2,10 +2,10 @@
 献给要求安卓照着苹果设计稿做开发的产品们（手动滑稽
 
 <a href="https://github.com/kongzue/dialogV3/">
-<img src="https://img.shields.io/badge/Kongzue%20Dialog-3.0.8-green.svg" alt="Kongzue Dialog">
+<img src="https://img.shields.io/badge/Kongzue%20Dialog-3.0.9-green.svg" alt="Kongzue Dialog">
 </a> 
-<a href="https://bintray.com/myzchh/maven/dialogV3/3.0.8/link">
-<img src="https://img.shields.io/badge/Maven-3.0.8-blue.svg" alt="Maven">
+<a href="https://bintray.com/myzchh/maven/dialogV3/3.0.9/link">
+<img src="https://img.shields.io/badge/Maven-3.0.9-blue.svg" alt="Maven">
 </a> 
 <a href="http://www.apache.org/licenses/LICENSE-2.0">
 <img src="https://img.shields.io/badge/License-Apache%202.0-red.svg" alt="License">
@@ -85,14 +85,14 @@ Maven仓库：
 <dependency>
   <groupId>com.kongzue.dialog_v3</groupId>
   <artifactId>dialog</artifactId>
-  <version>3.0.8</version>
+  <version>3.0.9</version>
   <type>pom</type>
 </dependency>
 ```
 Gradle：
 在dependencies{}中添加引用：
 ```
-implementation 'com.kongzue.dialog_v3:dialog:3.0.8'
+implementation 'com.kongzue.dialog_v3:dialog:3.0.9'
 ```
 
 从 Kongzue Dialog V2 升级至 Kongzue Dialog V3，请参考 [Kongzue Dialog V2升级注意事项](kongzue_dialog_v2_upto_v3.md)
@@ -465,8 +465,6 @@ CustomDialog.show(MainActivity.this, customView, new CustomDialog.OnBindView() {
 //全屏幕宽高
 customDialog.setFullScreen(true);
 ```
-
-
 ## 其他设置
 
 ### 文字样式
@@ -540,6 +538,12 @@ TipDialog.show(MainActivity.this, "成功！", TipDialog.TYPE.SUCCESS).setOnDism
 });
 ```
 
+### 自定义背景
+目前 MessageDialog、InpurDialog、TipDialog、WaitDialog 支持使用以下方法自定义背景资源：
+```
+dialog.setBackgroundResId(int resId);
+```
+
 ## 有关于内存泄漏和其他的一些建议
 
 ### 关于内存泄漏问题
@@ -588,6 +592,12 @@ limitations under the License.
 ```
 
 ## 更新日志：
+v3.0.9:
+- 修复了 TipDialog/WaitDialog 进行文本长度变化时背景大小未发生变化的 bug；
+- 修复了 OnShowListener 触发时机不正确的问题；
+- 调整了 OnShowListener 的参数为对应的 BaseDialog 对象；
+- MessageDialog、InpurDialog、TipDialog、WaitDialog 新增 setBackgroundResId(int resId) 方法用于自定义对话框背景资源；
+
 v3.0.8:
 - CustomDialog 新增 build(...) 方法；
 - CustomDialog 新增 setFullScreen(boolean) 控制是否全屏；

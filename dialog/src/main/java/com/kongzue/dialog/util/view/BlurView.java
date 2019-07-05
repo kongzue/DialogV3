@@ -7,6 +7,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
@@ -356,19 +357,17 @@ public class BlurView extends View {
             //Rounded corner
             mRectF.right = getWidth();
             mRectF.bottom = getHeight();
-            if (mRoundBitmap == null) {
-                mRoundBitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
-            } else {
-                mRoundBitmap = Bitmap.createScaledBitmap(mRoundBitmap, getWidth(), getHeight(), true);
-            }
-            if (mTmpCanvas == null) {
-                mTmpCanvas = new Canvas(mRoundBitmap);
-            }
-            mTmpCanvas.drawRoundRect(mRectF, mXRadius, mYRadius, mPaint);
+            
+            mRoundBitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
+            mTmpCanvas = new Canvas(mRoundBitmap);
+            Paint cutPaint = new Paint();
+            cutPaint.setAntiAlias(true);
+            cutPaint.setColor(Color.WHITE);
+            mTmpCanvas.drawRoundRect(mRectF, mXRadius, mYRadius, cutPaint);
         }
         
         mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
-        if (mRoundBitmap!=null && !mRoundBitmap.isRecycled()) {
+        if (mRoundBitmap != null && !mRoundBitmap.isRecycled()) {
             canvas.drawBitmap(mRoundBitmap, 0, 0, mPaint);
         }
     }

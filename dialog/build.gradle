@@ -6,7 +6,7 @@ def siteUrl = 'https://github.com/kongzue/DialogV3' //项目在github主页地�
 def gitUrl = 'https://github.com/kongzue/DialogV3.git'   //Git仓库的地址
 
 group = "com.kongzue.dialog_v3"
-version = "3.0.8.5"
+version = "3.0.9"
 
 android {
     compileSdkVersion 28
@@ -14,8 +14,8 @@ android {
     defaultConfig {
         minSdkVersion 17
         targetSdkVersion 28
-        versionCode 68
-        versionName "3.0.8.5"
+        versionCode 69
+        versionName "3.0.9"
 
         renderscriptTargetApi 14
         renderscriptSupportModeEnabled true    // Enable RS support
