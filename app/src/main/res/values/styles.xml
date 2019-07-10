@@ -8,4 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="DialogTheme" parent="BaseDialog">
+        <item name="android:backgroundDimAmount">0</item>
+    </style>
 </resources>
