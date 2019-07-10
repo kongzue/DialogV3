@@ -1,4 +1,4 @@
-# Kongzue Dialog V3
+# Kongzue Dialog V3(Support Ver)
 献给要求安卓照着苹果设计稿做开发的产品们（手动滑稽
 
 <a href="https://github.com/kongzue/dialogV3/">
