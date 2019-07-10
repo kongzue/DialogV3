@@ -5,7 +5,7 @@ apply plugin: 'com.jfrog.bintray'
 def siteUrl = 'https://github.com/kongzue/DialogV3' //项目在github主页地址
 def gitUrl = 'https://github.com/kongzue/DialogV3.git'   //Git仓库的地址
 
-group = "com.kongzue.dialog_v3"
+group = "com.kongzue.dialog_v3x"
 version = "3.0.9.1"
 
 android {
@@ -34,7 +34,7 @@ install {
         pom {
             project {
                 packaging 'aar'
-                name 'dialog_v3'
+                name 'dialog_v3x'
                 url siteUrl
                 licenses {
                     license {
@@ -75,7 +75,7 @@ bintray {
     configurations = ['archives']
     pkg {
         repo = "maven"
-        name = "dialogV3" //项目在JCenter的名字
+        name = "dialogV3X" //项目在JCenter的名字
         websiteUrl = siteUrl
         vcsUrl = gitUrl
         licenses = ["Apache-2.0"]
@@ -85,5 +85,5 @@ bintray {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'androidx.appcompat:appcompat:1.0.0'
 }

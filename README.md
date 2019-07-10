@@ -1,11 +1,13 @@
-# Kongzue Dialog V3
+# Kongzue Dialog V3(AndroidX)
 献给要求安卓照着苹果设计稿做开发的产品们（手动滑稽
 
+提示：此版本仅适用于基于 AndroidX 构建的项目。
+
 <a href="https://github.com/kongzue/dialogV3/">
-<img src="https://img.shields.io/badge/Kongzue%20Dialog-3.0.9-green.svg" alt="Kongzue Dialog">
+<img src="https://img.shields.io/badge/Kongzue%20Dialog-3.0.9.1-green.svg" alt="Kongzue Dialog">
 </a> 
-<a href="https://bintray.com/myzchh/maven/dialogV3/3.0.9/link">
-<img src="https://img.shields.io/badge/Maven-3.0.9-blue.svg" alt="Maven">
+<a href="https://bintray.com/myzchh/maven/dialogV3X">
+<img src="https://img.shields.io/badge/Maven-3.0.9.1-blue.svg" alt="Maven">
 </a> 
 <a href="http://www.apache.org/licenses/LICENSE-2.0">
 <img src="https://img.shields.io/badge/License-Apache%202.0-red.svg" alt="License">
@@ -83,16 +85,16 @@ MessageDialog.show(MainActivity.this, R.string.error_title, R.string.error_not_i
 Maven仓库：
 ```
 <dependency>
-  <groupId>com.kongzue.dialog_v3</groupId>
+  <groupId>com.kongzue.dialog_v3x</groupId>
   <artifactId>dialog</artifactId>
-  <version>3.0.9</version>
+  <version>3.0.9.1</version>
   <type>pom</type>
 </dependency>
 ```
 Gradle：
 在dependencies{}中添加引用：
 ```
-implementation 'com.kongzue.dialog_v3:dialog:3.0.9'
+implementation 'com.kongzue.dialog_v3x:dialog:3.0.9.1'
 ```
 
 从 Kongzue Dialog V2 升级至 Kongzue Dialog V3，请参考 [Kongzue Dialog V2升级注意事项](kongzue_dialog_v2_upto_v3.md)
@@ -592,46 +594,5 @@ limitations under the License.
 ```
 
 ## 更新日志：
-v3.0.9:
-- 修复了 TipDialog/WaitDialog 进行文本长度变化时背景大小未发生变化的 bug；
-- 修复了 OnShowListener 触发时机不正确的问题；
-- 调整了 OnShowListener 的参数为对应的 BaseDialog 对象；
-- MessageDialog、InpurDialog、TipDialog、WaitDialog 新增 setBackgroundResId(int resId) 方法用于自定义对话框背景资源；
-
-v3.0.8:
-- CustomDialog 新增 build(...) 方法；
-- CustomDialog 新增 setFullScreen(boolean) 控制是否全屏；
-- InputDialog 新增 getEditTextView() 可以自行对文本框进行一些事件或属性处理；
-- 最低 API 支持版本从 19 下降至 17；
-
-v3.0.7:
-- 对所有可能造成内存泄漏的 Activity 引用使用了弱引用处理；
-- 新增其他建议说明；
-
-v3.0.6:
-- 自定义布局在 MessageDialog、InputDialog 的 Material 风格使用时宽度未顶头的问题修复；
-- 自定义布局在 MessageDialog、InputDialog 的 Material 风格使用时存在的未 removeView 问题修复；
-- 重复旋转屏幕导致空指针问题修复；
-
-v3.0.5:
-- BottomMenu 和 ShareDialog 的 IOS 风格新增暗色模式，其他风格后续跟进；
-- 根据 IOS13 实际效果对所有暗色模式颜色进行了调整；
-- 修复了切换 Activity 导致已经 dismiss 的 Dialog 重复出现的 bug；
-- 修复了 dismissEvent 可能引发的空指针异常； 
-
-v3.0.4:
-- 修复多次显示 TipDialog 后设置 dismissListener 不触发的问题。
-
-v3.0.3:
-- 修复 TipDialog 不会自动消失的问题。
-
-v3.0.2:
-- 修复切换后台可能导致的序列化对话框恢复显示队列问题；
-- 修复切换后台可能导致等待、提示对话框出现的无法关闭或显示的问题；
-- 修复等待提示对话框可能存在的异步线程空指针异常；
-
-v3.0.1:
-- 修复 MessageDialog 自定义布局事件绑定不执行的问题；
-
-v3.0.0:
-- 全新发布。
+v3.0.9.1:
+- 迁移至 AndroidX；

@@ -13,13 +13,12 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.os.Build;
-import android.support.v8.renderscript.Allocation;
-import android.support.v8.renderscript.Element;
-import android.support.v8.renderscript.RenderScript;
-import android.support.v8.renderscript.ScriptIntrinsicBlur;
+
+import androidx.renderscript.Allocation;
+import androidx.renderscript.Element;
+import androidx.renderscript.RenderScript;
+import androidx.renderscript.ScriptIntrinsicBlur;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -160,7 +159,7 @@ public class BlurView extends View {
                 try {
                     mRenderScript = RenderScript.create(getContext());
                     mBlurScript = ScriptIntrinsicBlur.create(mRenderScript, Element.U8_4(mRenderScript));
-                } catch (android.support.v8.renderscript.RSRuntimeException e) {
+                } catch (androidx.renderscript.RSRuntimeException e) {
                     if (isDebug(getContext())) {
                         if (e.getMessage() != null && e.getMessage().startsWith("Error loading RS jni library: java.lang.UnsatisfiedLinkError:")) {
                             throw new RuntimeException("Error loading RS jni library, Upgrade buildToolsVersion=\"24.0.2\" or higher may solve this issue");
@@ -379,8 +378,9 @@ public class BlurView extends View {
     
     static {
         try {
-            BlurView.class.getClassLoader().loadClass("android.support.v8.renderscript.RenderScript");
+            BlurView.class.getClassLoader().loadClass("androidx.renderscript.RenderScript");
         } catch (ClassNotFoundException e) {
+            e.printStackTrace();
             throw new RuntimeException("\n错误！\nRenderScript支持库未启用，要启用模糊效果，请在您的app的Gradle配置文件中添加以下语句：" +
                     "\nandroid { \n...\n  defaultConfig { \n    ...\n    renderscriptTargetApi 19 \n    renderscriptSupportModeEnabled true \n  }\n}");
         }

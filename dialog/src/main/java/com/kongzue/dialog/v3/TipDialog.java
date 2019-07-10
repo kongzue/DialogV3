@@ -1,16 +1,12 @@
 package com.kongzue.dialog.v3;
 
-import android.app.ActivityManager;
-import android.app.Dialog;
-import android.content.ComponentName;
-import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.os.Looper;
-import android.support.annotation.DrawableRes;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
+
+import androidx.annotation.DrawableRes;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +25,6 @@ import com.kongzue.dialog.util.view.BlurView;
 import com.kongzue.dialog.util.view.ProgressView;
 
 import java.lang.ref.WeakReference;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
