@@ -230,7 +230,7 @@ public class DialogHelper extends DialogFragment {
     @Override
     public void dismiss() {
         try {
-            super.dismiss();
+            super.dismissAllowingStateLoss();
         } catch (Exception e) {
         }
     }

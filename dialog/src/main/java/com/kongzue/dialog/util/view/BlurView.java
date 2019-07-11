@@ -382,7 +382,7 @@ public class BlurView extends View {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
             throw new RuntimeException("\n错误！\nRenderScript支持库未启用，要启用模糊效果，请在您的app的Gradle配置文件中添加以下语句：" +
-                    "\nandroid { \n...\n  defaultConfig { \n    ...\n    renderscriptTargetApi 19 \n    renderscriptSupportModeEnabled true \n  }\n}");
+                    "\nandroid { \n...\n  defaultConfig { \n    ...\n    renderscriptTargetApi 14 \n    renderscriptSupportModeEnabled true \n  }\n}");
         }
     }
     

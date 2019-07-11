@@ -4,10 +4,10 @@
 提示：此版本仅适用于基于 AndroidX 构建的项目。
 
 <a href="https://github.com/kongzue/dialogV3/">
-<img src="https://img.shields.io/badge/Kongzue%20Dialog-3.0.9.1-green.svg" alt="Kongzue Dialog">
+<img src="https://img.shields.io/badge/Kongzue%20Dialog-3.1.0-green.svg" alt="Kongzue Dialog">
 </a> 
 <a href="https://bintray.com/myzchh/maven/dialogV3X">
-<img src="https://img.shields.io/badge/Maven-3.0.9.1-blue.svg" alt="Maven">
+<img src="https://img.shields.io/badge/Maven-3.1.0-blue.svg" alt="Maven">
 </a> 
 <a href="http://www.apache.org/licenses/LICENSE-2.0">
 <img src="https://img.shields.io/badge/License-Apache%202.0-red.svg" alt="License">
@@ -87,14 +87,14 @@ Maven仓库：
 <dependency>
   <groupId>com.kongzue.dialog_v3x</groupId>
   <artifactId>dialog</artifactId>
-  <version>3.0.9.1</version>
+  <version>3.1.0</version>
   <type>pom</type>
 </dependency>
 ```
 Gradle：
 在dependencies{}中添加引用：
 ```
-implementation 'com.kongzue.dialog_v3x:dialog:3.0.9.1'
+implementation 'com.kongzue.dialog_v3x:dialog:3.1.0'
 ```
 
 从 Kongzue Dialog V2 升级至 Kongzue Dialog V3，请参考 [Kongzue Dialog V2升级注意事项](kongzue_dialog_v2_upto_v3.md)
@@ -131,7 +131,7 @@ android {
     defaultConfig {
         ...
 
-        renderscriptTargetApi 19
+        renderscriptTargetApi 14
         renderscriptSupportModeEnabled true
     }
 }
@@ -594,5 +594,9 @@ limitations under the License.
 ```
 
 ## 更新日志：
+v3.1.0:
+- 修复了 RenderScript 无法加载的问题；
+- 用 dismissAllowingStateLoss() 替换之前使用的 dismiss();
+
 v3.0.9.1:
 - 迁移至 AndroidX；
