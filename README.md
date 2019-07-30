@@ -339,6 +339,10 @@ BottomMenu.show(MainActivity.this, baseAdapter, new OnMenuItemClickListener() {
 });
 ```
 
+⚠ 特别说明：
+
+Material 风格的 BottomDialog 默认不支持“取消”按钮，按照设计规范，使用下滑手势关闭。
+
 ### 通知
 这里的通知并非系统通知，且不具备在您的设备通知栏中持久显示的特性，它本质上是通过对 Toast 进行修改实现的跨界面屏幕顶部提示条。
 
@@ -394,6 +398,10 @@ ShareDialog.show(MainActivity.this, itemList, new ShareDialog.OnItemClickListene
 ```
 
 额外需要注意，iOS 风格模式下，默认会自动对图片进行圆角裁切，使用时只需要直接提供方形图标即可。
+
+⚠ 特别说明：
+
+Material 风格的 ShareDialog 默认不支持“取消”按钮，按照设计规范，使用下滑手势关闭。
 
 ## 定制化
 
@@ -594,6 +602,10 @@ limitations under the License.
 ```
 
 ## 更新日志：
+v(测试版本)3.1.0.2:
+- 新增 DialogSettings.defaultCancelButtonText 可设置 BottomDialog 和 ShareDialog 默认“取消”按钮的文字；
+- 新增 DialogSettings.tipBackgroundResId 可设置 TipDialog 和 WaitDialog 的背景资源；
+
 v3.1.0:
 - 用 dismissAllowingStateLoss() 替换之前使用的 dismiss();
 

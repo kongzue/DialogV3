@@ -257,6 +257,10 @@ public class TipDialog extends BaseDialog {
         if (rootView != null) {
             final int bkgResId, blurFrontColor;
             if (tipTheme == null) tipTheme = DialogSettings.tipTheme;
+            if (DialogSettings.tipBackgroundResId != 0 && backgroundResId == -1) {
+                backgroundResId = DialogSettings.tipBackgroundResId;
+            }
+            
             switch (tipTheme) {
                 case LIGHT:
                     bkgResId = R.drawable.rect_light;

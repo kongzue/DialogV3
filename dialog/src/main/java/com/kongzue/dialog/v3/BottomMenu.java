@@ -47,7 +47,7 @@ public class BottomMenu extends BaseDialog {
     
     private List<String> menuTextList;
     private String title;
-    private String cancelButtonText = "取消";
+    private String cancelButtonText = DialogSettings.defaultCancelButtonText;
     private boolean showCancelButton = true;
     private OnMenuItemClickListener onMenuItemClickListener;
     

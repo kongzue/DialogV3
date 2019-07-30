@@ -59,7 +59,7 @@ public class ShareDialog extends BaseDialog {
     
     private String title = "分享";
     private List<Item> items;
-    private String cancelButtonText = "取消";
+    private String cancelButtonText = DialogSettings.defaultCancelButtonText;
     
     private TextInfo titleTextInfo;
     private TextInfo itemTextInfo;
