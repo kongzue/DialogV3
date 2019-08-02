@@ -196,6 +196,35 @@ MessageDialog
         .setButtonOrientation(LinearLayout.VERTICAL);
 ```
 
+💡 额外说明，V3 库支持更灵活的配置按钮方式，除了默认的 setOnOkButtonClickListener(...) 方法以外，你还可以这样写：
+```
+//仅设置文字
+.setOkButton("知道了")
+        
+//设置文字同时设置回调
+.setOkButton("知道了", new OnDialogButtonClickListener() {
+            @Override
+            public boolean onClick(View v) {
+                Toast.makeText(MainActivity.this, "点击了知道了！", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        })
+        
+//仅设置回调
+.setOkButton(new OnDialogButtonClickListener() {
+            @Override
+            public boolean onClick(View v) {
+                Toast.makeText(MainActivity.this, "点击了知道了！", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        })
+        
+//使用资源 id 设置文字
+.setOkButton(R.string.iknow)
+
+//其他你能想到的同样支持...
+```
+
 ### 输入对话框
 提供额外输入需求的对话框组件，可控制输入内容类型，并在点击按钮时判断是否关闭对话框。
 
