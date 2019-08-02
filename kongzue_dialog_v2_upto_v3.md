@@ -28,4 +28,28 @@ Pop 组件已被暂时移除，不过不确定之后会不会回归。
 
 其次您需要阅读 V3 库的 [说明文档](https://github.com/kongzue/DialogV3) 以了解 V3 库的构建方式，并对您当前项目中的对话框组件构建方式进行修改。
 
+V3 库的构建方式中，不再支持在参数中添加回调监听器（例如确定、取消按钮的点击事件），需要使用 set 方法设置，这是为了增加代码的灵活性作出的修改。
+
+例如 V2 版本的代码：
+```
+MessageDialog.show(context, "消息提示框", "用于提示一些消息", "知道了", new DialogInterface.OnClickListener() {
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+    }
+});
+```
+在 V3 版本需要修改为：
+```
+MessageDialog.show(context, "消息提示框", "用于提示一些消息", "知道了")
+        .setOnOkButtonClickListener(new OnDialogButtonClickListener() {
+            @Override
+            public boolean onClick(BaseDialog baseDialog, View v) {
+                return false;               
+            }
+        });
+```
+灵活性主要体现在，1是你不必再设置空代码的监听器，2是统一使用的 OnDialogButtonClickListener 可以通过 return 值直接判断点击按钮后是否关闭对话框，3是额外的增加了可以直接设置资源 id——例如 R.string.xxx 的调用接口。
+
+V3 库与 V2 版本的回调方法不一样，例如 InputDialog 的确定按钮回调可设置成 OnInputDialogButtonClickListener 来直接获取值（请参考[正文文档](https://github.com/kongzue/DialogV3)）。
+
 感谢您一直以来对 Kongzue Dialog 的支持，如有任何问题可以通过提交 Issues 或者加 QQ 群 271127803 与我取得联系。
