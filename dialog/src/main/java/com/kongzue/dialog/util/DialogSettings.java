@@ -39,6 +39,9 @@ public class DialogSettings {
     //全局正文文字样式
     public static TextInfo contentTextInfo;
     
+    //全局提示文字样式
+    public static TextInfo tipTextInfo;
+    
     //全局默认按钮文字样式
     public static TextInfo buttonTextInfo;
     

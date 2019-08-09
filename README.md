@@ -2,10 +2,10 @@
 献给要求安卓照着苹果设计稿做开发的产品们（手动滑稽
 
 <a href="https://github.com/kongzue/dialogV3/">
-<img src="https://img.shields.io/badge/Kongzue%20Dialog-3.1.0-green.svg" alt="Kongzue Dialog">
+<img src="https://img.shields.io/badge/Kongzue%20Dialog-3.1.1-green.svg" alt="Kongzue Dialog">
 </a> 
-<a href="https://bintray.com/myzchh/maven/dialogV3/3.1.0/link">
-<img src="https://img.shields.io/badge/Maven-3.1.0-blue.svg" alt="Maven">
+<a href="https://bintray.com/myzchh/maven/dialogV3/3.1.1/link">
+<img src="https://img.shields.io/badge/Maven-3.1.1-blue.svg" alt="Maven">
 </a> 
 <a href="http://www.apache.org/licenses/LICENSE-2.0">
 <img src="https://img.shields.io/badge/License-Apache%202.0-red.svg" alt="License">
@@ -85,14 +85,14 @@ Maven仓库：
 <dependency>
   <groupId>com.kongzue.dialog_v3</groupId>
   <artifactId>dialog</artifactId>
-  <version>3.1.0</version>
+  <version>3.1.1</version>
   <type>pom</type>
 </dependency>
 ```
 Gradle：
 在dependencies{}中添加引用：
 ```
-implementation 'com.kongzue.dialog_v3:dialog:3.1.0'
+implementation 'com.kongzue.dialog_v3:dialog:3.1.1'
 ```
 
 从 Kongzue Dialog V2 升级至 Kongzue Dialog V3，请参考 [Kongzue Dialog V2升级注意事项](kongzue_dialog_v2_upto_v3.md)
@@ -120,6 +120,9 @@ DialogSettings.DEBUGMODE = (boolean);                   //是否允许打印日�
 DialogSettings.blurAlpha = (int);                       //开启模糊后的透明度（0~255）
 DialogSettings.systemDialogStyle = (styleResId);        //自定义系统对话框style，注意设置此功能会导致原对话框风格和动画失效
 DialogSettings.dialogLifeCycleListener = (DialogLifeCycleListener);  //全局Dialog生命周期监听器
+DialogSettings.defaultCancelButtonText = (String);      //设置 BottomDialog 和 ShareDialog 默认“取消”按钮的文字
+DialogSettings.tipBackgroundResId = (drawableResId);    //设置 TipDialog 和 WaitDialog 的背景资源
+DialogSettings.tipTextInfo = (InputInfo);               //设置 TipDialog 和 WaitDialog 文字样式
 ```
 
 如果需要开启模糊效果，即 DialogSettings.isUseBlur = true; 需要进行额外 renderscript 配置，需要注意的是在部分低配置手机上此功能效率可能存在问题。
@@ -631,9 +634,12 @@ limitations under the License.
 ```
 
 ## 更新日志：
-v(测试版本)3.1.0.2:
+v3.1.1:
 - 新增 DialogSettings.defaultCancelButtonText 可设置 BottomDialog 和 ShareDialog 默认“取消”按钮的文字；
 - 新增 DialogSettings.tipBackgroundResId 可设置 TipDialog 和 WaitDialog 的背景资源；
+- 新增 DialogSettings.tipTextInfo 可设置 TipDialog 和 WaitDialog 文字样式；
+- 修复 ShareDialog 可能存在的 Android 5- 版本崩溃问题；
+- 修复 InputDialog 可能存在的崩溃问题；
 
 v3.1.0:
 - 用 dismissAllowingStateLoss() 替换之前使用的 dismiss();

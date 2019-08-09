@@ -62,6 +62,7 @@ public abstract class BaseDialog {
     
     protected TextInfo titleTextInfo;
     protected TextInfo messageTextInfo;
+    protected TextInfo tipTextInfo;
     protected TextInfo buttonTextInfo;
     protected TextInfo buttonPositiveTextInfo;
     protected InputInfo inputInfo;
@@ -209,6 +210,7 @@ public abstract class BaseDialog {
         if (backgroundColor == 0) backgroundColor = DialogSettings.backgroundColor;
         if (titleTextInfo == null) titleTextInfo = DialogSettings.titleTextInfo;
         if (messageTextInfo == null) messageTextInfo = DialogSettings.contentTextInfo;
+        if (tipTextInfo == null) tipTextInfo = DialogSettings.tipTextInfo;
         if (buttonTextInfo == null) buttonTextInfo = DialogSettings.buttonTextInfo;
         if (inputInfo == null) inputInfo = DialogSettings.inputInfo;
         if (buttonPositiveTextInfo == null) {

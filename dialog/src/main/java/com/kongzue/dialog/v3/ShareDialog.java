@@ -136,6 +136,7 @@ public class ShareDialog extends BaseDialog {
         if (cancelButtonTextInfo == null) cancelButtonTextInfo = buttonTextInfo;
         if (titleTextInfo == null) titleTextInfo = super.titleTextInfo;
         if (itemTextInfo == null) itemTextInfo = messageTextInfo;
+        if (cancelButtonText==null) cancelButtonText = "取消";
         
         if (rootView != null) {
             switch (style) {

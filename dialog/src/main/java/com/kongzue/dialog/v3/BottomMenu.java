@@ -177,6 +177,7 @@ public class BottomMenu extends BaseDialog {
         if (menuTextInfo == null) menuTextInfo = buttonTextInfo;
         if (cancelButtonTextInfo == null) cancelButtonTextInfo = menuTextInfo;
         if (menuTitleTextInfo == null) menuTitleTextInfo = titleTextInfo;
+        if (cancelButtonText==null) cancelButtonText = "取消";
         
         if (rootView != null) {
             btnCancel.setText(cancelButtonText);

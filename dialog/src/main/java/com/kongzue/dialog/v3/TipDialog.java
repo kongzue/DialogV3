@@ -264,8 +264,8 @@ public class TipDialog extends BaseDialog {
             switch (tipTheme) {
                 case LIGHT:
                     bkgResId = R.drawable.rect_light;
-                    blurFrontColor = Color.argb(blurAlpha, 255, 255, 255);
                     int darkColor = Color.rgb(0, 0, 0);
+                    blurFrontColor = Color.argb(blurAlpha, 255, 255, 255);
                     progress.setStrokeColors(new int[]{darkColor});
                     txtInfo.setTextColor(darkColor);
                     if (type != null) {
@@ -356,7 +356,7 @@ public class TipDialog extends BaseDialog {
             } else {
                 txtInfo.setVisibility(View.VISIBLE);
                 txtInfo.setText(message);
-                useTextInfo(txtInfo, messageTextInfo);
+                useTextInfo(txtInfo, tipTextInfo);
             }
             
             if (customView != null) {

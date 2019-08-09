@@ -219,7 +219,7 @@ public class MainActivity extends BaseActivity {
                 BottomMenu.show(me, new String[]{"菜单1", "菜单2", "菜单3"}, new OnMenuItemClickListener() {
                     @Override
                     public void onClick(String text, int index) {
-                    
+                        toast(text);
                     }
                 }).setCustomView(R.layout.layout_custom, new BottomMenu.OnBindView() {
                     @Override
@@ -314,7 +314,7 @@ public class MainActivity extends BaseActivity {
                 BottomMenu.show(me, new String[]{"菜单1", "菜单2", "菜单3"}, new OnMenuItemClickListener() {
                     @Override
                     public void onClick(String text, int index) {
-                        log("点击了：" + text);
+                        toast("点击了：" + text);
                     }
                 }).setTitle("这里是标题文字");
             }
