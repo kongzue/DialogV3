@@ -39,6 +39,9 @@ public class DialogSettings {
     //全局正文文字样式
     public static TextInfo contentTextInfo;
     
+    //全局提示文字样式
+    public static TextInfo tipTextInfo;
+    
     //全局默认按钮文字样式
     public static TextInfo buttonTextInfo;
     
@@ -57,7 +60,7 @@ public class DialogSettings {
     //全局提示框及等待框（WaitDialog、TipDialog）默认是否可以关闭
     public static boolean cancelableTipDialog = false;
     
-    //日志
+    //是否允许显示日志
     public static boolean DEBUGMODE = false;
     
     //模糊透明度(0~255)
@@ -66,6 +69,12 @@ public class DialogSettings {
     //允许自定义系统对话框style，注意设置此功能会导致原对话框风格和动画失效
     public static int systemDialogStyle;
     
+    //默认取消按钮文本文字，影响BottomDialog、ShareDialog
+    public static String defaultCancelButtonText;
+    
     //全局Dialog生命周期监听器
     public static DialogLifeCycleListener dialogLifeCycleListener;
+    
+    //全局提示框背景资源，值0时不生效
+    public static int tipBackgroundResId = 0;
 }

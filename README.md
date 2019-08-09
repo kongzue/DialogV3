@@ -4,10 +4,10 @@
 提示：此版本仅适用于基于 AndroidX 构建的项目。
 
 <a href="https://github.com/kongzue/dialogV3/">
-<img src="https://img.shields.io/badge/Kongzue%20Dialog-3.1.0-green.svg" alt="Kongzue Dialog">
+<img src="https://img.shields.io/badge/Kongzue%20Dialog-3.1.1-green.svg" alt="Kongzue Dialog">
 </a> 
 <a href="https://bintray.com/myzchh/maven/dialogV3X">
-<img src="https://img.shields.io/badge/Maven-3.1.0-blue.svg" alt="Maven">
+<img src="https://img.shields.io/badge/Maven-3.1.1-blue.svg" alt="Maven">
 </a> 
 <a href="http://www.apache.org/licenses/LICENSE-2.0">
 <img src="https://img.shields.io/badge/License-Apache%202.0-red.svg" alt="License">
@@ -87,14 +87,14 @@ Maven仓库：
 <dependency>
   <groupId>com.kongzue.dialog_v3x</groupId>
   <artifactId>dialog</artifactId>
-  <version>3.1.0</version>
+  <version>3.1.1</version>
   <type>pom</type>
 </dependency>
 ```
 Gradle：
 在dependencies{}中添加引用：
 ```
-implementation 'com.kongzue.dialog_v3x:dialog:3.1.0'
+implementation 'com.kongzue.dialog_v3x:dialog:3.1.1'
 ```
 
 从 Kongzue Dialog V2 升级至 Kongzue Dialog V3，请参考 [Kongzue Dialog V2升级注意事项](kongzue_dialog_v2_upto_v3.md)
@@ -120,6 +120,9 @@ DialogSettings.DEBUGMODE = (boolean);                   //是否允许打印日�
 DialogSettings.blurAlpha = (int);                       //开启模糊后的透明度（0~255）
 DialogSettings.systemDialogStyle = (styleResId);        //自定义系统对话框style，注意设置此功能会导致原对话框风格和动画失效
 DialogSettings.dialogLifeCycleListener = (DialogLifeCycleListener);  //全局Dialog生命周期监听器
+DialogSettings.defaultCancelButtonText = (String);      //设置 BottomDialog 和 ShareDialog 默认“取消”按钮的文字
+DialogSettings.tipBackgroundResId = (drawableResId);    //设置 TipDialog 和 WaitDialog 的背景资源
+DialogSettings.tipTextInfo = (InputInfo);               //设置 TipDialog 和 WaitDialog 文字样式
 ```
 
 如果需要开启模糊效果，即 DialogSettings.isUseBlur = true; 需要进行额外 renderscript 配置，需要注意的是在部分低配置手机上此功能效率可能存在问题。
@@ -194,6 +197,34 @@ MessageDialog.build(MainActivity.this)
 MessageDialog
         .show(MainActivity.this, "纵向排列", "如果你正在使用iOS风格或Kongzue风格，这里的按钮可以纵向排列，以方便提供更多选择", "还不错", "有点意思", "还有呢？")
         .setButtonOrientation(LinearLayout.VERTICAL);
+```
+
+💡 额外说明，V3 库支持更灵活的配置按钮方式，除了默认的 setOnOkButtonClickListener(...) 方法以外，你还可以这样写：
+```
+//仅设置文字
+.setOkButton("知道了")
+        
+//设置文字同时设置回调
+.setOkButton("知道了", new OnDialogButtonClickListener() {
+            @Override
+            public boolean onClick(View v) {
+                Toast.makeText(MainActivity.this, "点击了知道了！", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        })
+        
+//仅设置回调
+.setOkButton(new OnDialogButtonClickListener() {
+            @Override
+            public boolean onClick(View v) {
+                Toast.makeText(MainActivity.this, "点击了知道了！", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        })
+        
+//使用资源 id 设置文字
+.setOkButton(R.string.iknow)
+//其他你能想到的同样支持...
 ```
 
 ### 输入对话框
@@ -339,6 +370,10 @@ BottomMenu.show(MainActivity.this, baseAdapter, new OnMenuItemClickListener() {
 });
 ```
 
+⚠ 特别说明：
+
+Material 风格的 BottomDialog 默认不支持“取消”按钮，按照设计规范，使用下滑手势关闭。
+
 ### 通知
 这里的通知并非系统通知，且不具备在您的设备通知栏中持久显示的特性，它本质上是通过对 Toast 进行修改实现的跨界面屏幕顶部提示条。
 
@@ -394,6 +429,10 @@ ShareDialog.show(MainActivity.this, itemList, new ShareDialog.OnItemClickListene
 ```
 
 额外需要注意，iOS 风格模式下，默认会自动对图片进行圆角裁切，使用时只需要直接提供方形图标即可。
+
+⚠ 特别说明：
+
+Material 风格的 ShareDialog 默认不支持“取消”按钮，按照设计规范，使用下滑手势关闭。
 
 ## 定制化
 
@@ -594,6 +633,13 @@ limitations under the License.
 ```
 
 ## 更新日志：
+v3.1.1:
+- 新增 DialogSettings.defaultCancelButtonText 可设置 BottomDialog 和 ShareDialog 默认“取消”按钮的文字；
+- 新增 DialogSettings.tipBackgroundResId 可设置 TipDialog 和 WaitDialog 的背景资源；
+- 新增 DialogSettings.tipTextInfo 可设置 TipDialog 和 WaitDialog 文字样式；
+- 修复 ShareDialog 可能存在的 Android 5- 版本崩溃问题；
+- 修复 InputDialog 可能存在的崩溃问题；
+
 v3.1.0:
 - 修复了 RenderScript 无法加载的问题；
 - 用 dismissAllowingStateLoss() 替换之前使用的 dismiss();

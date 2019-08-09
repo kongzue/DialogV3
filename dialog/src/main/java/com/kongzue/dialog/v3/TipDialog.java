@@ -252,6 +252,9 @@ public class TipDialog extends BaseDialog {
         if (rootView != null) {
             final int bkgResId, blurFrontColor;
             if (tipTheme == null) tipTheme = DialogSettings.tipTheme;
+            if (DialogSettings.tipBackgroundResId != 0 && backgroundResId == -1) {
+                backgroundResId = DialogSettings.tipBackgroundResId;
+            }
             switch (tipTheme) {
                 case LIGHT:
                     bkgResId = R.drawable.rect_light;
@@ -347,7 +350,7 @@ public class TipDialog extends BaseDialog {
             } else {
                 txtInfo.setVisibility(View.VISIBLE);
                 txtInfo.setText(message);
-                useTextInfo(txtInfo, messageTextInfo);
+                useTextInfo(txtInfo, tipTextInfo);
             }
             
             if (customView != null) {

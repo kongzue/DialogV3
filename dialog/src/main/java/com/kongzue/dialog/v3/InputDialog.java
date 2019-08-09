@@ -3,11 +3,13 @@ package com.kongzue.dialog.v3;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.text.InputFilter;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -81,9 +83,9 @@ public class InputDialog extends MessageDialog {
     public static InputDialog show(@NonNull AppCompatActivity context, int titleResId, int messageResId) {
         synchronized (TipDialog.class) {
             InputDialog inputDialog = show(context,
-                                           context.getString(titleResId),
-                                           context.getString(messageResId),
-                                           null, null, null
+                    context.getString(titleResId),
+                    context.getString(messageResId),
+                    null, null, null
             );
             return inputDialog;
         }
@@ -99,10 +101,10 @@ public class InputDialog extends MessageDialog {
     public static InputDialog show(@NonNull AppCompatActivity context, int titleResId, int messageResId, int okButtonResId) {
         synchronized (TipDialog.class) {
             InputDialog inputDialog = show(context,
-                                           context.getString(titleResId),
-                                           context.getString(messageResId),
-                                           context.getString(okButtonResId),
-                                           null, null
+                    context.getString(titleResId),
+                    context.getString(messageResId),
+                    context.getString(okButtonResId),
+                    null, null
             );
             return inputDialog;
         }
@@ -345,8 +347,8 @@ public class InputDialog extends MessageDialog {
     @Override
     protected void refreshTextViews() {
         super.refreshTextViews();
-        if (inputText != null) {
-            if (txtInput != null) {
+        if (txtInput != null) {
+            if (inputText != null) {
                 if (theme == DialogSettings.THEME.DARK) {
                     txtInput.setTextColor(Color.WHITE);
                     txtInput.setHintTextColor(context.get().getResources().getColor(R.color.whiteAlpha30));
@@ -361,9 +363,9 @@ public class InputDialog extends MessageDialog {
                         useTextInfo(txtInput, inputInfo.getTextInfo());
                 }
                 txtInput.setVisibility(View.VISIBLE);
+            } else {
+                txtInput.setVisibility(View.GONE);
             }
-        } else {
-            txtInput.setVisibility(View.GONE);
         }
     }
     
