@@ -422,11 +422,6 @@ public class TipDialog extends BaseDialog {
     public static void dismiss() {
         if (waitDialogTemp != null) waitDialogTemp.doDismiss();
         waitDialogTemp = null;
-        for (BaseDialog dialog : dialogList) {
-            if (dialog instanceof TipDialog) {
-                dialog.doDismiss();
-            }
-        }
     }
     
     public String getMessage() {

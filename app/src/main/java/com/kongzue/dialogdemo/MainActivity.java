@@ -420,18 +420,23 @@ public class MainActivity extends BaseActivity {
         btnWaitDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                WaitDialog.show(me, null);
-                new Handler().postDelayed(new Runnable() {
+                WaitDialog.show(me, null).setCustomView(R.layout.layout_custom, new TipDialog.OnBindView() {
                     @Override
-                    public void run() {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                WaitDialog.dismiss();
-                            }
-                        });
+                    public void onBind(TipDialog dialog, View v) {
+        
                     }
-                }, 2000);
+                });
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                WaitDialog.dismiss();
+//                            }
+//                        });
+//                    }
+//                }, 2000);
             }
         });
         

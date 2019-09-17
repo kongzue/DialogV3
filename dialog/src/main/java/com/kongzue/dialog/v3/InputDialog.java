@@ -323,8 +323,8 @@ public class InputDialog extends MessageDialog {
             refreshTextViews();
         }
         
-        if (inputText != null) {
-            if (txtInput != null) {
+        if (txtInput != null) {
+            if (inputText != null) {
                 if (theme == DialogSettings.THEME.DARK) {
                     txtInput.setTextColor(Color.WHITE);
                     txtInput.setHintTextColor(context.get().getResources().getColor(R.color.whiteAlpha30));
@@ -339,9 +339,9 @@ public class InputDialog extends MessageDialog {
                         useTextInfo(txtInput, inputInfo.getTextInfo());
                 }
                 txtInput.setVisibility(View.VISIBLE);
+            } else {
+                txtInput.setVisibility(View.GONE);
             }
-        } else {
-            txtInput.setVisibility(View.GONE);
         }
     }
     
@@ -422,14 +422,16 @@ public class InputDialog extends MessageDialog {
         return this;
     }
     
-    public InputDialog setOkButton(String okButton, OnInputDialogButtonClickListener onOkButtonClickListener) {
+    public InputDialog setOkButton(String okButton, OnInputDialogButtonClickListener
+            onOkButtonClickListener) {
         this.okButton = okButton;
         this.onOkButtonClickListener = onOkButtonClickListener;
         refreshView();
         return this;
     }
     
-    public InputDialog setOkButton(int okButtonResId, OnInputDialogButtonClickListener onOkButtonClickListener) {
+    public InputDialog setOkButton(int okButtonResId, OnInputDialogButtonClickListener
+            onOkButtonClickListener) {
         setOkButton(context.get().getString(okButtonResId), onOkButtonClickListener);
         return this;
     }
@@ -455,19 +457,22 @@ public class InputDialog extends MessageDialog {
         return this;
     }
     
-    public InputDialog setCancelButton(String cancelButton, OnInputDialogButtonClickListener onCancelButtonClickListener) {
+    public InputDialog setCancelButton(String cancelButton, OnInputDialogButtonClickListener
+            onCancelButtonClickListener) {
         this.cancelButton = cancelButton;
         this.onCancelButtonClickListener = onCancelButtonClickListener;
         refreshView();
         return this;
     }
     
-    public InputDialog setCancelButton(int cancelButtonResId, OnInputDialogButtonClickListener onCancelButtonClickListener) {
+    public InputDialog setCancelButton(int cancelButtonResId, OnInputDialogButtonClickListener
+            onCancelButtonClickListener) {
         setCancelButton(context.get().getString(cancelButtonResId), onCancelButtonClickListener);
         return this;
     }
     
-    public InputDialog setCancelButton(OnInputDialogButtonClickListener onCancelButtonClickListener) {
+    public InputDialog setCancelButton(OnInputDialogButtonClickListener
+                                               onCancelButtonClickListener) {
         this.onCancelButtonClickListener = onCancelButtonClickListener;
         refreshView();
         return this;
@@ -489,19 +494,22 @@ public class InputDialog extends MessageDialog {
         return this;
     }
     
-    public InputDialog setOtherButton(String otherButton, OnInputDialogButtonClickListener onOtherButtonClickListener) {
+    public InputDialog setOtherButton(String otherButton, OnInputDialogButtonClickListener
+            onOtherButtonClickListener) {
         this.otherButton = otherButton;
         this.onOtherButtonClickListener = onOtherButtonClickListener;
         refreshView();
         return this;
     }
     
-    public InputDialog setOtherButton(int otherButtonResId, OnInputDialogButtonClickListener onOtherButtonClickListener) {
+    public InputDialog setOtherButton(int otherButtonResId, OnInputDialogButtonClickListener
+            onOtherButtonClickListener) {
         setOtherButton(context.get().getString(otherButtonResId), onOtherButtonClickListener);
         return this;
     }
     
-    public InputDialog setOtherButton(OnInputDialogButtonClickListener onOtherButtonClickListener) {
+    public InputDialog setOtherButton(OnInputDialogButtonClickListener
+                                              onOtherButtonClickListener) {
         this.onOtherButtonClickListener = onOtherButtonClickListener;
         refreshView();
         return this;
@@ -517,7 +525,8 @@ public class InputDialog extends MessageDialog {
         return null;
     }
     
-    public InputDialog setOnOkButtonClickListener(OnInputDialogButtonClickListener onOkButtonClickListener) {
+    public InputDialog setOnOkButtonClickListener(OnInputDialogButtonClickListener
+                                                          onOkButtonClickListener) {
         this.onOkButtonClickListener = onOkButtonClickListener;
         refreshView();
         return this;
@@ -533,7 +542,8 @@ public class InputDialog extends MessageDialog {
         return null;
     }
     
-    public InputDialog setOnCancelButtonClickListener(OnInputDialogButtonClickListener onCancelButtonClickListener) {
+    public InputDialog setOnCancelButtonClickListener(OnInputDialogButtonClickListener
+                                                              onCancelButtonClickListener) {
         this.onCancelButtonClickListener = onCancelButtonClickListener;
         refreshView();
         return this;
@@ -549,7 +559,8 @@ public class InputDialog extends MessageDialog {
         return null;
     }
     
-    public InputDialog setOnOtherButtonClickListener(OnInputDialogButtonClickListener onOtherButtonClickListener) {
+    public InputDialog setOnOtherButtonClickListener(OnInputDialogButtonClickListener
+                                                             onOtherButtonClickListener) {
         this.onOtherButtonClickListener = onOtherButtonClickListener;
         refreshView();
         return this;
