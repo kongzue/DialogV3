@@ -1,14 +1,18 @@
 package com.kongzue.dialog.util;
 
 import android.app.Dialog;
+import android.graphics.Point;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Display;
 import android.view.View;
 import android.widget.TextView;
 
@@ -265,5 +269,32 @@ public abstract class BaseDialog {
     
     public static int getSize() {
         return dialogList.size();
+    }
+    
+    protected int getRootHeight() {
+        int diaplayHeight = 0;
+        Display display = context.get().getWindowManager().getDefaultDisplay();
+        Point point = new Point();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            display.getRealSize(point);
+            diaplayHeight = point.y;
+        } else {
+            DisplayMetrics dm = new DisplayMetrics();
+            context.get().getWindowManager().getDefaultDisplay().getMetrics(dm);
+            diaplayHeight = dm.heightPixels;
+        }
+        return diaplayHeight;
+    }
+    
+    protected int getNavigationBarHeight() {
+        int result = 0;
+        int resourceId = 0;
+        int rid = context.get().getResources().getIdentifier("config_showNavigationBar", "bool", "android");
+        if (rid != 0) {
+            resourceId = context.get().getResources().getIdentifier("navigation_bar_height", "dimen", "android");
+            return context.get().getResources().getDimensionPixelSize(resourceId);
+        } else {
+            return 0;
+        }
     }
 }

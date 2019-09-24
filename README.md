@@ -2,10 +2,10 @@
 献给要求安卓照着苹果设计稿做开发的产品们（手动滑稽
 
 <a href="https://github.com/kongzue/dialogV3/">
-<img src="https://img.shields.io/badge/Kongzue%20Dialog-3.1.1-green.svg" alt="Kongzue Dialog">
+<img src="https://img.shields.io/badge/Kongzue%20Dialog-3.1.2-green.svg" alt="Kongzue Dialog">
 </a> 
-<a href="https://bintray.com/myzchh/maven/dialogV3/3.1.1/link">
-<img src="https://img.shields.io/badge/Maven-3.1.1-blue.svg" alt="Maven">
+<a href="https://bintray.com/myzchh/maven/dialogV3/3.1.2/link">
+<img src="https://img.shields.io/badge/Maven-3.1.2-blue.svg" alt="Maven">
 </a> 
 <a href="http://www.apache.org/licenses/LICENSE-2.0">
 <img src="https://img.shields.io/badge/License-Apache%202.0-red.svg" alt="License">
@@ -85,14 +85,14 @@ Maven仓库：
 <dependency>
   <groupId>com.kongzue.dialog_v3</groupId>
   <artifactId>dialog</artifactId>
-  <version>3.1.1</version>
+  <version>3.1.2</version>
   <type>pom</type>
 </dependency>
 ```
 Gradle：
 在dependencies{}中添加引用：
 ```
-implementation 'com.kongzue.dialog_v3:dialog:3.1.1'
+implementation 'com.kongzue.dialog_v3:dialog:3.1.2'
 ```
 
 从 Kongzue Dialog V2 升级至 Kongzue Dialog V3，请参考 [Kongzue Dialog V2升级注意事项](kongzue_dialog_v2_upto_v3.md)
@@ -634,6 +634,13 @@ limitations under the License.
 ```
 
 ## 更新日志：
+v3.1.2:
+- 底部菜单 BottomMenu 中，Material 风格升级为 Android Q 风格；
+- 底部菜单 BottomMenu 和分享对话框 ShareDialog 中，Material 风格与 Kongzue 风格支持底部导航栏沉浸式；
+- 修复底部菜单 BottomMenu 中，Material 风格在部分华为手机上的触控兼容性问题；
+- 修复了TipDialog存在的关闭问题；
+- 修复了输入对话框偶发设置inputInfo空指针问题
+
 v3.1.1:
 - 新增 DialogSettings.defaultCancelButtonText 可设置 BottomDialog 和 ShareDialog 默认“取消”按钮的文字；
 - 新增 DialogSettings.tipBackgroundResId 可设置 TipDialog 和 WaitDialog 的背景资源；

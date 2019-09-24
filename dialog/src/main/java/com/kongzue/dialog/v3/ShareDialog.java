@@ -7,12 +7,14 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -292,6 +294,13 @@ public class ShareDialog extends BaseDialog {
                                 doDismiss();
                             }
                         });
+                        
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                            dialog.getDialog().getWindow().setNavigationBarColor(Color.WHITE);
+                            boxBody.setPadding(0, 0, 0, getNavigationBarHeight());
+                        }
                     }
                     break;
                 case STYLE_KONGZUE:
@@ -342,6 +351,14 @@ public class ShareDialog extends BaseDialog {
                             });
                             
                             boxItem.addView(itemView);
+                        }
+    
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            Window window = dialog.getDialog().getWindow();
+                            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                            dialog.getDialog().getWindow().setNavigationBarColor(Color.WHITE);
+                            boxBody.setPadding(0, 0, 0, getNavigationBarHeight());
                         }
                     }
                     break;
@@ -432,15 +449,8 @@ public class ShareDialog extends BaseDialog {
                             }
                         }
                         if (deltaY >= -dip2px(50) && deltaY <= dip2px(50)) {
-                            switch (step) {
-                                case 0:
-                                    boxBody.animate().setDuration(300).translationY(boxBody.getHeight() / 2);
-                                    break;
-                                case 1:
-                                    boxBody.animate().setDuration(300).translationY(0);
-                                    step = 0;
-                                    break;
-                            }
+                            boxBody.animate().setDuration(300).translationY(boxBodyOldY);
+                            step = 0;
                         }
                     }
                     isTouchDown = false;

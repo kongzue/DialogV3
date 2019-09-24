@@ -264,7 +264,7 @@ public class MainActivity extends BaseActivity {
                                 //);
                                 
                                 InputDialog.show(me, "回复", "请输入回复的消息",
-                                                 "回复", "取消"
+                                        "回复", "取消"
                                 );
                             }
                         });
@@ -284,7 +284,10 @@ public class MainActivity extends BaseActivity {
         btnBottomMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BottomMenu.show(me, new String[]{"菜单1", "菜单2", "菜单3"}, new OnMenuItemClickListener() {
+                BottomMenu.show(me, new String[]{"菜单1", "菜单2", "菜单3", "菜单4", "菜单5", "菜单6", "菜单7", "菜单8", "菜单9"
+                        , "菜单1", "菜单2", "菜单3", "菜单4", "菜单5", "菜单6", "菜单7", "菜单8", "菜单9"
+                        , "菜单1", "菜单2", "菜单3", "菜单4", "菜单5", "菜单6", "菜单7", "菜单8", "菜单9"
+                }, new OnMenuItemClickListener() {
                     @Override
                     public void onClick(String text, int index) {
                         toast(text);
@@ -405,11 +408,11 @@ public class MainActivity extends BaseActivity {
                         })
                         .setHintText("请输入密码")
                         .setInputInfo(new InputInfo()
-                                              .setMAX_LENGTH(6)
-                                              .setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD)
-                                              .setTextInfo(new TextInfo()
-                                                                   .setFontColor(Color.RED)
-                                              )
+                                .setMAX_LENGTH(6)
+                                .setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD)
+                                .setTextInfo(new TextInfo()
+                                        .setFontColor(Color.RED)
+                                )
                         )
                         .setCancelable(false)
                 ;
@@ -420,23 +423,18 @@ public class MainActivity extends BaseActivity {
         btnWaitDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                WaitDialog.show(me, null).setCustomView(R.layout.layout_custom, new TipDialog.OnBindView() {
+                WaitDialog.show(me, null);
+                new Handler().postDelayed(new Runnable() {
                     @Override
-                    public void onBind(TipDialog dialog, View v) {
-        
+                    public void run() {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                WaitDialog.dismiss();
+                            }
+                        });
                     }
-                });
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        runOnUiThread(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                WaitDialog.dismiss();
-//                            }
-//                        });
-//                    }
-//                }, 2000);
+                }, 2000);
             }
         });
         
@@ -454,7 +452,7 @@ public class MainActivity extends BaseActivity {
                                 TipDialog.show(me, "成功！", TipDialog.TYPE.SUCCESS).setOnDismissListener(new OnDismissListener() {
                                     @Override
                                     public void onDismiss() {
-
+                                    
                                     }
                                 });
                             }
