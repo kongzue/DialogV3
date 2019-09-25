@@ -637,9 +637,10 @@ limitations under the License.
 v3.1.2:
 - 底部菜单 BottomMenu 中，Material 风格升级为 Android Q 风格；
 - 底部菜单 BottomMenu 和分享对话框 ShareDialog 中，Material 风格与 Kongzue 风格支持底部导航栏沉浸式；
+- 底部菜单 BottomMenu 在内容过多的情况下只占用2/3屏幕高度，且支持列表滚动；
 - 修复底部菜单 BottomMenu 中，Material 风格在部分华为手机上的触控兼容性问题；
 - 修复了TipDialog存在的关闭问题；
-- 修复了输入对话框偶发设置inputInfo空指针问题
+- 修复了输入对话框偶发设置inputInfo空指针问题；
 
 v3.1.1:
 - 新增 DialogSettings.defaultCancelButtonText 可设置 BottomDialog 和 ShareDialog 默认“取消”按钮的文字；

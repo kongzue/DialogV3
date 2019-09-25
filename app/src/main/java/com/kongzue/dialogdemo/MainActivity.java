@@ -284,10 +284,7 @@ public class MainActivity extends BaseActivity {
         btnBottomMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BottomMenu.show(me, new String[]{"菜单1", "菜单2", "菜单3", "菜单4", "菜单5", "菜单6", "菜单7", "菜单8", "菜单9"
-                        , "菜单1", "菜单2", "菜单3", "菜单4", "菜单5", "菜单6", "菜单7", "菜单8", "菜单9"
-                        , "菜单1", "菜单2", "菜单3", "菜单4", "菜单5", "菜单6", "菜单7", "菜单8", "菜单9"
-                }, new OnMenuItemClickListener() {
+                BottomMenu.show(me, new String[]{"菜单1", "菜单2", "菜单3"}, new OnMenuItemClickListener() {
                     @Override
                     public void onClick(String text, int index) {
                         toast(text);
