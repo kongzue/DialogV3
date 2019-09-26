@@ -1,8 +1,14 @@
 package com.kongzue.dialog.util;
 
+import android.content.Context;
 import android.graphics.Color;
+import android.support.v8.renderscript.Element;
+import android.support.v8.renderscript.RenderScript;
+import android.support.v8.renderscript.ScriptIntrinsicBlur;
+import android.util.Log;
 
 import com.kongzue.dialog.interfaces.DialogLifeCycleListener;
+import com.kongzue.dialog.util.view.BlurView;
 
 /**
  * Author: @Kongzue
@@ -77,4 +83,42 @@ public class DialogSettings {
     
     //全局提示框背景资源，值0时不生效
     public static int tipBackgroundResId = 0;
+    
+    //检查Renderscript支持性
+    public static boolean checkRenderscriptSupport(Context context) {
+        boolean isSupport = true;
+        try {
+            DialogSettings.class.getClassLoader().loadClass("android.support.v8.renderscript.RenderScript");
+        } catch (ClassNotFoundException e) {
+            isSupport = false;
+            if (DEBUGMODE) {
+                Log.e(">>>", "\n错误！\nRenderScript支持库未启用，要启用模糊效果，请在您的app的Gradle配置文件中添加以下语句：" +
+                        "\nandroid { \n...\n  defaultConfig { \n    ...\n    renderscriptTargetApi 17 \n    renderscriptSupportModeEnabled true \n  }\n}");
+            }
+        }
+    
+        RenderScript renderScript = null;
+        ScriptIntrinsicBlur blurScript = null;
+        try {
+            renderScript = RenderScript.create(context);
+            blurScript = ScriptIntrinsicBlur.create(renderScript, Element.U8_4(renderScript));
+        } catch (Exception e) {
+            isSupport = false;
+        }finally {
+            if (renderScript != null) {
+                renderScript.destroy();
+                renderScript = null;
+            }
+            if (blurScript != null) {
+                blurScript.destroy();
+                blurScript = null;
+            }
+        }
+        isUseBlur = isSupport;
+    
+        if (DEBUGMODE) {
+            Log.i(">>>", "检查Renderscript支持性: "+isSupport);
+        }
+        return isSupport;
+    }
 }

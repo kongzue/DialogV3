@@ -1,18 +1,11 @@
 package com.kongzue.dialogdemo;
 
 import android.app.ActivityManager;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Handler;
 import android.text.InputType;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -32,7 +25,6 @@ import com.kongzue.dialog.interfaces.OnDismissListener;
 import com.kongzue.dialog.interfaces.OnInputDialogButtonClickListener;
 import com.kongzue.dialog.interfaces.OnMenuItemClickListener;
 import com.kongzue.dialog.interfaces.OnNotificationClickListener;
-import com.kongzue.dialog.interfaces.OnShowListener;
 import com.kongzue.dialog.util.BaseDialog;
 import com.kongzue.dialog.util.DialogSettings;
 import com.kongzue.dialog.util.InputInfo;
@@ -128,6 +120,7 @@ public class MainActivity extends BaseActivity {
         //DialogSettings.buttonPositiveTextInfo = new TextInfo().setFontColor(Color.GREEN);
         DialogSettings.style = DialogSettings.STYLE.STYLE_IOS;
         DialogSettings.theme = DialogSettings.THEME.LIGHT;
+        DialogSettings.checkRenderscriptSupport(me);
         
         refreshLayout.setEnableLoadMore(false).setEnableRefresh(false).setEnableOverScrollDrag(true);
         boxBody.setPadding(dip2px(15), dip2px(50), dip2px(15), dip2px(20));
@@ -415,7 +408,7 @@ public class MainActivity extends BaseActivity {
                 ;
             }
         });
-        
+    
         //等待窗
         btnWaitDialog.setOnClickListener(new View.OnClickListener() {
             @Override
