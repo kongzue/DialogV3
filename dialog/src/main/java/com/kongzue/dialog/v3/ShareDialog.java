@@ -82,7 +82,7 @@ public class ShareDialog extends BaseDialog {
     public static ShareDialog build(@NonNull AppCompatActivity context) {
         synchronized (ShareDialog.class) {
             ShareDialog shareDialog = new ShareDialog();
-            shareDialog.log("装载分享对话框");
+            shareDialog.log("装载分享框: " + shareDialog.toString() );
             shareDialog.context = new WeakReference<>(context);
             
             switch (shareDialog.style) {
@@ -112,6 +112,7 @@ public class ShareDialog extends BaseDialog {
     
     @Override
     public void bindView(View rootView) {
+        log("启动分享框 -> " + toString());
         this.rootView = rootView;
         if (boxCustom != null) boxCustom.removeAllViews();
         boxBody = rootView.findViewById(R.id.box_body);
@@ -513,6 +514,13 @@ public class ShareDialog extends BaseDialog {
             this.text = text;
             return this;
         }
+    
+        @Override
+        public String toString() {
+            return "Item{" +
+                    "text='" + text + '\'' +
+                    '}';
+        }
     }
     
     private Bitmap zoomImg(Bitmap bm, int newWidth, int newHeight) {
@@ -706,5 +714,18 @@ public class ShareDialog extends BaseDialog {
             e.printStackTrace();
         }
         return 0;
+    }
+    
+    public ShareDialog setCustomDialogStyleId(int customDialogStyleId) {
+        if (isAlreadyShown) {
+            error("必须使用 build(...) 方法创建时，才可以使用 setTheme(...) 来修改对话框主题或风格。");
+            return this;
+        }
+        this.customDialogStyleId = customDialogStyleId;
+        return this;
+    }
+    
+    public String toString() {
+        return getClass().getSimpleName() + "@" + Integer.toHexString(hashCode());
     }
 }

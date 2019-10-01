@@ -56,7 +56,7 @@ public class InputDialog extends MessageDialog {
     public static InputDialog build(@NonNull AppCompatActivity context) {
         synchronized (InputDialog.class) {
             InputDialog inputDialog = new InputDialog();
-            inputDialog.log("装载输入对话框");
+            inputDialog.log("装载对话框: " + inputDialog.toString());
             inputDialog.context = new WeakReference<>(context);
             
             switch (inputDialog.style) {
@@ -75,14 +75,14 @@ public class InputDialog extends MessageDialog {
     }
     
     public static InputDialog show(@NonNull AppCompatActivity context, String title, String message) {
-        synchronized (TipDialog.class) {
+        synchronized (InputDialog.class) {
             InputDialog inputDialog = show(context, title, message, null, null, null);
             return inputDialog;
         }
     }
     
     public static InputDialog show(@NonNull AppCompatActivity context, int titleResId, int messageResId) {
-        synchronized (TipDialog.class) {
+        synchronized (InputDialog.class) {
             InputDialog inputDialog = show(context,
                     context.getString(titleResId),
                     context.getString(messageResId),
@@ -93,14 +93,14 @@ public class InputDialog extends MessageDialog {
     }
     
     public static InputDialog show(@NonNull AppCompatActivity context, String title, String message, String okButton) {
-        synchronized (TipDialog.class) {
+        synchronized (InputDialog.class) {
             InputDialog inputDialog = show(context, title, message, okButton, null, null);
             return inputDialog;
         }
     }
     
     public static InputDialog show(@NonNull AppCompatActivity context, int titleResId, int messageResId, int okButtonResId) {
-        synchronized (TipDialog.class) {
+        synchronized (InputDialog.class) {
             InputDialog inputDialog = show(context,
                     context.getString(titleResId),
                     context.getString(messageResId),
@@ -112,14 +112,14 @@ public class InputDialog extends MessageDialog {
     }
     
     public static InputDialog show(@NonNull AppCompatActivity context, String title, String message, String okButton, String cancelButton) {
-        synchronized (TipDialog.class) {
+        synchronized (InputDialog.class) {
             InputDialog inputDialog = show(context, title, message, okButton, cancelButton, null);
             return inputDialog;
         }
     }
     
     public static InputDialog show(@NonNull AppCompatActivity context, int titleResId, int messageResId, int okButtonResId, int cancelButtonResId) {
-        synchronized (TipDialog.class) {
+        synchronized (InputDialog.class) {
             InputDialog inputDialog = show(
                     context,
                     context.getString(titleResId),
@@ -133,7 +133,7 @@ public class InputDialog extends MessageDialog {
     }
     
     public static InputDialog show(@NonNull AppCompatActivity context, String title, String message, String okButton, String cancelButton, String otherButton) {
-        synchronized (TipDialog.class) {
+        synchronized (InputDialog.class) {
             InputDialog inputDialog = build(context);
             
             inputDialog.title = title;
@@ -148,7 +148,7 @@ public class InputDialog extends MessageDialog {
     }
     
     public static InputDialog show(@NonNull AppCompatActivity context, int titleResId, int messageResId, int okButtonResId, int cancelButtonResId, int otherButtonResId) {
-        synchronized (TipDialog.class) {
+        synchronized (InputDialog.class) {
             InputDialog inputDialog = show(
                     context,
                     context.getString(titleResId),
@@ -166,118 +166,109 @@ public class InputDialog extends MessageDialog {
     @Override
     public void refreshView() {
         super.refreshView();
-        log("InputDialog:refreshView");
         if (style == DialogSettings.STYLE.STYLE_MATERIAL) {
             if (materialAlertDialog != null) {
-                if (inputText != null) {
+                if (txtInput == null) {
+                    //初始化的情况
+                    txtInput = new EditText(context.get());
+                    txtInput.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) txtInput.getLayoutParams();
+                            p.setMargins(dip2px(20), 0, dip2px(20), 0);
+                            txtInput.requestLayout();
+                        }
+                    });
                     if (customView == null) {
-                        txtInput = new EditText(context.get());
-                        txtInput.setSingleLine();
-                        txtInput.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) txtInput.getLayoutParams();
-                                p.setMargins(dip2px(20), 0, dip2px(20), 0);
-                                txtInput.requestLayout();
-                            }
-                        });
                         materialAlertDialog.setView(txtInput);
                     } else {
-                        txtInput = new EditText(context.get());
-                        txtInput.setSingleLine();
-                        txtInput.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) txtInput.getLayoutParams();
-                                p.setMargins(dip2px(20), 0, dip2px(20), 0);
-                                txtInput.requestLayout();
-                            }
-                        });
-                        
                         if (boxCustom != null) boxCustom.removeAllViews();
                         if (materialCustomViewBox != null) materialCustomViewBox.removeAllViews();
                         materialCustomViewBox = new LinearLayout(context.get());
                         materialCustomViewBox.setOrientation(LinearLayout.VERTICAL);
                         materialCustomViewBox.addView(customView);
                         materialCustomViewBox.addView(txtInput);
-                        
+        
                         if (onBindView != null) onBindView.onBind(this, materialCustomViewBox);
-                        
+        
                         materialAlertDialog.setView(materialCustomViewBox);
                     }
-                }
-                materialAlertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-                    @Override
-                    public void onShow(DialogInterface dialog) {
-                        Button positiveButton = materialAlertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-                        positiveButton.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                if (onOkButtonClickListener != null) {
-                                    if (!onOkButtonClickListener.onClick(InputDialog.this, v, getInputText()))
-                                        materialAlertDialog.dismiss();
-                                } else {
-                                    materialAlertDialog.dismiss();
-                                }
-                            }
-                        });
-                        useTextInfo(positiveButton, buttonPositiveTextInfo);
-                        
-                        Button negativeButton = materialAlertDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
-                        negativeButton.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                if (onCancelButtonClickListener != null) {
-                                    if (!onCancelButtonClickListener.onClick(InputDialog.this, v, getInputText()))
-                                        materialAlertDialog.dismiss();
-                                } else {
-                                    materialAlertDialog.dismiss();
-                                }
-                            }
-                        });
-                        useTextInfo(negativeButton, buttonTextInfo);
-                        
-                        if (otherButton != null) {
-                            Button otherButton = materialAlertDialog.getButton(AlertDialog.BUTTON_NEUTRAL);
-                            otherButton.setOnClickListener(new View.OnClickListener() {
+                    materialAlertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                        @Override
+                        public void onShow(DialogInterface dialog) {
+                            Button positiveButton = materialAlertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                            positiveButton.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    if (onOtherButtonClickListener != null) {
-                                        if (!onOtherButtonClickListener.onClick(InputDialog.this, v, getInputText()))
+                                    if (onOkButtonClickListener != null) {
+                                        if (!onOkButtonClickListener.onClick(InputDialog.this, v, getInputText()))
                                             materialAlertDialog.dismiss();
                                     } else {
                                         materialAlertDialog.dismiss();
                                     }
                                 }
                             });
-                            useTextInfo(otherButton, buttonTextInfo);
-                        }
-                        try {
-                            Field mAlert = AlertDialog.class.getDeclaredField("mAlert");
-                            mAlert.setAccessible(true);
-                            Object mAlertController = mAlert.get(dialog);
-                            
-                            if (titleTextInfo != null) {
-                                Field mTitle = mAlertController.getClass().getDeclaredField("mTitleView");
-                                mTitle.setAccessible(true);
-                                TextView titleTextView = (TextView) mTitle.get(mAlertController);
-                                useTextInfo(titleTextView, titleTextInfo);
+                            useTextInfo(positiveButton, buttonPositiveTextInfo);
+            
+                            Button negativeButton = materialAlertDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+                            negativeButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    if (onCancelButtonClickListener != null) {
+                                        if (!onCancelButtonClickListener.onClick(InputDialog.this, v, getInputText()))
+                                            materialAlertDialog.dismiss();
+                                    } else {
+                                        materialAlertDialog.dismiss();
+                                    }
+                                }
+                            });
+                            useTextInfo(negativeButton, buttonTextInfo);
+            
+                            if (otherButton != null) {
+                                Button otherButton = materialAlertDialog.getButton(AlertDialog.BUTTON_NEUTRAL);
+                                otherButton.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        if (onOtherButtonClickListener != null) {
+                                            if (!onOtherButtonClickListener.onClick(InputDialog.this, v, getInputText()))
+                                                materialAlertDialog.dismiss();
+                                        } else {
+                                            materialAlertDialog.dismiss();
+                                        }
+                                    }
+                                });
+                                useTextInfo(otherButton, buttonTextInfo);
                             }
-                            
-                            if (messageTextInfo != null) {
-                                Field mMessage = mAlertController.getClass().getDeclaredField("mMessageView");
-                                mMessage.setAccessible(true);
-                                TextView messageTextView = (TextView) mMessage.get(mAlertController);
-                                useTextInfo(messageTextView, messageTextInfo);
+                            try {
+                                Field mAlert = AlertDialog.class.getDeclaredField("mAlert");
+                                mAlert.setAccessible(true);
+                                Object mAlertController = mAlert.get(dialog);
+                
+                                if (titleTextInfo != null) {
+                                    Field mTitle = mAlertController.getClass().getDeclaredField("mTitleView");
+                                    mTitle.setAccessible(true);
+                                    TextView titleTextView = (TextView) mTitle.get(mAlertController);
+                                    useTextInfo(titleTextView, titleTextInfo);
+                                }
+                
+                                if (messageTextInfo != null) {
+                                    Field mMessage = mAlertController.getClass().getDeclaredField("mMessageView");
+                                    mMessage.setAccessible(true);
+                                    TextView messageTextView = (TextView) mMessage.get(mAlertController);
+                                    useTextInfo(messageTextView, messageTextInfo);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
+            
                         }
-                        
-                    }
-                });
+                    });
+                }
             }
         } else {
+            if (boxInput != null) {
+                boxInput.setMaxHeight(dip2px(100));
+            }
             if (btnSelectPositive != null) {
                 btnSelectPositive.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -320,52 +311,33 @@ public class InputDialog extends MessageDialog {
                     }
                 });
             }
-            refreshTextViews();
         }
-        
-        if (txtInput != null) {
-            if (inputText != null) {
-                if (theme == DialogSettings.THEME.DARK) {
-                    txtInput.setTextColor(Color.WHITE);
-                    txtInput.setHintTextColor(context.get().getResources().getColor(R.color.whiteAlpha30));
-                }
-                txtInput.setText(inputText);
-                txtInput.setHint(hintText);
-                if (inputInfo != null) {
-                    if (inputInfo.getMAX_LENGTH() != -1)
-                        txtInput.setFilters(new InputFilter[]{new InputFilter.LengthFilter(inputInfo.getMAX_LENGTH())});
-                    txtInput.setInputType(InputType.TYPE_CLASS_TEXT | inputInfo.getInputType());
-                    if (inputInfo.getTextInfo() != null)
-                        useTextInfo(txtInput, inputInfo.getTextInfo());
-                }
-                txtInput.setVisibility(View.VISIBLE);
-            } else {
-                txtInput.setVisibility(View.GONE);
-            }
-        }
+        refreshTextViews();
     }
     
     @Override
     protected void refreshTextViews() {
+        log(txtInput==null);
         super.refreshTextViews();
         if (txtInput != null) {
-            if (inputText != null) {
-                if (theme == DialogSettings.THEME.DARK) {
-                    txtInput.setTextColor(Color.WHITE);
-                    txtInput.setHintTextColor(context.get().getResources().getColor(R.color.whiteAlpha30));
+            txtInput.setText(inputText);
+            txtInput.setVisibility(View.VISIBLE);
+            
+            if (theme == DialogSettings.THEME.DARK) {
+                txtInput.setTextColor(Color.WHITE);
+                txtInput.setHintTextColor(context.get().getResources().getColor(R.color.whiteAlpha30));
+            }
+            txtInput.setHint(hintText);
+            if (inputInfo != null) {
+                if (inputInfo.getMAX_LENGTH() != -1)
+                    txtInput.setFilters(new InputFilter[]{new InputFilter.LengthFilter(inputInfo.getMAX_LENGTH())});
+                int inputType = InputType.TYPE_CLASS_TEXT | inputInfo.getInputType();
+                if (inputInfo.isMultipleLines()) {
+                    inputType = inputType | InputType.TYPE_TEXT_FLAG_MULTI_LINE;
                 }
-                txtInput.setText(inputText);
-                txtInput.setHint(hintText);
-                if (inputInfo != null) {
-                    if (inputInfo.getMAX_LENGTH() != -1)
-                        txtInput.setFilters(new InputFilter[]{new InputFilter.LengthFilter(inputInfo.getMAX_LENGTH())});
-                    txtInput.setInputType(InputType.TYPE_CLASS_TEXT | inputInfo.getInputType());
-                    if (inputInfo.getTextInfo() != null)
-                        useTextInfo(txtInput, inputInfo.getTextInfo());
-                }
-                txtInput.setVisibility(View.VISIBLE);
-            } else {
-                txtInput.setVisibility(View.GONE);
+                txtInput.setInputType(inputType);
+                if (inputInfo.getTextInfo() != null)
+                    useTextInfo(txtInput, inputInfo.getTextInfo());
             }
         }
     }
@@ -817,5 +789,18 @@ public class InputDialog extends MessageDialog {
         this.backgroundResId = backgroundResId;
         refreshView();
         return this;
+    }
+    
+    public InputDialog setCustomDialogStyleId(int customDialogStyleId) {
+        if (isAlreadyShown) {
+            error("必须使用 build(...) 方法创建时，才可以使用 setTheme(...) 来修改对话框主题或风格。");
+            return this;
+        }
+        this.customDialogStyleId = customDialogStyleId;
+        return this;
+    }
+    
+    public String toString() {
+        return getClass().getSimpleName() + "@" + Integer.toHexString(hashCode());
     }
 }

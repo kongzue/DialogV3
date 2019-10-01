@@ -106,4 +106,13 @@
         <item name="android:windowEnterAnimation">@anim/bottom_menu_enter</item>
         <item name="android:windowExitAnimation">@anim/bottom_menu_exit</item>
     </style>
+
+    <style name="TopDialog" parent="BaseDialog">
+        <item name="android:windowAnimationStyle">@style/topMenuAnim</item>
+    </style>
+
+    <style name="topMenuAnim">
+        <item name="android:windowEnterAnimation">@anim/top_menu_enter</item>
+        <item name="android:windowExitAnimation">@anim/top_menu_exit</item>
+    </style>
 </resources>

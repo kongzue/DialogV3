@@ -53,7 +53,7 @@ public class TipDialog extends BaseDialog {
     private OnDismissListener dismissListener;
     
     public static TipDialog waitDialogTemp;
-    private String message;
+    protected String message;
     private TYPE type;
     private Drawable tipImage;
     
@@ -85,7 +85,7 @@ public class TipDialog extends BaseDialog {
                     return null;
                 }
             }
-            waitDialog.log("装载等待对话框");
+            waitDialog.log("装载提示/等待框: " + waitDialog.toString());
             waitDialog.context = new WeakReference<>(context);
             waitDialog.build(waitDialog, R.layout.dialog_wait);
             return waitDialog;
@@ -183,7 +183,6 @@ public class TipDialog extends BaseDialog {
     }
     
     public static TipDialog show(AppCompatActivity context, String message, int icoResId) {
-        Log.e("@@@", "show: " + (waitDialogTemp == null));
         synchronized (TipDialog.class) {
             TipDialog waitDialog = build(context);
             
@@ -216,7 +215,7 @@ public class TipDialog extends BaseDialog {
     }
     
     protected void showDialog() {
-        log("启动等待对话框 -> " + message);
+        log("启动提示/等待框 -> " + toString());
         super.showDialog();
         setDismissEvent();
     }
@@ -247,6 +246,7 @@ public class TipDialog extends BaseDialog {
         cancelTimer.schedule(new TimerTask() {
             @Override
             public void run() {
+                doDismiss();
                 dismiss();
                 cancelTimer.cancel();
             }
@@ -430,7 +430,7 @@ public class TipDialog extends BaseDialog {
     
     public TipDialog setMessage(String message) {
         this.message = message;
-        log("启动等待对话框 -> " + message);
+        log("启动提示/等待框 -> " + toString());
         if (txtInfo != null) txtInfo.setText(message);
         refreshView();
         return this;
@@ -438,7 +438,7 @@ public class TipDialog extends BaseDialog {
     
     public TipDialog setMessage(int messageResId) {
         this.message = context.get().getString(messageResId);
-        log("启动等待对话框 -> " + message);
+        log("启动提示/等待框 -> " + toString());
         if (txtInfo != null) txtInfo.setText(message);
         refreshView();
         return this;
@@ -533,5 +533,18 @@ public class TipDialog extends BaseDialog {
         this.backgroundResId = backgroundResId;
         refreshView();
         return this;
+    }
+    
+    public TipDialog setCustomDialogStyleId(int customDialogStyleId) {
+        if (isAlreadyShown) {
+            error("必须使用 build(...) 方法创建时，才可以使用 setTheme(...) 来修改对话框主题或风格。");
+            return this;
+        }
+        this.customDialogStyleId = customDialogStyleId;
+        return this;
+    }
+    
+    public String toString() {
+        return getClass().getSimpleName() + "@" + Integer.toHexString(hashCode());
     }
 }

@@ -76,7 +76,7 @@ public class BottomMenu extends BaseDialog {
     public static BottomMenu build(@NonNull AppCompatActivity context) {
         synchronized (BottomMenu.class) {
             BottomMenu bottomMenu = new BottomMenu();
-            bottomMenu.log("装载底部菜单");
+            bottomMenu.log("装载底部菜单: " + bottomMenu.toString());
             bottomMenu.context = new WeakReference<>(context);
             
             switch (bottomMenu.style) {
@@ -157,6 +157,7 @@ public class BottomMenu extends BaseDialog {
     
     @Override
     public void bindView(View rootView) {
+        log("启动底部菜单 -> " + toString());
         this.rootView = rootView;
         if (boxCustom != null) boxCustom.removeAllViews();
         boxBody = rootView.findViewById(R.id.box_body);
@@ -784,5 +785,18 @@ public class BottomMenu extends BaseDialog {
         }
         int top = c.getTop();
         return top == 0;
+    }
+    
+    public BottomMenu setCustomDialogStyleId(int customDialogStyleId) {
+        if (isAlreadyShown) {
+            error("必须使用 build(...) 方法创建时，才可以使用 setTheme(...) 来修改对话框主题或风格。");
+            return this;
+        }
+        this.customDialogStyleId = customDialogStyleId;
+        return this;
+    }
+    
+    public String toString() {
+        return getClass().getSimpleName() + "@" + Integer.toHexString(hashCode());
     }
 }

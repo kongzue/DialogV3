@@ -52,13 +52,14 @@ public abstract class BaseDialog {
     protected static List<BaseDialog> dialogList = new ArrayList<>();           //对话框队列
     
     public WeakReference<AppCompatActivity> context;
-    public DialogHelper dialog;                                              //我才是本体！
+    public DialogHelper dialog;                                                 //我才是本体！
     
     private BaseDialog baseDialog;
     private int layoutId;
     private int styleId;
     public boolean isShow;
     protected boolean isAlreadyShown;
+    protected int customDialogStyleId;                                          //Dialog的style资源文件
     
     protected DialogSettings.STYLE style;
     protected DialogSettings.THEME theme;
@@ -99,14 +100,18 @@ public abstract class BaseDialog {
     }
     
     protected void showDialog() {
+        log("# showDialog");
         showDialog(R.style.BaseDialog);
     }
     
     protected void showDialog(int style) {
+        if (isAlreadyShown) {
+            return;
+        }
+        isAlreadyShown = true;
         dismissedFlag = false;
         if (DialogSettings.dialogLifeCycleListener != null)
             DialogSettings.dialogLifeCycleListener.onCreate(this);
-        isAlreadyShown = true;
         styleId = style;
         dismissEvent = new OnDismissListener() {
             @Override
@@ -130,17 +135,19 @@ public abstract class BaseDialog {
     }
     
     protected void showNext() {
+        log("# showNext:" + dialogList.size());
         List<BaseDialog> cache = new ArrayList<>();
         cache.addAll(BaseDialog.dialogList);
         for (BaseDialog dialog : cache) {
             if (dialog.context.get().isDestroyed()) {
+                log("# 由于 context 已被回收，卸载Dialog：" + dialog);
                 dialogList.remove(dialog);
             }
         }
         for (BaseDialog dialog : dialogList) {
             if (!(dialog instanceof TipDialog)) {
                 if (dialog.isShow) {
-                    
+                    log("# 启动中断：已有正在显示的Dialog：" + dialog);
                     return;
                 }
             }
@@ -154,7 +161,7 @@ public abstract class BaseDialog {
     }
     
     private void showNow() {
-        log("# showNow");
+        log("# showNow: " + toString());
         isShow = true;
         if (context.get().isDestroyed()) {
             if (newContext.get() == null) {
@@ -170,6 +177,9 @@ public abstract class BaseDialog {
         }
         if (DialogSettings.systemDialogStyle != 0) {
             styleId = DialogSettings.systemDialogStyle;
+        }
+        if (customDialogStyleId != 0) {
+            styleId = customDialogStyleId;
         }
         dialog.setStyle(DialogFragment.STYLE_NORMAL, styleId);
         dialog.show(fragmentManager, "kongzueDialog");
@@ -257,6 +267,10 @@ public abstract class BaseDialog {
     
     //不放心或强迫症可用的卸载方法
     public static void unload() {
+        reset();
+    }
+    
+    public static void reset() {
         for (BaseDialog dialog : dialogList) {
             if (dialog.isShow) {
                 dialog.doDismiss();

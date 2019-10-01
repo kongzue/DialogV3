@@ -113,6 +113,8 @@ public class MainActivity extends BaseActivity {
     
     @Override
     public void initDatas(JumpParameter paramer) {
+        DialogSettings.init();
+        DialogSettings.checkRenderscriptSupport(this);
         DialogSettings.DEBUGMODE = true;
         DialogSettings.isUseBlur = true;
         //DialogSettings.backgroundColor = Color.BLUE;
@@ -120,10 +122,10 @@ public class MainActivity extends BaseActivity {
         //DialogSettings.buttonPositiveTextInfo = new TextInfo().setFontColor(Color.GREEN);
         DialogSettings.style = DialogSettings.STYLE.STYLE_IOS;
         DialogSettings.theme = DialogSettings.THEME.LIGHT;
-        DialogSettings.checkRenderscriptSupport(me);
         
         refreshLayout.setEnableLoadMore(false).setEnableRefresh(false).setEnableOverScrollDrag(true);
         boxBody.setPadding(dip2px(15), dip2px(50), dip2px(15), dip2px(20));
+        
     }
     
     @Override
@@ -136,7 +138,7 @@ public class MainActivity extends BaseActivity {
                     @Override
                     public void onBind(final CustomDialog dialog, View v) {
                         ImageView btnOk = v.findViewById(R.id.btn_ok);
-                        
+
                         btnOk.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -144,7 +146,7 @@ public class MainActivity extends BaseActivity {
                             }
                         });
                     }
-                }).setCancelable(false).show();
+                }).setAlign(CustomDialog.ALIGN.DEFAULT).setCancelable(false).show();
             }
         });
         
@@ -383,8 +385,9 @@ public class MainActivity extends BaseActivity {
         btnInputDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                InputDialog.show(me, "提示", "请输入密码（123456）", "确定", "取消")
-                        .setOnOkButtonClickListener(new OnInputDialogButtonClickListener() {
+                InputDialog.build(me)
+                        .setTitle("提示").setMessage("请输入密码（123456）")
+                        .setOkButton("确定", new OnInputDialogButtonClickListener() {
                             @Override
                             public boolean onClick(BaseDialog baseDialog, View v, String inputStr) {
                                 if (inputStr.equals("123456")) {
@@ -396,6 +399,7 @@ public class MainActivity extends BaseActivity {
                                 }
                             }
                         })
+                        .setCancelButton("取消")
                         .setHintText("请输入密码")
                         .setInputInfo(new InputInfo()
                                 .setMAX_LENGTH(6)
@@ -405,10 +409,11 @@ public class MainActivity extends BaseActivity {
                                 )
                         )
                         .setCancelable(false)
+                        .show();
                 ;
             }
         });
-    
+        
         //等待窗
         btnWaitDialog.setOnClickListener(new View.OnClickListener() {
             @Override

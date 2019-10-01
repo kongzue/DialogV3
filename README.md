@@ -123,6 +123,11 @@ DialogSettings.dialogLifeCycleListener = (DialogLifeCycleListener);  //全局Dia
 DialogSettings.defaultCancelButtonText = (String);      //设置 BottomDialog 和 ShareDialog 默认“取消”按钮的文字
 DialogSettings.tipBackgroundResId = (drawableResId);    //设置 TipDialog 和 WaitDialog 的背景资源
 DialogSettings.tipTextInfo = (InputInfo);               //设置 TipDialog 和 WaitDialog 文字样式
+
+//检查 Renderscript 兼容性，若设备不支持，DialogSettings.isUseBlur 会自动关闭；
+boolean renderscriptSupport = DialogSettings.checkRenderscriptSupport(context)
+
+DialogSettings.init(context);                           //初始化清空 BaseDialog 队列
 ```
 
 如果需要开启模糊效果，即 DialogSettings.isUseBlur = true; 需要进行额外 renderscript 配置，需要注意的是在部分低配置手机上此功能效率可能存在问题。
@@ -264,11 +269,12 @@ InputDialog.show(MainActivity.this, "输入对话框", "输入一些内容", "�
 ```
 InputDialog.show(MainActivity.this, "输入对话框", "请输入6位密码", "确定")
         .setInputInfo(new InputInfo()
-                              .setMAX_LENGTH(6)
-                              .setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD)
-                              .setTextInfo(new TextInfo()
-                                                   .setFontColor(Color.RED)
+                              .setMAX_LENGTH(6)     //限制最大输入长度
+                              .setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD)     //仅输入密码类型
+                              .setTextInfo(new TextInfo()       //设置文字样式
+                                                   .setFontColor(Color.RED)     //修改文字样式颜色为红色
                               )
+                              .setMultipleLines(true)       //支持多行输入
         )
 ;
 ```
@@ -506,6 +512,11 @@ CustomDialog.show(MainActivity.this, customView, new CustomDialog.OnBindView() {
 ```
 //全屏幕宽高
 customDialog.setFullScreen(true);
+
+//设置 CustomDialog 处于屏幕的位置
+CustomDialog.setAlign(CustomDialog.ALIGN.BOTTOM)        //从屏幕底端出现
+CustomDialog.setAlign(CustomDialog.ALIGN.TOP)           //从屏幕顶端出现
+CustomDialog.setAlign(CustomDialog.ALIGN.DEFAULT)       //从屏幕中部出现
 ```
 ## 其他设置
 
@@ -634,6 +645,13 @@ limitations under the License.
 ```
 
 ## 更新日志：
+v3.1.3:
+- CustomDialog 新增 `setAlign(Align)` 方法，可设置显示在顶部、底部或默认位置；
+- InputDialog 支持多行内容输入，请通过 `.setInputInfo(new InputInfo().setMultipleLines(true))` 设置开启；
+- 所有 Dialog 支持通过 `setCustomDialogStyleId(styleId)` 自定义 Dialog 样式；
+- DialogSettings 新增 `init(Context)` 方法，用于初始化 BaseDialog 队列并检查 Renderscript 兼容性，此方法建议在 Activity 的 onCreate 执行；
+- 增强日志打印信息以协助排查可能存在的问题；
+
 v3.1.2:
 - 底部菜单 BottomMenu 中，Material 风格升级为 Android Q 风格；
 - 底部菜单 BottomMenu 和分享对话框 ShareDialog 中，Material 风格与 Kongzue 风格支持底部导航栏沉浸式；

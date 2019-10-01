@@ -25,7 +25,16 @@ public class CustomDialog extends BaseDialog {
     private boolean fullScreen = false;
     private OnBindView onBindView;
     
+    public enum ALIGN{
+        DEFAULT,
+        TOP,
+        BOTTOM
+    }
+    
+    protected ALIGN align;
+    
     private CustomDialog() {
+        log("装载自定义对话框: " + toString());
     }
     
     public static CustomDialog show(AppCompatActivity context, int layoutResId, OnBindView onBindView) {
@@ -99,6 +108,7 @@ public class CustomDialog extends BaseDialog {
     
     @Override
     public void bindView(View rootView) {
+        log("启动自定义对话框 -> " + toString());
         if (boxCustom!=null)boxCustom.removeAllViews();
         boxCustom = rootView.findViewById(R.id.box_custom);
         if (boxCustom == null) {
@@ -175,5 +185,35 @@ public class CustomDialog extends BaseDialog {
         this.cancelable = enable ? BOOLEAN.TRUE : BOOLEAN.FALSE;
         if (dialog != null) dialog.setCancelable(cancelable == BOOLEAN.TRUE);
         return this;
+    }
+    
+    public CustomDialog setAlign(ALIGN align) {
+        this.align = align;
+        switch (align){
+            case BOTTOM:
+                customDialogStyleId = R.style.BottomDialog;
+                break;
+            case TOP:
+                customDialogStyleId = R.style.TopDialog;
+                break;
+        }
+        return this;
+    }
+    
+    public ALIGN getAlign() {
+        return align;
+    }
+    
+    public CustomDialog setCustomDialogStyleId(int customDialogStyleId) {
+        if (isAlreadyShown) {
+            error("必须使用 build(...) 方法创建时，才可以使用 setTheme(...) 来修改对话框主题或风格。");
+            return this;
+        }
+        this.customDialogStyleId = customDialogStyleId;
+        return this;
+    }
+    
+    public String toString() {
+        return getClass().getSimpleName() + "@" + Integer.toHexString(hashCode());
     }
 }

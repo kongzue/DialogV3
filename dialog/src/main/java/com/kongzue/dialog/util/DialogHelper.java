@@ -109,6 +109,7 @@ public class DialogHelper extends DialogFragment {
             }
             if (parent instanceof CustomDialog) {
                 CustomDialog customDialog = (CustomDialog) parent;
+                
                 if (customDialog.isFullScreen()) {
                     dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
                     Window window = dialog.getWindow();
@@ -117,7 +118,41 @@ public class DialogHelper extends DialogFragment {
                     Display display = windowManager.getDefaultDisplay();
                     WindowManager.LayoutParams lp = window.getAttributes();
                     lp.width = display.getWidth();
+                    lp.height = display.getHeight();
                     window.setAttributes(lp);
+                }
+                Window window;
+                WindowManager windowManager;
+                Display display;
+                WindowManager.LayoutParams lp;
+                switch (customDialog.getAlign()){
+                    case BOTTOM:
+                        dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                        window = dialog.getWindow();
+                        window.getDecorView().setPadding(0, 0, 0, 0);
+                        windowManager = getActivity().getWindowManager();
+                        display = windowManager.getDefaultDisplay();
+                        lp = window.getAttributes();
+                        lp.width = display.getWidth();
+                        lp.windowAnimations = R.style.bottomMenuAnim;
+                        window.setGravity(Gravity.BOTTOM);
+                        window.setWindowAnimations(R.style.bottomMenuAnim);
+                        window.setAttributes(lp);
+                        break;
+                    case TOP:
+                        dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                        window = dialog.getWindow();
+                        window.getDecorView().setPadding(0, 0, 0, 0);
+                        windowManager = getActivity().getWindowManager();
+                        display = windowManager.getDefaultDisplay();
+                        lp = window.getAttributes();
+                        
+                        lp.width = display.getWidth();
+                        lp.windowAnimations = R.style.topMenuAnim;
+                        window.setGravity(Gravity.TOP);
+                        window.setWindowAnimations(R.style.topMenuAnim);
+                        window.setAttributes(lp);
+                        break;
                 }
             }
         }

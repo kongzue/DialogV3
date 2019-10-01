@@ -121,4 +121,8 @@ public class DialogSettings {
         }
         return isSupport;
     }
+    
+    public static void init(){
+        BaseDialog.reset();
+    }
 }

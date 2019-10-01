@@ -35,6 +35,11 @@ public class MaxHeightLayout extends RelativeLayout {
         maxHeight = (int) (getScreenHeight(context) * 0.8);
     }
     
+    public MaxHeightLayout setMaxHeight(int maxHeight) {
+        this.maxHeight = maxHeight;
+        return this;
+    }
+    
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int heightMode = MeasureSpec.getMode(heightMeasureSpec);
