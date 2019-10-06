@@ -425,7 +425,7 @@ public class MainActivity extends BaseActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                WaitDialog.dismiss();
+                                WaitDialog.dismiss(5000);
                             }
                         });
                     }
