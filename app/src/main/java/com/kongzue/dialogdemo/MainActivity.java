@@ -121,6 +121,8 @@ public class MainActivity extends BaseActivity {
     
     @Override
     public void initDatas(JumpParameter paramer) {
+        DialogSettings.init();
+        DialogSettings.checkRenderscriptSupport(this);
         DialogSettings.DEBUGMODE = true;
         DialogSettings.isUseBlur = true;
         //DialogSettings.backgroundColor = Color.BLUE;
@@ -131,6 +133,7 @@ public class MainActivity extends BaseActivity {
         
         refreshLayout.setEnableLoadMore(false).setEnableRefresh(false).setEnableOverScrollDrag(true);
         boxBody.setPadding(dip2px(15), dip2px(50), dip2px(15), dip2px(20));
+        
     }
     
     @Override
@@ -151,7 +154,7 @@ public class MainActivity extends BaseActivity {
                             }
                         });
                     }
-                }).setCancelable(false).show();
+                }).setAlign(CustomDialog.ALIGN.DEFAULT).setCancelable(false).show();
             }
         });
         
@@ -264,7 +267,7 @@ public class MainActivity extends BaseActivity {
                                 //);
                                 
                                 InputDialog.show(me, "回复", "请输入回复的消息",
-                                                 "回复", "取消"
+                                        "回复", "取消"
                                 );
                             }
                         });
@@ -390,8 +393,9 @@ public class MainActivity extends BaseActivity {
         btnInputDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                InputDialog.show(me, "提示", "请输入密码（123456）", "确定", "取消")
-                        .setOnOkButtonClickListener(new OnInputDialogButtonClickListener() {
+                InputDialog.build(me)
+                        .setTitle("提示").setMessage("请输入密码（123456）")
+                        .setOkButton("确定", new OnInputDialogButtonClickListener() {
                             @Override
                             public boolean onClick(BaseDialog baseDialog, View v, String inputStr) {
                                 if (inputStr.equals("123456")) {
@@ -403,15 +407,17 @@ public class MainActivity extends BaseActivity {
                                 }
                             }
                         })
+                        .setCancelButton("取消")
                         .setHintText("请输入密码")
                         .setInputInfo(new InputInfo()
-                                              .setMAX_LENGTH(6)
-                                              .setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD)
-                                              .setTextInfo(new TextInfo()
-                                                                   .setFontColor(Color.RED)
-                                              )
+                                .setMAX_LENGTH(6)
+                                .setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD)
+                                .setTextInfo(new TextInfo()
+                                        .setFontColor(Color.RED)
+                                )
                         )
                         .setCancelable(false)
+                        .show();
                 ;
             }
         });
@@ -427,7 +433,7 @@ public class MainActivity extends BaseActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                WaitDialog.dismiss();
+                                WaitDialog.dismiss(5000);
                             }
                         });
                     }
@@ -449,7 +455,7 @@ public class MainActivity extends BaseActivity {
                                 TipDialog.show(me, "成功！", TipDialog.TYPE.SUCCESS).setOnDismissListener(new OnDismissListener() {
                                     @Override
                                     public void onDismiss() {
-
+                                    
                                     }
                                 });
                             }

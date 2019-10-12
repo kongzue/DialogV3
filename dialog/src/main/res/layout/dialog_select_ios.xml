@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/box_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
     android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/bkg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20dp"
         android:layout_centerInParent="true">
 
         <LinearLayout
@@ -49,23 +51,35 @@
                 android:layout_height="wrap_content"
                 android:visibility="gone"></RelativeLayout>
 
-            <EditText
-                android:id="@+id/txt_input"
+            <com.kongzue.dialog.util.view.MaxHeightLayout
+                android:id="@+id/box_input"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="15dp"
-                android:background="@drawable/editbox_dialog_bkg_ios"
-                android:gravity="center_vertical"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:singleLine="true"
-                android:text="输入文本"
-                android:textColor="#000000"
-                android:textSize="14dp"
-                android:visibility="gone" />
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/txt_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/editbox_dialog_bkg_ios"
+                    android:gravity="center_vertical"
+                    android:overScrollMode="never"
+                    android:paddingLeft="5dp"
+                    android:paddingTop="5dp"
+                    android:paddingRight="5dp"
+                    android:paddingBottom="5dp"
+                    android:scrollbarSize="7dp"
+                    android:scrollbarThumbVertical="@drawable/scrollbar_vertical_track"
+                    android:scrollbars="vertical"
+                    android:text="输入文本"
+                    android:textColor="#000000"
+                    android:textSize="14dp"
+                    android:visibility="gone" />
+
+            </com.kongzue.dialog.util.view.MaxHeightLayout>
 
             <ImageView
                 android:id="@+id/split_horizontal"

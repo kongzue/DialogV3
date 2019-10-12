@@ -79,6 +79,7 @@ public class Notification {
     public static Notification build(Context context, String message) {
         synchronized (Notification.class) {
             Notification notification = new Notification();
+            notification.log("装载消息通知: " + notification.toString());
             notification.context = new WeakReference<>(context);
             notification.message = message;
             return notification;
@@ -241,6 +242,7 @@ public class Notification {
     private boolean isShow;
     
     public void showNotification() {
+        log("启动消息通知 -> " + toString());
         isShow = true;
         if (style == null) style = DialogSettings.style;
         switch (style) {
@@ -830,5 +832,9 @@ public class Notification {
     
     public interface OnBindView {
         void onBind(Notification notification, View v);
+    }
+    
+    public String toString() {
+        return getClass().getSimpleName() + "@" + Integer.toHexString(hashCode());
     }
 }

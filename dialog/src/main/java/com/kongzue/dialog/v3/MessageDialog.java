@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -28,6 +29,7 @@ import com.kongzue.dialog.util.BaseDialog;
 import com.kongzue.dialog.util.DialogSettings;
 import com.kongzue.dialog.util.TextInfo;
 import com.kongzue.dialog.util.view.BlurView;
+import com.kongzue.dialog.util.view.MaxHeightLayout;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
@@ -64,11 +66,13 @@ public class MessageDialog extends BaseDialog {
     
     private BlurView blurView;
     
+    protected RelativeLayout boxRoot;
     protected RelativeLayout bkg;
     protected TextView txtDialogTitle;
     protected TextView txtDialogTip;
     protected RelativeLayout boxCustom;
     protected EditText txtInput;
+    protected MaxHeightLayout boxInput;
     protected ImageView splitHorizontal;
     protected LinearLayout boxButton;
     protected TextView btnSelectNegative;
@@ -83,7 +87,7 @@ public class MessageDialog extends BaseDialog {
     public static MessageDialog build(@NonNull AppCompatActivity context) {
         synchronized (MessageDialog.class) {
             MessageDialog messageDialog = new MessageDialog();
-            messageDialog.log("装载对话框");
+            messageDialog.log("装载对话框: " + messageDialog.toString());
             messageDialog.context = new WeakReference<>(context);
             
             switch (messageDialog.style) {
@@ -102,36 +106,36 @@ public class MessageDialog extends BaseDialog {
     }
     
     public static MessageDialog show(@NonNull AppCompatActivity context, String title, String message) {
-        synchronized (TipDialog.class) {
+        synchronized (MessageDialog.class) {
             MessageDialog messageDialog = show(context, title, message, null, null, null);
             return messageDialog;
         }
     }
     
     public static MessageDialog show(@NonNull AppCompatActivity context, int titleResId, int messageResId) {
-        synchronized (TipDialog.class) {
+        synchronized (MessageDialog.class) {
             MessageDialog messageDialog = show(context,
-                                               context.getString(titleResId),
-                                               context.getString(messageResId),
-                                               null, null, null
+                    context.getString(titleResId),
+                    context.getString(messageResId),
+                    null, null, null
             );
             return messageDialog;
         }
     }
     
     public static MessageDialog show(@NonNull AppCompatActivity context, String title, String message, String okButton) {
-        synchronized (TipDialog.class) {
+        synchronized (MessageDialog.class) {
             MessageDialog messageDialog = show(context, title, message, okButton, null, null);
             return messageDialog;
         }
     }
     
     public static MessageDialog show(@NonNull AppCompatActivity context, int titleResId, int messageResId, int okButtonResId) {
-        synchronized (TipDialog.class) {
+        synchronized (MessageDialog.class) {
             MessageDialog messageDialog = show(context,
-                                               context.getString(titleResId),
-                                               context.getString(messageResId),
-                                               context.getString(okButtonResId)
+                    context.getString(titleResId),
+                    context.getString(messageResId),
+                    context.getString(okButtonResId)
                     , null, null
             );
             return messageDialog;
@@ -139,14 +143,14 @@ public class MessageDialog extends BaseDialog {
     }
     
     public static MessageDialog show(@NonNull AppCompatActivity context, String title, String message, String okButton, String cancelButton) {
-        synchronized (TipDialog.class) {
+        synchronized (MessageDialog.class) {
             MessageDialog messageDialog = show(context, title, message, okButton, cancelButton, null);
             return messageDialog;
         }
     }
     
     public static MessageDialog show(@NonNull AppCompatActivity context, int titleResId, int messageResId, int okButtonResId, int cancelButtonResId) {
-        synchronized (TipDialog.class) {
+        synchronized (MessageDialog.class) {
             MessageDialog messageDialog = show(
                     context,
                     context.getString(titleResId),
@@ -160,7 +164,7 @@ public class MessageDialog extends BaseDialog {
     }
     
     public static MessageDialog show(@NonNull AppCompatActivity context, String title, String message, String okButton, String cancelButton, String otherButton) {
-        synchronized (TipDialog.class) {
+        synchronized (MessageDialog.class) {
             MessageDialog messageDialog = build(context);
             
             messageDialog.title = title;
@@ -175,7 +179,7 @@ public class MessageDialog extends BaseDialog {
     }
     
     public static MessageDialog show(@NonNull AppCompatActivity context, int titleResId, int messageResId, int okButtonResId, int cancelButtonResId, int otherButtonResId) {
-        synchronized (TipDialog.class) {
+        synchronized (MessageDialog.class) {
             MessageDialog messageDialog = show(
                     context,
                     context.getString(titleResId),
@@ -193,7 +197,7 @@ public class MessageDialog extends BaseDialog {
     
     @Override
     public void bindView(View rootView) {
-        log("启动对话框 -> " + title + ":" + message);
+        log("启动对话框 -> " + toString());
         if (boxCustom != null) boxCustom.removeAllViews();
         if (style == DialogSettings.STYLE.STYLE_MATERIAL) {
             materialAlertDialog = (AlertDialog) dialog.getDialog();
@@ -201,6 +205,7 @@ public class MessageDialog extends BaseDialog {
             if (rootView != null) {
                 this.rootView = rootView;
                 bkg = rootView.findViewById(R.id.bkg);
+                boxRoot = rootView.findViewById(R.id.box_root);
                 txtDialogTitle = rootView.findViewById(R.id.txt_dialog_title);
                 txtDialogTip = rootView.findViewById(R.id.txt_dialog_tip);
                 boxCustom = rootView.findViewById(R.id.box_custom);
@@ -212,6 +217,7 @@ public class MessageDialog extends BaseDialog {
                 btnSelectOther = rootView.findViewById(R.id.btn_selectOther);
                 splitVertical2 = rootView.findViewById(R.id.split_vertical2);
                 btnSelectPositive = rootView.findViewById(R.id.btn_selectPositive);
+                boxInput = rootView.findViewById(R.id.box_input);
             }
         }
         
@@ -267,10 +273,13 @@ public class MessageDialog extends BaseDialog {
                                 public void run() {
                                     blurView = new BlurView(context.get(), null);
                                     RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, bkg.getHeight());
+                                    params.addRule(RelativeLayout.CENTER_IN_PARENT);
                                     blurView.setOverlayColor(blurFrontColor);
-                                    bkg.addView(blurView, 0, params);
+                                    boxRoot.addView(blurView, 0, params);
                                 }
                             });
+                            
+                            bkg.getViewTreeObserver().addOnGlobalLayoutListener(blurViewRefreshLayoutListener);
                         } else {
                             bkg.setBackgroundResource(bkgResId);
                         }
@@ -575,6 +584,23 @@ public class MessageDialog extends BaseDialog {
             }
         }
     }
+    
+    private ViewTreeObserver.OnGlobalLayoutListener blurViewRefreshLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+        @Override
+        public void onGlobalLayout() {
+            if (isShow){
+                if (bkg!=null && blurView!=null){
+                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, bkg.getHeight());
+                    blurView.setLayoutParams(params);
+                    blurView.requestLayout();
+                }
+            }else{
+                if (bkg!=null) {
+                    bkg.getViewTreeObserver().removeOnGlobalLayoutListener(blurViewRefreshLayoutListener);
+                }
+            }
+        }
+    };
     
     @Override
     public void show() {
@@ -969,5 +995,18 @@ public class MessageDialog extends BaseDialog {
         this.backgroundResId = backgroundResId;
         refreshView();
         return this;
+    }
+    
+    public MessageDialog setCustomDialogStyleId(int customDialogStyleId) {
+        if (isAlreadyShown) {
+            error("必须使用 build(...) 方法创建时，才可以使用 setTheme(...) 来修改对话框主题或风格。");
+            return this;
+        }
+        this.customDialogStyleId = customDialogStyleId;
+        return this;
+    }
+    
+    public String toString() {
+        return getClass().getSimpleName() + "@" + Integer.toHexString(hashCode());
     }
 }

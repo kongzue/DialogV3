@@ -6,97 +6,105 @@
     android:background="@color/empty"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/box_body"
+    <com.kongzue.dialog.util.view.MaxHeightLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
-        <RelativeLayout
-            android:id="@+id/box_list"
+        <LinearLayout
+            android:id="@+id/box_body"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_weight="1"
             android:orientation="vertical">
 
-            <LinearLayout
+            <RelativeLayout
+                android:id="@+id/box_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_weight="1"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/txt_title"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="25dp"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginRight="25dp"
-                    android:layout_marginBottom="15dp"
-                    android:gravity="center_horizontal"
-                    android:text=""
-                    android:textColor="@color/tipTextColor"
-                    android:textSize="12dp"
-                    android:textStyle="bold"
-                    android:visibility="gone" />
+                    android:orientation="vertical">
 
-                <RelativeLayout
-                    android:id="@+id/box_custom"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"></RelativeLayout>
+                    <TextView
+                        android:id="@+id/txt_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="25dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginRight="25dp"
+                        android:layout_marginBottom="15dp"
+                        android:gravity="center_horizontal"
+                        android:text=""
+                        android:textColor="@color/tipTextColor"
+                        android:textSize="12dp"
+                        android:textStyle="bold"
+                        android:visibility="gone" />
 
-                <ImageView
-                    android:id="@+id/title_split_line"
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:visibility="gone"
-                    android:background="@color/dialogSplitIOSLight" />
+                    <RelativeLayout
+                        android:id="@+id/box_custom"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"></RelativeLayout>
 
-                <ListView
-                    android:id="@+id/list_menu"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clipToPadding="false"
-                    android:divider="@color/dialogSplitIOSLight"
-                    android:dividerHeight="1px"
-                    android:listSelector="@android:color/transparent"
-                    android:overScrollMode="never"
-                    android:scrollbarSize="7dp"
-                    android:scrollbarThumbVertical="@drawable/scrollbar_vertical_track"></ListView>
+                    <ImageView
+                        android:id="@+id/title_split_line"
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:visibility="gone"
+                        android:background="@color/dialogSplitIOSLight" />
 
-            </LinearLayout>
+                    <ListView
+                        android:id="@+id/list_menu"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clipToPadding="false"
+                        android:divider="@color/dialogSplitIOSLight"
+                        android:dividerHeight="1px"
+                        android:listSelector="@android:color/transparent"
+                        android:overScrollMode="never"
+                        android:scrollbarSize="7dp"
+                        android:scrollbarThumbVertical="@drawable/scrollbar_vertical_track"></ListView>
 
-        </RelativeLayout>
+                </LinearLayout>
 
-        <RelativeLayout
-            android:id="@+id/box_cancel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="-2dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="10dp">
+            </RelativeLayout>
 
-            <TextView
-                android:id="@+id/btn_cancel"
+            <RelativeLayout
+                android:id="@+id/box_cancel"
                 android:layout_width="match_parent"
-                android:layout_height="53dp"
-                android:background="@drawable/button_menu_ios_light"
-                android:gravity="center"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                android:singleLine="true"
-                android:text="CANCEL"
-                android:textColor="@color/dialogButtonIOSNormal"
-                android:textSize="19dp"
-                android:textStyle="bold" />
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="-2dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="10dp">
 
-        </RelativeLayout>
+                <TextView
+                    android:id="@+id/btn_cancel"
+                    android:layout_width="match_parent"
+                    android:layout_height="53dp"
+                    android:background="@drawable/button_menu_ios_light"
+                    android:gravity="center"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:singleLine="true"
+                    android:text="CANCEL"
+                    android:textColor="@color/dialogButtonIOSNormal"
+                    android:textSize="19dp"
+                    android:textStyle="bold" />
+
+            </RelativeLayout>
 
 
-    </LinearLayout>
+        </LinearLayout>
+
+
+    </com.kongzue.dialog.util.view.MaxHeightLayout>
+
 
 </LinearLayout>

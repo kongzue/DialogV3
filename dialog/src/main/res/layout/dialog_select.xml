@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/box_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -46,21 +47,30 @@
                 android:layout_marginTop="10dp"
                 android:visibility="gone"></RelativeLayout>
 
-            <EditText
-                android:id="@+id/txt_input"
+            <com.kongzue.dialog.util.view.MaxHeightLayout
+                android:id="@+id/box_input"
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="15dp"
-                android:background="@drawable/editbox_dialog_bkg"
-                android:gravity="center"
-                android:singleLine="true"
-                android:text=""
-                android:textColor="#000000"
-                android:textSize="18dp"
-                android:visibility="gone" />
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/txt_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="15dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:visibility="gone"
+                    android:scrollbars="vertical"
+                    android:background="@drawable/editbox_dialog_bkg"
+                    android:gravity="center"
+                    android:text=""
+                    android:textColor="#000000"
+                    android:textSize="18dp"/>
+
+            </com.kongzue.dialog.util.view.MaxHeightLayout>
 
             <LinearLayout
                 android:id="@+id/box_button"

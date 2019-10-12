@@ -10,6 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Build;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -74,7 +76,7 @@ public class ShareDialog extends BaseDialog {
     public static ShareDialog build(@NonNull AppCompatActivity context) {
         synchronized (ShareDialog.class) {
             ShareDialog shareDialog = new ShareDialog();
-            shareDialog.log("装载分享对话框");
+            shareDialog.log("装载分享框: " + shareDialog.toString() );
             shareDialog.context = new WeakReference<>(context);
             
             switch (shareDialog.style) {
@@ -104,6 +106,7 @@ public class ShareDialog extends BaseDialog {
     
     @Override
     public void bindView(View rootView) {
+        log("启动分享框 -> " + toString());
         this.rootView = rootView;
         if (boxCustom != null) boxCustom.removeAllViews();
         boxBody = rootView.findViewById(R.id.box_body);
@@ -286,6 +289,13 @@ public class ShareDialog extends BaseDialog {
                                 doDismiss();
                             }
                         });
+                        
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                            dialog.getDialog().getWindow().setNavigationBarColor(Color.WHITE);
+                            boxBody.setPadding(0, 0, 0, getNavigationBarHeight());
+                        }
                     }
                     break;
                 case STYLE_KONGZUE:
@@ -336,6 +346,14 @@ public class ShareDialog extends BaseDialog {
                             });
                             
                             boxItem.addView(itemView);
+                        }
+                        
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            Window window = dialog.getDialog().getWindow();
+                            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                            dialog.getDialog().getWindow().setNavigationBarColor(Color.WHITE);
+                            boxBody.setPadding(0, 0, 0, getNavigationBarHeight());
                         }
                     }
                     break;
@@ -426,15 +444,8 @@ public class ShareDialog extends BaseDialog {
                             }
                         }
                         if (deltaY >= -dip2px(50) && deltaY <= dip2px(50)) {
-                            switch (step) {
-                                case 0:
-                                    boxBody.animate().setDuration(300).translationY(boxBody.getHeight() / 2);
-                                    break;
-                                case 1:
-                                    boxBody.animate().setDuration(300).translationY(0);
-                                    step = 0;
-                                    break;
-                            }
+                            boxBody.animate().setDuration(300).translationY(boxBodyOldY);
+                            step = 0;
                         }
                     }
                     isTouchDown = false;
@@ -496,6 +507,13 @@ public class ShareDialog extends BaseDialog {
         public Item setText(String text) {
             this.text = text;
             return this;
+        }
+        
+        @Override
+        public String toString() {
+            return "Item{" +
+                    "text='" + text + '\'' +
+                    '}';
         }
     }
     
@@ -690,5 +708,18 @@ public class ShareDialog extends BaseDialog {
             e.printStackTrace();
         }
         return 0;
+    }
+    
+    public ShareDialog setCustomDialogStyleId(int customDialogStyleId) {
+        if (isAlreadyShown) {
+            error("必须使用 build(...) 方法创建时，才可以使用 setTheme(...) 来修改对话框主题或风格。");
+            return this;
+        }
+        this.customDialogStyleId = customDialogStyleId;
+        return this;
+    }
+    
+    public String toString() {
+        return getClass().getSimpleName() + "@" + Integer.toHexString(hashCode());
     }
 }

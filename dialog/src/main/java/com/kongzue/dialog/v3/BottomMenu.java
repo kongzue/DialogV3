@@ -5,10 +5,14 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
@@ -46,7 +50,7 @@ public class BottomMenu extends BaseDialog {
     
     private List<String> menuTextList;
     private String title;
-    private String cancelButtonText =  DialogSettings.defaultCancelButtonText;
+    private String cancelButtonText = DialogSettings.defaultCancelButtonText;
     private boolean showCancelButton = true;
     private OnMenuItemClickListener onMenuItemClickListener;
     
@@ -69,7 +73,7 @@ public class BottomMenu extends BaseDialog {
     public static BottomMenu build(@NonNull AppCompatActivity context) {
         synchronized (BottomMenu.class) {
             BottomMenu bottomMenu = new BottomMenu();
-            bottomMenu.log("装载底部菜单");
+            bottomMenu.log("装载底部菜单: " + bottomMenu.toString());
             bottomMenu.context = new WeakReference<>(context);
             
             switch (bottomMenu.style) {
@@ -150,6 +154,7 @@ public class BottomMenu extends BaseDialog {
     
     @Override
     public void bindView(View rootView) {
+        log("启动底部菜单 -> " + toString());
         this.rootView = rootView;
         if (boxCustom != null) boxCustom.removeAllViews();
         boxBody = rootView.findViewById(R.id.box_body);
@@ -168,15 +173,12 @@ public class BottomMenu extends BaseDialog {
     private BlurView blurList;
     private BlurView blurCancel;
     
-    private boolean isListViewTouchDown;
-    private float listViewTouchDownY;
-    
     @Override
     public void refreshView() {
         if (menuTextInfo == null) menuTextInfo = buttonTextInfo;
         if (cancelButtonTextInfo == null) cancelButtonTextInfo = menuTextInfo;
         if (menuTitleTextInfo == null) menuTitleTextInfo = titleTextInfo;
-        if (cancelButtonText==null) cancelButtonText = "取消";
+        if (cancelButtonText == null) cancelButtonText = "取消";
         
         if (rootView != null) {
             btnCancel.setText(cancelButtonText);
@@ -198,70 +200,25 @@ public class BottomMenu extends BaseDialog {
                     }
                     listMenu.setAdapter(menuArrayAdapter);
                     
-                    boxBody.setOnTouchListener(new View.OnTouchListener() {
-                        @Override
-                        public boolean onTouch(View v, MotionEvent event) {
-                            if (!listMenu.canScrollVertically(-1)) {
-                                //不可滑动状态
-                                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                                    isListViewTouchDown = true;
-                                    listViewTouchDownY = event.getY();
-                                }
-                                if (event.getAction() == MotionEvent.ACTION_MOVE) {
-                                    if (isListViewTouchDown) {
-                                        float deltaY = (event.getY() - listViewTouchDownY);
-                                        float aimY = boxBody.getY() + deltaY;
-                                        if (aimY < 0) aimY = 0;
-                                        if (deltaY < 0) {
-                                            if (boxBody.getY() > 0) {
-                                                boxBody.setY(aimY);
-                                                return true;
-                                            }
-                                            return false;
-                                        } else {
-                                            boxBody.setY(aimY);
-                                            return true;
-                                        }
-                                    }
-                                }
-                                if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {
-                                    if (isListViewTouchDown) {
-                                        if (boxBody.getY() > dip2px(80)) {
-                                            doDismiss();
-                                            return true;
-                                        } else {
-                                            boxBody.animate().setDuration(300).translationY(0);
-                                        }
-                                    }
-                                    isListViewTouchDown = false;
-                                }
-                                listMenu.requestDisallowInterceptTouchEvent(false);
-                                return true;
-                            } else {
-                                //可滑动状态
-                                if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {
-                                    if (isListViewTouchDown) {
-                                        if (boxBody.getY() > dip2px(80)) {
-                                            doDismiss();
-                                            return true;
-                                        } else {
-                                            boxBody.animate().setDuration(300).translationY(0);
-                                        }
-                                    }
-                                    isListViewTouchDown = false;
-                                }
-                                listMenu.requestDisallowInterceptTouchEvent(true);
-                                return false;
-                            }
-                        }
-                    });
                     boxBody.post(new Runnable() {
                         @Override
                         public void run() {
-                            boxBody.setY(boxBody.getHeight());
-                            boxBody.animate().setDuration(300).translationY(0);
+                            if (boxBody.getHeight() > getRootHeight() * 2 / 3) {
+                                boxBody.setY(boxBody.getHeight());
+                                boxBody.animate().setDuration(300).translationY(boxBody.getHeight() / 2);
+                            }
                         }
                     });
+                    listMenu.setOnTouchListener(listViewTouchListener);
+                    boxBody.setOnTouchListener(listViewTouchListener);
+                    
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        Window window = dialog.getDialog().getWindow();
+                        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                        dialog.getDialog().getWindow().setNavigationBarColor(Color.WHITE);
+                        boxBody.setPadding(0, 0, 0, getNavigationBarHeight());
+                    }
                     break;
                 case STYLE_KONGZUE:
                     if (customAdapter != null) {
@@ -271,6 +228,13 @@ public class BottomMenu extends BaseDialog {
                     }
                     listMenu.setAdapter(menuArrayAdapter);
                     
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        Window window = dialog.getDialog().getWindow();
+                        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                        dialog.getDialog().getWindow().setNavigationBarColor(Color.WHITE);
+                        boxBody.setPadding(0, 0, 0, getNavigationBarHeight());
+                    }
                     break;
                 case STYLE_IOS:
                     final int bkgResId, blurFrontColor;
@@ -398,7 +362,7 @@ public class BottomMenu extends BaseDialog {
                 useTextInfo(viewHolder.textView, menuTextInfo);
                 
                 if (objects.size() == 1) {
-                    if (theme== DialogSettings.THEME.LIGHT){
+                    if (theme == DialogSettings.THEME.LIGHT) {
                         if (title != null && !title.trim().isEmpty()) {
                             viewHolder.textView.setBackgroundResource(R.drawable.button_menu_ios_bottom_light);
                         } else {
@@ -408,7 +372,7 @@ public class BottomMenu extends BaseDialog {
                                 viewHolder.textView.setBackgroundResource(R.drawable.button_menu_ios_light);
                             }
                         }
-                    }else{
+                    } else {
                         if (title != null && !title.trim().isEmpty()) {
                             viewHolder.textView.setBackgroundResource(R.drawable.button_menu_ios_bottom_dark);
                         } else {
@@ -420,7 +384,7 @@ public class BottomMenu extends BaseDialog {
                         }
                     }
                 } else {
-                    if (theme== DialogSettings.THEME.LIGHT) {
+                    if (theme == DialogSettings.THEME.LIGHT) {
                         if (position == 0) {
                             if (title != null && !title.trim().isEmpty()) {
                                 viewHolder.textView.setBackgroundResource(R.drawable.button_menu_ios_center_light);
@@ -436,7 +400,7 @@ public class BottomMenu extends BaseDialog {
                         } else {
                             viewHolder.textView.setBackgroundResource(R.drawable.button_menu_ios_center_light);
                         }
-                    }else{
+                    } else {
                         if (position == 0) {
                             if (title != null && !title.trim().isEmpty()) {
                                 viewHolder.textView.setBackgroundResource(R.drawable.button_menu_ios_center_dark);
@@ -717,5 +681,119 @@ public class BottomMenu extends BaseDialog {
     public BottomMenu setCustomAdapter(BaseAdapter customAdapter) {
         this.customAdapter = customAdapter;
         return this;
+    }
+    
+    private float boxBodyOldY;
+    private int step;
+    private boolean isTouchDown;
+    private float touchDownY;
+    
+    private View.OnTouchListener listViewTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    isTouchDown = true;
+                    touchDownY = event.getY();
+                    boxBodyOldY = boxBody.getY();
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    if (isTouchDown) {
+                        float deltaY = event.getY() - touchDownY;
+                        float aimY = boxBody.getY() + deltaY;
+                        if (aimY < 0) {
+                            aimY = 0;
+                        }
+                        if (isListViewOnTop() && aimY != 0) {
+                            boxBody.setY(aimY);
+                            return true;
+                        } else {
+                            touchDownY = event.getY();
+                            boxBody.setY(0);
+                        }
+                    }
+                    break;
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+                    if (isTouchDown) {
+                        float deltaY = boxBody.getY() - boxBodyOldY;
+                        
+                        if (deltaY >= -dip2px(50) && deltaY <= dip2px(50)) {
+                            //几乎没动，回到原来位置
+                            boxBody.animate().setDuration(300).translationY(boxBodyOldY);
+                            step = 0;
+                        } else {
+                            if (deltaY > dip2px(150)) {
+                                //向下(重)
+                                boxBody.animate().setDuration(300).translationY(boxBody.getHeight()).withEndAction(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        doDismiss();
+                                    }
+                                });
+                                v.onTouchEvent(MotionEvent.obtain(0, 0, MotionEvent.ACTION_CANCEL, 0, 0, 0));       //释放点击事件
+                                return true;
+                            } else if (deltaY > dip2px(50)) {
+                                //向下(轻)
+                                switch (step) {
+                                    case 0:
+                                        boxBody.animate().setDuration(300).translationY(boxBody.getHeight()).withEndAction(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                doDismiss();
+                                            }
+                                        });
+                                        break;
+                                    case 1:
+                                        boxBody.animate().setDuration(300).translationY(boxBody.getHeight() / 2);
+                                        step = 0;
+                                        break;
+                                }
+                                v.onTouchEvent(MotionEvent.obtain(0, 0, MotionEvent.ACTION_CANCEL, 0, 0, 0));       //释放点击事件
+                                return true;
+                            } else {
+                                //向上
+                                boxBody.animate().setDuration(300).translationY(0);
+                                step = 1;
+                                v.onTouchEvent(MotionEvent.obtain(0, 0, MotionEvent.ACTION_CANCEL, 0, 0, 0));       //释放点击事件
+                                return true;
+                            }
+                        }
+                    }
+                    isTouchDown = false;
+                    break;
+            }
+            if (v instanceof ListView) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+    };
+    
+    private boolean isListViewOnTop() {
+        View c = listMenu.getChildAt(0);
+        if (c == null) {
+            return false;
+        }
+        int firstVisiblePosition = listMenu.getFirstVisiblePosition();
+        if (firstVisiblePosition != 0) {
+            return false;
+        }
+        int top = c.getTop();
+        return top == 0;
+    }
+    
+    public BottomMenu setCustomDialogStyleId(int customDialogStyleId) {
+        if (isAlreadyShown) {
+            error("必须使用 build(...) 方法创建时，才可以使用 setTheme(...) 来修改对话框主题或风格。");
+            return this;
+        }
+        this.customDialogStyleId = customDialogStyleId;
+        return this;
+    }
+    
+    public String toString() {
+        return getClass().getSimpleName() + "@" + Integer.toHexString(hashCode());
     }
 }
