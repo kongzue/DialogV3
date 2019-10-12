@@ -80,6 +80,7 @@ MessageDialog.show(MainActivity.this, R.string.error_title, R.string.error_not_i
 
 ## 引入
 
+### Support 版本
 Maven仓库：
 ```
 <dependency>
@@ -97,7 +98,14 @@ implementation 'com.kongzue.dialog_v3:dialog:3.1.3'
 
 从 Kongzue Dialog V2 升级至 Kongzue Dialog V3，请参考 [Kongzue Dialog V2升级注意事项](kongzue_dialog_v2_upto_v3.md)
 
-⚡ 另外提供 AndroidX 版本，详见 [分支](https://github.com/kongzue/DialogV3/tree/androidx)
+### AndroidX 版本
+
+⚡ 另外提供 AndroidX 版本，源码详见 [分支](https://github.com/kongzue/DialogV3/tree/androidx)
+
+在dependencies{}中添加引用：
+```
+implementation 'com.kongzue.dialog_v3x:dialog:3.1.3'
+```
 
 ## 全局配置
 在完成引入 Kongzue Dialog V3 库后，首先需要进行一些预先配置，诸如对话框组件整体的风格、主题和字体等，它们都可以在一个工具类中进行配置，说明如下：
