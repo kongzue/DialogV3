@@ -1,5 +1,6 @@
 package com.kongzue.dialog.util;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.graphics.Point;
 import android.graphics.Typeface;
