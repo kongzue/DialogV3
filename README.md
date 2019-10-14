@@ -628,9 +628,11 @@ android:configChanges="orientation|keyboardHidden|screenSize"
 ### 常见问题
 
 **Q：如何检查是否支持即时模糊（Renderscript）？**
+
 A：请执行 DialogSettings.checkRenderscriptSupport(context) 方法检查，如果支持，isUseBlur 会自动被设置为 true，反之会被关闭。
 
 **Q：为什么不支持非Activity作为Context？为什么只支持AppCompatActivity而不支持普通Activity？**
+
 A：不支持非 Activity 是因为 Android 在的限制，Dialog 必须基于 Activity 显示，并且受到 Activity 的生命周期管理。
 
 如果想“凭空”显示出 Dialog，可以考虑使用透明主题的 Activity，再在其上显示 Dialog，即在 manifest 中设置 Activity 的 theme 为自定义的透明主题，具体代码如下：
@@ -644,9 +646,11 @@ A：不支持非 Activity 是因为 Android 在的限制，Dialog 必须基于 A
 对于为什么只支持 AppCompatActivity 而不支持普通 Activity，是因为需要使用到 SupportFragmentManager()，而它是 AppCompatActivity 中才能提供的。
 
 **Q：Dialog不启动，不显示**
+
 A：首先请检查您传入的 Context 是否为已回收的上下文索引，然后尝试使用 `BaseDialog.unload();` 清空内存队列，如果还是不显示，请提交 issues 返回问题，记得备注您的创建 Dialog 代码。
 
 **Q：显示位置或大小异常**
+
 A：您可能是用了第三方的屏幕适配方案，例如头条适配方案，此问题是适配方案导致的，请查询适配方案是否有解决办法，DialogV3 库主要支持标准适配方案，在第三方适配方案下可能存在显示问题。
 
 ## 混淆设置
