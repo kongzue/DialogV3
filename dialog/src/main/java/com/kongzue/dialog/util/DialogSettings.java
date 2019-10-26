@@ -30,6 +30,9 @@ public class DialogSettings {
     //是否开启模糊效果
     public static boolean isUseBlur = false;
     
+    //开启模态化队列启动方式
+    public static boolean modalDialog = false;
+    
     //全局主题风格
     public static STYLE style = STYLE.STYLE_MATERIAL;
     
@@ -56,6 +59,12 @@ public class DialogSettings {
     
     //全局输入框文本样式
     public static InputInfo inputInfo;
+    
+    //全局菜单标题样式
+    public static TextInfo menuTitleInfo;
+    
+    //全局菜单文字样式
+    public static TextInfo menuTextInfo;
     
     //全局对话框背景颜色，值0时不生效
     public static int backgroundColor = 0;

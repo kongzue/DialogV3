@@ -8,6 +8,7 @@
         android:id="@+id/box_body"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:background="@drawable/rect_share_material_bkg"
         android:orientation="vertical">
 
@@ -22,14 +23,13 @@
             android:id="@+id/txt_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
+            android:layout_marginLeft="20dp"
+            android:visibility="gone"
+            android:layout_marginRight="20dp"
             android:layout_marginTop="10dp"
             android:text=""
             android:textColor="@color/tipTextColor"
-            android:textSize="12dp"
-            android:visibility="gone" />
+            android:textSize="12dp" />
 
         <RelativeLayout
             android:id="@+id/box_custom"
@@ -43,6 +43,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:divider="@color/empty"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:dividerHeight="1px"></ListView>
 
         <LinearLayout

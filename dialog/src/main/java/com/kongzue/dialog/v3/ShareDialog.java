@@ -76,7 +76,7 @@ public class ShareDialog extends BaseDialog {
     public static ShareDialog build(@NonNull AppCompatActivity context) {
         synchronized (ShareDialog.class) {
             ShareDialog shareDialog = new ShareDialog();
-            shareDialog.log("装载分享框: " + shareDialog.toString() );
+            shareDialog.log("装载分享框: " + shareDialog.toString());
             shareDialog.context = new WeakReference<>(context);
             
             switch (shareDialog.style) {
@@ -133,7 +133,7 @@ public class ShareDialog extends BaseDialog {
         if (cancelButtonTextInfo == null) cancelButtonTextInfo = buttonTextInfo;
         if (titleTextInfo == null) titleTextInfo = super.titleTextInfo;
         if (itemTextInfo == null) itemTextInfo = messageTextInfo;
-        if (cancelButtonText==null) cancelButtonText = "取消";
+        if (cancelButtonText == null) cancelButtonText = "取消";
         
         if (rootView != null) {
             switch (style) {
@@ -264,7 +264,7 @@ public class ShareDialog extends BaseDialog {
                             boxItem.addView(itemView);
                         }
                         
-                        Window window = dialog.getDialog().getWindow();
+                        Window window = dialog.get().getDialog().getWindow();
                         WindowManager windowManager = context.get().getWindowManager();
                         Display display = windowManager.getDefaultDisplay();
                         WindowManager.LayoutParams lp = window.getAttributes();
@@ -293,7 +293,7 @@ public class ShareDialog extends BaseDialog {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
                             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                            dialog.getDialog().getWindow().setNavigationBarColor(Color.WHITE);
+                            dialog.get().getDialog().getWindow().setNavigationBarColor(Color.WHITE);
                             boxBody.setPadding(0, 0, 0, getNavigationBarHeight());
                         }
                     }
@@ -349,10 +349,10 @@ public class ShareDialog extends BaseDialog {
                         }
                         
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                            Window window = dialog.getDialog().getWindow();
+                            Window window = dialog.get().getDialog().getWindow();
                             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
                             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                            dialog.getDialog().getWindow().setNavigationBarColor(Color.WHITE);
+                            dialog.get().getDialog().getWindow().setNavigationBarColor(Color.WHITE);
                             boxBody.setPadding(0, 0, 0, getNavigationBarHeight());
                         }
                     }
@@ -449,6 +449,9 @@ public class ShareDialog extends BaseDialog {
                         }
                     }
                     isTouchDown = false;
+                    if (Math.abs(boxBodyOldY - boxBody.getY()) < dip2px(10)) {
+                        return false;
+                    }
                     break;
             }
             return true;

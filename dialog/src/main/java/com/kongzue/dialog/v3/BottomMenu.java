@@ -55,7 +55,6 @@ public class BottomMenu extends BaseDialog {
     private OnMenuItemClickListener onMenuItemClickListener;
     
     private TextInfo menuTitleTextInfo;
-    private TextInfo menuTextInfo;
     private TextInfo cancelButtonTextInfo;
     
     private LinearLayout boxBody;
@@ -66,6 +65,7 @@ public class BottomMenu extends BaseDialog {
     private ListView listMenu;
     private ViewGroup boxCancel;
     private TextView btnCancel;
+    private TextInfo menuTextInfo;
     
     private BottomMenu() {
     }
@@ -175,13 +175,20 @@ public class BottomMenu extends BaseDialog {
     
     @Override
     public void refreshView() {
-        if (menuTextInfo == null) menuTextInfo = buttonTextInfo;
         if (cancelButtonTextInfo == null) cancelButtonTextInfo = menuTextInfo;
-        if (menuTitleTextInfo == null) menuTitleTextInfo = titleTextInfo;
+        if (menuTitleTextInfo == null) menuTitleTextInfo = DialogSettings.menuTitleInfo;
+        if (menuTextInfo == null) menuTextInfo = DialogSettings.menuTextInfo;
         if (cancelButtonText == null) cancelButtonText = "取消";
         
         if (rootView != null) {
             btnCancel.setText(cancelButtonText);
+            
+            ((ViewGroup)boxBody.getParent()).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    doDismiss();
+                }
+            });
             
             if (showCancelButton) {
                 if (boxCancel != null) boxCancel.setVisibility(View.VISIBLE);
@@ -200,12 +207,16 @@ public class BottomMenu extends BaseDialog {
                     }
                     listMenu.setAdapter(menuArrayAdapter);
                     
+                    boxBody.setY(getRootHeight());
+                    boxBody.setVisibility(View.VISIBLE);
                     boxBody.post(new Runnable() {
                         @Override
                         public void run() {
                             if (boxBody.getHeight() > getRootHeight() * 2 / 3) {
                                 boxBody.setY(boxBody.getHeight());
                                 boxBody.animate().setDuration(300).translationY(boxBody.getHeight() / 2);
+                            }else{
+                                boxBody.animate().setDuration(300).translationY(0);
                             }
                         }
                     });
@@ -213,10 +224,10 @@ public class BottomMenu extends BaseDialog {
                     boxBody.setOnTouchListener(listViewTouchListener);
                     
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        Window window = dialog.getDialog().getWindow();
+                        Window window = dialog.get().getDialog().getWindow();
                         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
                         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                        dialog.getDialog().getWindow().setNavigationBarColor(Color.WHITE);
+                        dialog.get().getDialog().getWindow().setNavigationBarColor(Color.WHITE);
                         boxBody.setPadding(0, 0, 0, getNavigationBarHeight());
                     }
                     break;
@@ -229,10 +240,10 @@ public class BottomMenu extends BaseDialog {
                     listMenu.setAdapter(menuArrayAdapter);
                     
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        Window window = dialog.getDialog().getWindow();
+                        Window window = dialog.get().getDialog().getWindow();
                         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
                         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                        dialog.getDialog().getWindow().setNavigationBarColor(Color.WHITE);
+                        dialog.get().getDialog().getWindow().setNavigationBarColor(Color.WHITE);
                         boxBody.setPadding(0, 0, 0, getNavigationBarHeight());
                     }
                     break;
@@ -682,6 +693,8 @@ public class BottomMenu extends BaseDialog {
         this.customAdapter = customAdapter;
         return this;
     }
+    
+    
     
     private float boxBodyOldY;
     private int step;

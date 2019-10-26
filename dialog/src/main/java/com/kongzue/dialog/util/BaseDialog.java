@@ -52,7 +52,7 @@ public abstract class BaseDialog {
     protected static List<BaseDialog> dialogList = new ArrayList<>();           //对话框队列
     
     public WeakReference<AppCompatActivity> context;
-    public DialogHelper dialog;                                                 //我才是本体！
+    public WeakReference<DialogHelper> dialog;                                                 //我才是本体！
     
     private BaseDialog baseDialog;
     private int layoutId;
@@ -127,10 +127,14 @@ public abstract class BaseDialog {
             }
         };
         dialogList.add(this);
-        if (baseDialog instanceof TipDialog) {
+        if (!DialogSettings.modalDialog){
             showNow();
-        } else {
-            showNext();
+        }else{
+            if (baseDialog instanceof TipDialog) {
+                showNow();
+            } else {
+                showNext();
+            }
         }
     }
     
@@ -171,7 +175,7 @@ public abstract class BaseDialog {
             context = new WeakReference<>(newContext.get());
         }
         FragmentManager fragmentManager = context.get().getSupportFragmentManager();
-        dialog = new DialogHelper().setLayoutId(baseDialog, layoutId);
+        dialog = new WeakReference<>(new DialogHelper().setLayoutId(baseDialog, layoutId));
         if (baseDialog instanceof BottomMenu || baseDialog instanceof ShareDialog) {
             styleId = R.style.BottomDialog;
         }
@@ -181,9 +185,9 @@ public abstract class BaseDialog {
         if (customDialogStyleId != 0) {
             styleId = customDialogStyleId;
         }
-        dialog.setStyle(DialogFragment.STYLE_NORMAL, styleId);
-        dialog.show(fragmentManager, "kongzueDialog");
-        dialog.setOnShowListener(new DialogHelper.PreviewOnShowListener() {
+        dialog.get().setStyle(DialogFragment.STYLE_NORMAL, styleId);
+        dialog.get().show(fragmentManager, "kongzueDialog");
+        dialog.get().setOnShowListener(new DialogHelper.PreviewOnShowListener() {
             @Override
             public void onShow(Dialog dialog) {
                 if (DialogSettings.dialogLifeCycleListener != null)
@@ -191,7 +195,7 @@ public abstract class BaseDialog {
             }
         });
         if (DialogSettings.systemDialogStyle == 0 && style == DialogSettings.STYLE.STYLE_IOS && !(baseDialog instanceof TipDialog) && !(baseDialog instanceof BottomMenu) && !(baseDialog instanceof ShareDialog))
-            dialog.setAnim(R.style.iOSDialogAnimStyle);
+            dialog.get().setAnim(R.style.iOSDialogAnimStyle);
         
         if (baseDialog instanceof TipDialog) {
             if (cancelable == null)
@@ -201,7 +205,7 @@ public abstract class BaseDialog {
                 cancelable = DialogSettings.cancelable ? BOOLEAN.TRUE : BOOLEAN.FALSE;
         }
         if (dialog != null) {
-            dialog.setCancelable(cancelable == BOOLEAN.TRUE);
+            dialog.get().setCancelable(cancelable == BOOLEAN.TRUE);
         }
     }
     
@@ -215,7 +219,7 @@ public abstract class BaseDialog {
     
     public void doDismiss() {
         dismissedFlag = true;
-        dialog.dismiss();
+        dialog.get().dismiss();
     }
     
     protected void initDefaultSettings() {
@@ -274,10 +278,12 @@ public abstract class BaseDialog {
         for (BaseDialog dialog : dialogList) {
             if (dialog.isShow) {
                 dialog.doDismiss();
+                if (dialog.context != null) dialog.context.clear();
+                dialog.dialog = null;
             }
         }
         dialogList = new ArrayList<>();
-        newContext = null;
+        if (newContext != null) newContext.clear();
         WaitDialog.waitDialogTemp = null;
     }
     
