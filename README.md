@@ -104,7 +104,7 @@ implementation 'com.kongzue.dialog_v3:dialog:3.1.4'
 
 在dependencies{}中添加引用：
 ```
-implementation 'com.kongzue.dialog_v3x:dialog:3.1.3'
+implementation 'com.kongzue.dialog_v3x:dialog:3.1.4'
 ```
 
 ## 全局配置
