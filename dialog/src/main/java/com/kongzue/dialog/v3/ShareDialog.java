@@ -1,20 +1,15 @@
 package com.kongzue.dialog.v3;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
-import android.graphics.Point;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
-import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -25,12 +20,10 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kongzue.dialog.R;
-import com.kongzue.dialog.interfaces.OnDialogButtonClickListener;
 import com.kongzue.dialog.interfaces.OnDismissListener;
 import com.kongzue.dialog.interfaces.OnShowListener;
 import com.kongzue.dialog.util.BaseDialog;
@@ -38,7 +31,6 @@ import com.kongzue.dialog.util.DialogSettings;
 import com.kongzue.dialog.util.TextInfo;
 import com.kongzue.dialog.util.view.BlurView;
 import com.kongzue.dialog.util.view.IOSItemImageView;
-import com.kongzue.dialog.util.view.MaterialTouchView;
 import com.kongzue.dialog.util.view.TableLayout;
 
 import java.lang.ref.WeakReference;
@@ -82,7 +74,7 @@ public class ShareDialog extends BaseDialog {
     public static ShareDialog build(@NonNull AppCompatActivity context) {
         synchronized (ShareDialog.class) {
             ShareDialog shareDialog = new ShareDialog();
-            shareDialog.log("装载分享框: " + shareDialog.toString() );
+            shareDialog.log("装载分享框: " + shareDialog.toString());
             shareDialog.context = new WeakReference<>(context);
             
             switch (shareDialog.style) {
@@ -139,7 +131,7 @@ public class ShareDialog extends BaseDialog {
         if (cancelButtonTextInfo == null) cancelButtonTextInfo = buttonTextInfo;
         if (titleTextInfo == null) titleTextInfo = super.titleTextInfo;
         if (itemTextInfo == null) itemTextInfo = messageTextInfo;
-        if (cancelButtonText==null) cancelButtonText = "取消";
+        if (cancelButtonText == null) cancelButtonText = "取消";
         
         if (rootView != null) {
             switch (style) {
@@ -270,7 +262,7 @@ public class ShareDialog extends BaseDialog {
                             boxItem.addView(itemView);
                         }
                         
-                        Window window = dialog.getDialog().getWindow();
+                        Window window = dialog.get().getDialog().getWindow();
                         WindowManager windowManager = context.get().getWindowManager();
                         Display display = windowManager.getDefaultDisplay();
                         WindowManager.LayoutParams lp = window.getAttributes();
@@ -299,7 +291,7 @@ public class ShareDialog extends BaseDialog {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
                             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                            dialog.getDialog().getWindow().setNavigationBarColor(Color.WHITE);
+                            dialog.get().getDialog().getWindow().setNavigationBarColor(Color.WHITE);
                             boxBody.setPadding(0, 0, 0, getNavigationBarHeight());
                         }
                     }
@@ -353,12 +345,12 @@ public class ShareDialog extends BaseDialog {
                             
                             boxItem.addView(itemView);
                         }
-    
+                        
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                            Window window = dialog.getDialog().getWindow();
+                            Window window = dialog.get().getDialog().getWindow();
                             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
                             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                            dialog.getDialog().getWindow().setNavigationBarColor(Color.WHITE);
+                            dialog.get().getDialog().getWindow().setNavigationBarColor(Color.WHITE);
                             boxBody.setPadding(0, 0, 0, getNavigationBarHeight());
                         }
                     }
@@ -455,6 +447,9 @@ public class ShareDialog extends BaseDialog {
                         }
                     }
                     isTouchDown = false;
+                    if (Math.abs(boxBodyOldY - boxBody.getY()) < dip2px(10)) {
+                        return false;
+                    }
                     break;
             }
             return true;
@@ -514,7 +509,7 @@ public class ShareDialog extends BaseDialog {
             this.text = text;
             return this;
         }
-    
+        
         @Override
         public String toString() {
             return "Item{" +

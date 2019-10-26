@@ -125,7 +125,7 @@ public class DialogHelper extends DialogFragment {
                 WindowManager windowManager;
                 Display display;
                 WindowManager.LayoutParams lp;
-                if (customDialog.getAlign()!=null) {
+                if (customDialog.getAlign() != null) {
                     switch (customDialog.getAlign()) {
                         case BOTTOM:
                             dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -147,7 +147,7 @@ public class DialogHelper extends DialogFragment {
                             windowManager = getActivity().getWindowManager();
                             display = windowManager.getDefaultDisplay();
                             lp = window.getAttributes();
-            
+                            
                             lp.width = display.getWidth();
                             lp.windowAnimations = R.style.topMenuAnim;
                             window.setGravity(Gravity.TOP);
@@ -210,7 +210,7 @@ public class DialogHelper extends DialogFragment {
             baseDialog.context = new WeakReference<>((AppCompatActivity) getContext());
             if (baseDialog.toString().equals(parentId)) {
                 parent = baseDialog;
-                parent.dialog = this;
+                parent.dialog = new WeakReference<>(this);
                 refreshDialogPosition(getDialog());
                 parent.bindView(rootView);
                 parent.initDefaultSettings();
@@ -228,7 +228,7 @@ public class DialogHelper extends DialogFragment {
             if (baseDialog.toString().equals(parentId)) {
                 flag = true;
                 parent = baseDialog;
-                parent.dialog = this;
+                parent.dialog = new WeakReference<>(this);
                 refreshDialogPosition(getDialog());
             }
         }
@@ -244,7 +244,7 @@ public class DialogHelper extends DialogFragment {
                 return;
             }
         }
-        if (parent.dismissEvent!=null)parent.dismissEvent.onDismiss();
+        if (parent.dismissEvent != null) parent.dismissEvent.onDismiss();
         super.onDismiss(dialog);
         privateNotDismissFlag = false;
     }

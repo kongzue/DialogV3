@@ -3,7 +3,7 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.kongzue.dialog.util.view.MaterialTouchView
+    <LinearLayout
         android:id="@+id/box_body"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -48,6 +48,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
-    </com.kongzue.dialog.util.view.MaterialTouchView>
+    </LinearLayout>
 
 </LinearLayout>

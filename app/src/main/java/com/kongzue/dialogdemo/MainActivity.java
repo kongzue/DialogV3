@@ -461,6 +461,7 @@ public class MainActivity extends BaseActivity {
         btnModalDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                DialogSettings.modalDialog = true;
                 MessageDialog.build(me)
                         .setTitle("提示")
                         .setMessage("序列化对话框，即模态对话框，是通过代码一次性弹出多个对话框而一次只显示一个，当一个对话框关闭后下一个对话框才会显示。")
@@ -488,7 +489,12 @@ public class MainActivity extends BaseActivity {
                                 btnTipDialog.callOnClick();
                                 return true;
                             }
-                        });
+                        }).setOnDismissListener(new OnDismissListener() {
+                    @Override
+                    public void onDismiss() {
+                        DialogSettings.modalDialog = false;
+                    }
+                });
             }
         });
         

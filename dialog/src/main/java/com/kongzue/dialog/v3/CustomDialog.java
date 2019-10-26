@@ -183,7 +183,7 @@ public class CustomDialog extends BaseDialog {
     
     public CustomDialog setCancelable(boolean enable) {
         this.cancelable = enable ? BOOLEAN.TRUE : BOOLEAN.FALSE;
-        if (dialog != null) dialog.setCancelable(cancelable == BOOLEAN.TRUE);
+        if (dialog != null) dialog.get().setCancelable(cancelable == BOOLEAN.TRUE);
         return this;
     }
     

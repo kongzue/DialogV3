@@ -202,7 +202,7 @@ public class MessageDialog extends BaseDialog {
         log("启动对话框 -> " + toString());
         if (boxCustom != null) boxCustom.removeAllViews();
         if (style == DialogSettings.STYLE.STYLE_MATERIAL) {
-            materialAlertDialog = (AlertDialog) dialog.getDialog();
+            materialAlertDialog = (AlertDialog) dialog.get().getDialog();
         } else {
             if (rootView != null) {
                 this.rootView = rootView;
@@ -911,7 +911,7 @@ public class MessageDialog extends BaseDialog {
     
     public MessageDialog setCancelable(boolean enable) {
         this.cancelable = enable ? BOOLEAN.TRUE : BOOLEAN.FALSE;
-        if (dialog != null) dialog.setCancelable(cancelable == BOOLEAN.TRUE);
+        if (dialog != null) dialog.get().setCancelable(cancelable == BOOLEAN.TRUE);
         return this;
     }
     

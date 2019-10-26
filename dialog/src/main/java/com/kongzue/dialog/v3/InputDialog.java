@@ -661,7 +661,7 @@ public class InputDialog extends MessageDialog {
     
     public InputDialog setCancelable(boolean enable) {
         this.cancelable = enable ? BOOLEAN.TRUE : BOOLEAN.FALSE;
-        if (dialog != null) dialog.setCancelable(cancelable == BOOLEAN.TRUE);
+        if (dialog != null) dialog.get().setCancelable(cancelable == BOOLEAN.TRUE);
         return this;
     }
     

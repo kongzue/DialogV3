@@ -2,10 +2,10 @@
 献给要求安卓照着苹果设计稿做开发的产品们（手动滑稽
 
 <a href="https://github.com/kongzue/dialogV3/">
-<img src="https://img.shields.io/badge/Kongzue%20Dialog-3.1.3-green.svg" alt="Kongzue Dialog">
+<img src="https://img.shields.io/badge/Kongzue%20Dialog-3.1.4-green.svg" alt="Kongzue Dialog">
 </a> 
-<a href="https://bintray.com/myzchh/maven/dialogV3/3.1.3/link">
-<img src="https://img.shields.io/badge/Maven-3.1.3-blue.svg" alt="Maven">
+<a href="https://bintray.com/myzchh/maven/dialogV3/3.1.4/link">
+<img src="https://img.shields.io/badge/Maven-3.1.4-blue.svg" alt="Maven">
 </a> 
 <a href="http://www.apache.org/licenses/LICENSE-2.0">
 <img src="https://img.shields.io/badge/License-Apache%202.0-red.svg" alt="License">
@@ -40,7 +40,7 @@ Kongzue Dialog V3 依然会像第二代一样提供多种主题风格选择，�
 我们的组件也会提供许许多多的接口供您自定义对话框的每一点细节，方便而快捷，迅速构建您的程序。
 
 #### 4，模态化&快速创建
-Kongzue Dialog V3 默认即支持模态化窗口模式，即即便从代码一次执行显示多个对话框，实际也会再上一个对话框消失后再显示下一个，以避免对话框叠加造成的混乱情况发生。
+Kongzue Dialog V3 支持模态化窗口模式，即即便从代码一次执行显示多个对话框，实际也会再上一个对话框消失后再显示下一个，以避免对话框叠加造成的混乱情况发生。
 
 另外 Kongzue Dialog 不强制您必须使用 Builder 等方式创建，且为了避免额外的代码量，所有组件均提供了可灵活使用的 show(...) 构造方法，因此只需要输入组件名称，按一下 “.” 按键，即可快速根据提示创建出一个对话框。
 
@@ -86,14 +86,14 @@ Maven仓库：
 <dependency>
   <groupId>com.kongzue.dialog_v3</groupId>
   <artifactId>dialog</artifactId>
-  <version>3.1.3</version>
+  <version>3.1.4</version>
   <type>pom</type>
 </dependency>
 ```
 Gradle：
 在dependencies{}中添加引用：
 ```
-implementation 'com.kongzue.dialog_v3:dialog:3.1.3'
+implementation 'com.kongzue.dialog_v3:dialog:3.1.4'
 ```
 
 从 Kongzue Dialog V2 升级至 Kongzue Dialog V3，请参考 [Kongzue Dialog V2升级注意事项](kongzue_dialog_v2_upto_v3.md)
@@ -113,6 +113,7 @@ implementation 'com.kongzue.dialog_v3x:dialog:3.1.3'
 import com.kongzue.dialog.util.DialogSettings;
 
 DialogSettings.isUseBlur = (boolean);                   //是否开启模糊效果，默认关闭
+DialogSettings.modalDialog = (boolean);                 //是否开启模态窗口模式，一次显示多个对话框将以队列形式一个一个显示，默认关闭
 DialogSettings.style = (DialogSettings.STYLE);          //全局主题风格，提供三种可选风格，STYLE_MATERIAL, STYLE_KONGZUE, STYLE_IOS
 DialogSettings.theme = (DialogSettings.THEME);          //全局对话框明暗风格，提供两种可选主题，LIGHT, DARK
 DialogSettings.tipTheme = (DialogSettings.THEME);       //全局提示框明暗风格，提供两种可选主题，LIGHT, DARK
@@ -128,7 +129,7 @@ DialogSettings.DEBUGMODE = (boolean);                   //是否允许打印日�
 DialogSettings.blurAlpha = (int);                       //开启模糊后的透明度（0~255）
 DialogSettings.systemDialogStyle = (styleResId);        //自定义系统对话框style，注意设置此功能会导致原对话框风格和动画失效
 DialogSettings.dialogLifeCycleListener = (DialogLifeCycleListener);  //全局Dialog生命周期监听器
-DialogSettings.defaultCancelButtonText = (String);      //设置 BottomDialog 和 ShareDialog 默认“取消”按钮的文字
+DialogSettings.defaultCancelButtonText = (String);      //设置 BottomMenu 和 ShareDialog 默认“取消”按钮的文字
 DialogSettings.tipBackgroundResId = (drawableResId);    //设置 TipDialog 和 WaitDialog 的背景资源
 DialogSettings.tipTextInfo = (InputInfo);               //设置 TipDialog 和 WaitDialog 文字样式
 
@@ -387,7 +388,7 @@ BottomMenu.show(MainActivity.this, baseAdapter, new OnMenuItemClickListener() {
 
 ⚠ 特别说明：
 
-Material 风格的 BottomDialog 默认不支持“取消”按钮，按照设计规范，使用下滑手势关闭。
+Material 风格的 BottomMenu 默认不支持“取消”按钮，按照设计规范，使用下滑手势关闭。
 
 ### 通知
 这里的通知并非系统通知，且不具备在您的设备通知栏中持久显示的特性，它本质上是通过对 Toast 进行修改实现的跨界面屏幕顶部提示条。
@@ -475,7 +476,7 @@ MessageDialog.show(MainActivity.this, "提示", "这个窗口附带自定义布�
         .setCustomView(customView);
 ```
 
-目前支持自定义子布局的有：消息对话框组件（MessageDialog）、底部菜单组件（BottomDialog）、输入框组件（InputDialog）、分享对话框（ShareDialog）和通知组件（Notification）
+目前支持自定义子布局的有：消息对话框组件（MessageDialog）、底部菜单组件（BottomMenu）、输入框组件（InputDialog）、分享对话框（ShareDialog）和通知组件（Notification）
 
 ### 自定义对话框
 Kongzue Dialog V3 提供了完全自定义对话框方便快速实现特殊效果的对话框样式。
@@ -681,6 +682,13 @@ limitations under the License.
 ```
 
 ## 更新日志：
+v3.1.4:
+- BottomMenu 新增标题字体控制 menuTitleInfo 和菜单字体控制 menuTextInfo，也可通过全局（DialogSettings）设置；
+- 新增模态模式开关 `DialogSettings.modalDialog`，关闭后对话框会以正常方式启动；
+- 再次优化内存泄漏问题，对 DialogHelper 的释放问题进行了改进；
+- 修复了 customDialog.getAlign() 空指针异常的问题；
+- 修复 ShareDialog 在华为设备上使用 Material 风格时的点击按钮无效问题；
+
 v3.1.3:
 - CustomDialog 新增 `setAlign(Align)` 方法，可设置显示在顶部、底部或默认位置；
 - InputDialog 支持多行内容输入，请通过 `.setInputInfo(new InputInfo().setMultipleLines(true))` 设置开启；
@@ -697,7 +705,7 @@ v3.1.2:
 - 修复了输入对话框偶发设置inputInfo空指针问题；
 
 v3.1.1:
-- 新增 DialogSettings.defaultCancelButtonText 可设置 BottomDialog 和 ShareDialog 默认“取消”按钮的文字；
+- 新增 DialogSettings.defaultCancelButtonText 可设置 BottomMenu 和 ShareDialog 默认“取消”按钮的文字；
 - 新增 DialogSettings.tipBackgroundResId 可设置 TipDialog 和 WaitDialog 的背景资源；
 - 新增 DialogSettings.tipTextInfo 可设置 TipDialog 和 WaitDialog 文字样式；
 - 修复 ShareDialog 可能存在的 Android 5- 版本崩溃问题；
