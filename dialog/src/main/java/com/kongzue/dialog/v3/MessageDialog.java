@@ -1,6 +1,5 @@
 package com.kongzue.dialog.v3;
 
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -11,7 +10,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -117,9 +115,9 @@ public class MessageDialog extends BaseDialog {
     public static MessageDialog show(@NonNull AppCompatActivity context, int titleResId, int messageResId) {
         synchronized (MessageDialog.class) {
             MessageDialog messageDialog = show(context,
-                                               context.getString(titleResId),
-                                               context.getString(messageResId),
-                                               null, null, null
+                    context.getString(titleResId),
+                    context.getString(messageResId),
+                    null, null, null
             );
             return messageDialog;
         }
@@ -135,9 +133,9 @@ public class MessageDialog extends BaseDialog {
     public static MessageDialog show(@NonNull AppCompatActivity context, int titleResId, int messageResId, int okButtonResId) {
         synchronized (MessageDialog.class) {
             MessageDialog messageDialog = show(context,
-                                               context.getString(titleResId),
-                                               context.getString(messageResId),
-                                               context.getString(okButtonResId)
+                    context.getString(titleResId),
+                    context.getString(messageResId),
+                    context.getString(okButtonResId)
                     , null, null
             );
             return messageDialog;
@@ -266,9 +264,9 @@ public class MessageDialog extends BaseDialog {
                         btnSelectOther.setBackgroundResource(R.drawable.button_menu_ios_center_dark);
                         btnSelectNegative.setBackgroundResource(R.drawable.button_dialog_ios_left_dark);
                     }
-                    if (backgroundResId!=-1){
+                    if (backgroundResId != -1) {
                         bkg.setBackgroundResource(backgroundResId);
-                    }else{
+                    } else {
                         if (DialogSettings.isUseBlur) {
                             bkg.post(new Runnable() {
                                 @Override
@@ -280,7 +278,7 @@ public class MessageDialog extends BaseDialog {
                                     boxRoot.addView(blurView, 0, params);
                                 }
                             });
-    
+                            
                             bkg.getViewTreeObserver().addOnGlobalLayoutListener(blurViewRefreshLayoutListener);
                         } else {
                             bkg.setBackgroundResource(bkgResId);
@@ -590,14 +588,14 @@ public class MessageDialog extends BaseDialog {
     private ViewTreeObserver.OnGlobalLayoutListener blurViewRefreshLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
         @Override
         public void onGlobalLayout() {
-            if (isShow){
-                if (bkg!=null && blurView!=null){
+            if (isShow) {
+                if (bkg != null && blurView != null) {
                     RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, bkg.getHeight());
                     blurView.setLayoutParams(params);
                     blurView.requestLayout();
                 }
-            }else{
-                if (bkg!=null) {
+            } else {
+                if (bkg != null) {
                     bkg.getViewTreeObserver().removeOnGlobalLayoutListener(blurViewRefreshLayoutListener);
                 }
             }

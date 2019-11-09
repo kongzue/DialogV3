@@ -117,6 +117,7 @@ public class MainActivity extends BaseActivity {
         DialogSettings.checkRenderscriptSupport(this);
         DialogSettings.DEBUGMODE = true;
         DialogSettings.isUseBlur = true;
+        DialogSettings.autoShowInputKeyboard = true;
         //DialogSettings.backgroundColor = Color.BLUE;
         //DialogSettings.titleTextInfo = new TextInfo().setFontSize(50);
         //DialogSettings.buttonPositiveTextInfo = new TextInfo().setFontColor(Color.GREEN);
@@ -418,18 +419,8 @@ public class MainActivity extends BaseActivity {
         btnWaitDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                WaitDialog.show(me, null);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                WaitDialog.dismiss(5000);
-                            }
-                        });
-                    }
-                }, 2000);
+                WaitDialog.show(me, "测试");
+                WaitDialog.dismiss(10000);
             }
         });
         

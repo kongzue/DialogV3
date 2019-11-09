@@ -117,7 +117,9 @@ DialogSettings.modalDialog = (boolean);                 //是否开启模态窗�
 DialogSettings.style = (DialogSettings.STYLE);          //全局主题风格，提供三种可选风格，STYLE_MATERIAL, STYLE_KONGZUE, STYLE_IOS
 DialogSettings.theme = (DialogSettings.THEME);          //全局对话框明暗风格，提供两种可选主题，LIGHT, DARK
 DialogSettings.tipTheme = (DialogSettings.THEME);       //全局提示框明暗风格，提供两种可选主题，LIGHT, DARK
-DialogSettings.titleTextInfo = (TextInfo);              //全局标题文字样式
+DialogSettings.titleTextInfo = (TextInfo);              //全局对话框标题文字样式
+DialogSettings.menuTitleInfo = (TextInfo);              //全局菜单标题文字样式
+DialogSettings.menuTextInfo = (TextInfo);               //全局菜单列表文字样式
 DialogSettings.contentTextInfo = (TextInfo);            //全局正文文字样式
 DialogSettings.buttonTextInfo = (TextInfo);             //全局默认按钮文字样式
 DialogSettings.buttonPositiveTextInfo = (TextInfo);     //全局焦点按钮文字样式（一般指确定按钮）
@@ -132,6 +134,7 @@ DialogSettings.dialogLifeCycleListener = (DialogLifeCycleListener);  //全局Dia
 DialogSettings.defaultCancelButtonText = (String);      //设置 BottomMenu 和 ShareDialog 默认“取消”按钮的文字
 DialogSettings.tipBackgroundResId = (drawableResId);    //设置 TipDialog 和 WaitDialog 的背景资源
 DialogSettings.tipTextInfo = (InputInfo);               //设置 TipDialog 和 WaitDialog 文字样式
+DialogSettings.autoShowInputKeyboard = (boolean);       //设置 InputDialog 是否自动弹出输入法
 
 //检查 Renderscript 兼容性，若设备不支持，DialogSettings.isUseBlur 会自动关闭；
 boolean renderscriptSupport = DialogSettings.checkRenderscriptSupport(context)
@@ -523,9 +526,9 @@ CustomDialog.show(MainActivity.this, customView, new CustomDialog.OnBindView() {
 customDialog.setFullScreen(true);
 
 //设置 CustomDialog 处于屏幕的位置
-CustomDialog.setAlign(CustomDialog.ALIGN.BOTTOM)        //从屏幕底端出现
-CustomDialog.setAlign(CustomDialog.ALIGN.TOP)           //从屏幕顶端出现
-CustomDialog.setAlign(CustomDialog.ALIGN.DEFAULT)       //从屏幕中部出现
+customDialog.setAlign(CustomDialog.ALIGN.BOTTOM)        //从屏幕底端出现
+customDialog.setAlign(CustomDialog.ALIGN.TOP)           //从屏幕顶端出现
+customDialog.setAlign(CustomDialog.ALIGN.DEFAULT)       //从屏幕中部出现
 ```
 ## 其他设置
 
@@ -682,6 +685,12 @@ limitations under the License.
 ```
 
 ## 更新日志：
+v3.1.5:
+- 新增 DialogSettings.autoShowInputKeyboard 设置开启时，InputDialog 将自动弹出输入法；
+- 修复 WaitDialog 等待对话框动画在切换至后台再切换至前台恢复显示后消失的问题；
+- 修复 BottomMenu 在屏内虚拟导航按键的设备上隐藏虚拟导航按键情况下使用时底部依然存在虚拟导航栏高度的问题；
+- 修复 Notification 在部分刘海屏设备上存在的顶部额外安全区高度空留问题；
+
 v3.1.4:
 - BottomMenu 新增标题字体控制 menuTitleInfo 和菜单字体控制 menuTextInfo，也可通过全局（DialogSettings）设置；
 - 新增模态模式开关 `DialogSettings.modalDialog`，关闭后对话框会以正常方式启动；

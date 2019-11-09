@@ -13,4 +13,7 @@
         <attr name="yRadius" format="dimension"/>
     </declare-styleable>
 
+    <declare-styleable name="CircularProgress">
+        <attr name="borderWidth" format="dimension" />
+    </declare-styleable>
 </resources>

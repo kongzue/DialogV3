@@ -5,8 +5,12 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.Display;
@@ -180,14 +184,14 @@ public class BottomMenu extends BaseDialog {
     @Override
     public void refreshView() {
         if (cancelButtonTextInfo == null) cancelButtonTextInfo = menuTextInfo;
-        if (menuTitleTextInfo == null) menuTitleTextInfo = DialogSettings.menuTitleInfo;
+        if (menuTitleTextInfo == null) menuTitleTextInfo = menuTitleInfo;
         if (menuTextInfo == null) menuTextInfo = DialogSettings.menuTextInfo;
         if (cancelButtonText == null) cancelButtonText = "取消";
         
         if (rootView != null) {
             btnCancel.setText(cancelButtonText);
-    
-            ((ViewGroup)boxBody.getParent()).setOnClickListener(new View.OnClickListener() {
+            
+            ((ViewGroup) boxBody.getParent()).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     doDismiss();
@@ -210,7 +214,7 @@ public class BottomMenu extends BaseDialog {
                         menuArrayAdapter = new NormalMenuArrayAdapter(context.get(), R.layout.item_bottom_menu_material, menuTextList);
                     }
                     listMenu.setAdapter(menuArrayAdapter);
-    
+                    
                     boxBody.setY(getRootHeight());
                     boxBody.setVisibility(View.VISIBLE);
                     boxBody.post(new Runnable() {
@@ -219,7 +223,7 @@ public class BottomMenu extends BaseDialog {
                             if (boxBody.getHeight() > getRootHeight() * 2 / 3) {
                                 boxBody.setY(boxBody.getHeight());
                                 boxBody.animate().setDuration(300).translationY(boxBody.getHeight() / 2);
-                            }else{
+                            } else {
                                 boxBody.animate().setDuration(300).translationY(0);
                             }
                         }
@@ -246,9 +250,18 @@ public class BottomMenu extends BaseDialog {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         Window window = dialog.get().getDialog().getWindow();
                         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
                         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                        dialog.get().getDialog().getWindow().setNavigationBarColor(Color.WHITE);
+                        window.setNavigationBarColor(Color.WHITE);
                         boxBody.setPadding(0, 0, 0, getNavigationBarHeight());
+                        
+                        //设置底部导航栏按钮暗色，无效，悬赏解决————
+                        View decorView = window.getDecorView();
+                        int vis = decorView.getSystemUiVisibility();
+                        vis |= View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
+                        vis |= android.view.WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS;
+                        vis |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+                        decorView.setSystemUiVisibility(vis);
                     }
                     break;
                 case STYLE_IOS:
@@ -697,8 +710,6 @@ public class BottomMenu extends BaseDialog {
         this.customAdapter = customAdapter;
         return this;
     }
-    
-    
     
     private float boxBodyOldY;
     private int step;

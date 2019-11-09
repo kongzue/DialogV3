@@ -62,6 +62,7 @@ public class TipDialog extends BaseDialog {
     
     private RelativeLayout boxBody;
     private RelativeLayout boxBlur;
+    private RelativeLayout boxProgress;
     private ProgressView progress;
     private RelativeLayout boxTip;
     private TextView txtInfo;
@@ -231,6 +232,7 @@ public class TipDialog extends BaseDialog {
         if (boxBlur != null) boxBlur.removeAllViews();
         boxBody = rootView.findViewById(R.id.box_body);
         boxBlur = rootView.findViewById(R.id.box_blur);
+        boxProgress = rootView.findViewById(R.id.box_progress);
         progress = rootView.findViewById(R.id.progress);
         boxTip = rootView.findViewById(R.id.box_tip);
         txtInfo = rootView.findViewById(R.id.txt_info);
@@ -267,10 +269,10 @@ public class TipDialog extends BaseDialog {
                     bkgResId = R.drawable.rect_light;
                     int darkColor = Color.rgb(0, 0, 0);
                     blurFrontColor = Color.argb(blurAlpha, 255, 255, 255);
-                    progress.setStrokeColors(new int[]{darkColor});
+                    progress.setup(R.color.black);
                     txtInfo.setTextColor(darkColor);
                     if (type != null) {
-                        progress.setVisibility(View.GONE);
+                        boxProgress.setVisibility(View.GONE);
                         boxTip.setVisibility(View.VISIBLE);
                         switch (type) {
                             case OTHER:
@@ -287,7 +289,7 @@ public class TipDialog extends BaseDialog {
                                 break;
                         }
                     } else {
-                        progress.setVisibility(View.VISIBLE);
+                        boxProgress.setVisibility(View.VISIBLE);
                         boxTip.setVisibility(View.GONE);
                     }
                     break;
@@ -295,10 +297,10 @@ public class TipDialog extends BaseDialog {
                     bkgResId = R.drawable.rect_dark;
                     int lightColor = Color.rgb(255, 255, 255);
                     blurFrontColor = Color.argb(blurAlpha, 0, 0, 0);
-                    progress.setStrokeColors(new int[]{lightColor});
+                    progress.setup(R.color.white);
                     txtInfo.setTextColor(lightColor);
                     if (type != null) {
-                        progress.setVisibility(View.GONE);
+                        boxProgress.setVisibility(View.GONE);
                         boxTip.setVisibility(View.VISIBLE);
                         switch (type) {
                             case OTHER:
@@ -315,7 +317,7 @@ public class TipDialog extends BaseDialog {
                                 break;
                         }
                     } else {
-                        progress.setVisibility(View.VISIBLE);
+                        boxProgress.setVisibility(View.VISIBLE);
                         boxTip.setVisibility(View.GONE);
                     }
                     break;
@@ -361,7 +363,7 @@ public class TipDialog extends BaseDialog {
             }
             
             if (customView != null) {
-                progress.setVisibility(View.GONE);
+                boxProgress.setVisibility(View.GONE);
                 boxTip.setBackground(null);
                 boxTip.setVisibility(View.VISIBLE);
                 boxTip.addView(customView);

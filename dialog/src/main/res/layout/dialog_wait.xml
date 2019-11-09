@@ -26,10 +26,19 @@
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
-            <com.kongzue.dialog.util.view.ProgressView
-                android:id="@+id/progress"
+            <RelativeLayout
+                android:id="@+id/box_progress"
                 android:layout_width="65dp"
-                android:layout_height="65dp" />
+                android:layout_height="65dp">
+
+                <com.kongzue.dialog.util.view.ProgressView
+                    android:id="@+id/progress"
+                    app:borderWidth ="1.5dp"
+                    android:layout_centerInParent="true"
+                    android:layout_width="55dp"
+                    android:layout_height="55dp" />
+
+            </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/box_tip"

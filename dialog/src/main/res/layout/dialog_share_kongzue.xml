@@ -8,22 +8,24 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@color/white">
+        android:background="@color/menuSplitSpaceKongzue">
 
         <TextView
             android:id="@+id/txt_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="25dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginRight="25dp"
-            android:layout_marginBottom="15dp"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:background="@color/white"
             android:gravity="center_horizontal"
             android:text="分享"
             android:textColor="@color/black"
             android:textSize="14dp"/>
 
         <RelativeLayout
+            android:background="@color/white"
             android:id="@+id/box_custom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -39,6 +41,7 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/white"
             android:layout_weight="1">
 
             <com.kongzue.dialog.util.view.TableLayout
@@ -52,6 +55,7 @@
             android:id="@+id/box_cancel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/white"
             android:orientation="vertical">
 
             <ImageView
@@ -81,6 +85,11 @@
                 android:text=""
                 android:textColor="@color/dark"
                 android:textSize="16dp" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/dialogSplitIOSLight" />
 
         </LinearLayout>
 

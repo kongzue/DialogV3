@@ -2,6 +2,7 @@ package com.kongzue.dialog.v3;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Handler;
@@ -13,6 +14,8 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowInsets;
 import android.view.WindowManager;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
@@ -25,6 +28,7 @@ import com.kongzue.dialog.R;
 import com.kongzue.dialog.interfaces.OnDismissListener;
 import com.kongzue.dialog.interfaces.OnNotificationClickListener;
 import com.kongzue.dialog.util.DialogSettings;
+import com.kongzue.dialog.util.NotchUtil;
 import com.kongzue.dialog.util.view.NotifyToastShadowView;
 import com.kongzue.dialog.util.SafelyHandlerWrapper;
 import com.kongzue.dialog.util.TextInfo;
@@ -529,7 +533,7 @@ public class Notification {
                 boxCustom.setVisibility(View.VISIBLE);
                 boxCustom.addView(customView);
                 rootView.setDispatchTouchEvent(false);
-                if (onBindView!=null)onBindView.onBind(this,customView);
+                if (onBindView != null) onBindView.onBind(this, customView);
             } else {
                 boxCustom.setVisibility(View.GONE);
                 rootView.setDispatchTouchEvent(true);
@@ -549,6 +553,16 @@ public class Notification {
     }
     
     private int getStatusBarHeight() {
+        if (context.get() instanceof  Activity){
+            Activity activity = (Activity) context.get();
+            boolean isHasNotch = NotchUtil.hasNotchInScreen(activity);
+            if (isHasNotch){
+                if (boxBody!=null){
+                    boxBody.setBackgroundColor(Color.TRANSPARENT);
+                }
+                return 0;
+            }
+        }
         try {
             Class<?> c = Class.forName("com.android.internal.R$dimen");
             Object obj = c.newInstance();
@@ -575,7 +589,7 @@ public class Notification {
             toast.setDuration(durationTime.ordinal());
             toast.setView(view);
             toast.getView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-            
+    
             view.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
                 @Override
                 public void onViewAttachedToWindow(View v) {
@@ -817,11 +831,11 @@ public class Notification {
         return this;
     }
     
-    private  OnBindView onBindView;
+    private OnBindView onBindView;
     
     public Notification setCustomView(int customViewLayoutId, OnBindView onBindView) {
         customView = LayoutInflater.from(context.get()).inflate(customViewLayoutId, null);
-        this.onBindView=onBindView;
+        this.onBindView = onBindView;
         refreshView();
         return this;
     }

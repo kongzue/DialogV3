@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:max_attr="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/box_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/menuSplitSpaceKongzue"
     android:orientation="vertical">
 
     <com.kongzue.dialog.util.view.MaxHeightLayout
@@ -20,10 +21,11 @@
                 android:id="@+id/txt_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginBottom="10dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:background="@color/white"
                 android:gravity="center_horizontal"
                 android:textColor="@color/tipTextColor"
                 android:textSize="12dp"
@@ -34,6 +36,7 @@
                 android:id="@+id/box_custom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/white"
                 android:layout_marginBottom="10dp"
                 android:visibility="gone"></RelativeLayout>
 
@@ -47,6 +50,7 @@
                 android:id="@+id/list_menu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/white"
                 android:layout_weight="1"
                 android:divider="@color/dialogSplitIOSLight"
                 android:dividerHeight="1px"></ListView>
@@ -55,6 +59,7 @@
                 android:id="@+id/box_cancel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/white"
                 android:orientation="vertical">
 
                 <ImageView
@@ -84,6 +89,11 @@
                     android:text=""
                     android:textColor="@color/dark"
                     android:textSize="16dp" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/dialogSplitIOSLight" />
 
             </LinearLayout>
 
