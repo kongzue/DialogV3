@@ -2,10 +2,10 @@
 献给要求安卓照着苹果设计稿做开发的产品们（手动滑稽
 
 <a href="https://github.com/kongzue/dialogV3/">
-<img src="https://img.shields.io/badge/Kongzue%20Dialog-3.1.4-green.svg" alt="Kongzue Dialog">
+<img src="https://img.shields.io/badge/Kongzue%20Dialog-3.1.5-green.svg" alt="Kongzue Dialog">
 </a> 
-<a href="https://bintray.com/myzchh/maven/dialogV3/3.1.4/link">
-<img src="https://img.shields.io/badge/Maven-3.1.4-blue.svg" alt="Maven">
+<a href="https://bintray.com/myzchh/maven/dialogV3/3.1.5/link">
+<img src="https://img.shields.io/badge/Maven-3.1.5-blue.svg" alt="Maven">
 </a> 
 <a href="http://www.apache.org/licenses/LICENSE-2.0">
 <img src="https://img.shields.io/badge/License-Apache%202.0-red.svg" alt="License">
@@ -40,7 +40,7 @@ Kongzue Dialog V3 依然会像第二代一样提供多种主题风格选择，�
 我们的组件也会提供许许多多的接口供您自定义对话框的每一点细节，方便而快捷，迅速构建您的程序。
 
 #### 4，模态化&快速创建
-Kongzue Dialog V3 支持模态化窗口模式，即即便从代码一次执行显示多个对话框，实际也会再上一个对话框消失后再显示下一个，以避免对话框叠加造成的混乱情况发生。
+Kongzue Dialog V3 支持模态化窗口模式，启用模态化设置项后，即便从代码一次执行显示多个对话框，实际也会在上一个对话框消失后再显示下一个，以避免对话框叠加造成的混乱情况发生。
 
 另外 Kongzue Dialog 不强制您必须使用 Builder 等方式创建，且为了避免额外的代码量，所有组件均提供了可灵活使用的 show(...) 构造方法，因此只需要输入组件名称，按一下 “.” 按键，即可快速根据提示创建出一个对话框。
 
@@ -48,9 +48,10 @@ Kongzue Dialog V3 支持模态化窗口模式，即即便从代码一次执行�
 
 使用 AlertDialog：
 ```
-android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);         //需要先创建Builder
+//需要先创建Builder
+android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);         
 builder.setTitle(R.string.error_title);
-builder.setCancelable(false);                                                                                                   //每次都需要指定的设置
+builder.setCancelable(false);   //每次都需要指定的设置                                                                                                
 builder.setMessage(R.string.error_not_install_tip);
 builder.setPositiveButton(context.getString(R.string.dialog_iknow_button), new DialogInterface.OnClickListener() {                  
     @Override
@@ -59,19 +60,22 @@ builder.setPositiveButton(context.getString(R.string.dialog_iknow_button), new D
     }
 });
 builder.setNegativeButton(context.getString(R.string.cancel), null);
-builder.show();                                                                                                                 //不要忘记.show()
+//不要忘记.show()
+builder.show();                                                                                                                 
 ```
 
 使用 Kongzue Dialog V3：
 ```
-MessageDialog.show(MainActivity.this, R.string.error_title, R.string.error_not_install_tip, R.string.dialog_iknow_button, R.string.cancel)     //一次性完成所有赋值操作
-        .setOkButton(new OnDialogButtonClickListener() {                                                                        //仅需要对需要处理的按钮进行操作
+//一次性完成所有赋值操作
+MessageDialog.show(MainActivity.this, R.string.error_title, R.string.error_not_install_tip, R.string.dialog_iknow_button, R.string.cancel)     
+        .setOkButton(new OnDialogButtonClickListener() {  //仅需要对需要处理的按钮进行操作                                                                     
             @Override
             public boolean onClick(BaseDialog baseDialog, View v) {
                 //处理确定按钮事务
-                return false;                                                                                                   //可以通过 return 决定点击按钮是否默认自动关闭对话框
+                return false;    //可以通过 return 决定点击按钮是否默认自动关闭对话框                                                                                               
             }
-        });                                                                                                                     //很多设置可通过全局进行设置，不需要每次都指定
+        }); 
+//很多设置可通过全局进行设置，不需要每次都指定                                                                                                                    
 ```
 
 ## Demo
@@ -86,14 +90,14 @@ Maven仓库：
 <dependency>
   <groupId>com.kongzue.dialog_v3</groupId>
   <artifactId>dialog</artifactId>
-  <version>3.1.4</version>
+  <version>3.1.5</version>
   <type>pom</type>
 </dependency>
 ```
 Gradle：
 在dependencies{}中添加引用：
 ```
-implementation 'com.kongzue.dialog_v3:dialog:3.1.4'
+implementation 'com.kongzue.dialog_v3:dialog:3.1.5'
 ```
 
 从 Kongzue Dialog V2 升级至 Kongzue Dialog V3，请参考 [Kongzue Dialog V2升级注意事项](kongzue_dialog_v2_upto_v3.md)
