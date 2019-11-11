@@ -15,6 +15,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.View;
+import android.view.WindowInsets;
 import android.widget.TextView;
 
 import com.kongzue.dialog.R;
@@ -127,9 +128,9 @@ public abstract class BaseDialog {
             }
         };
         dialogList.add(this);
-        if (!DialogSettings.modalDialog){
+        if (!DialogSettings.modalDialog) {
             showNow();
-        }else{
+        } else {
             if (baseDialog instanceof TipDialog) {
                 showNow();
             } else {
@@ -307,7 +308,13 @@ public abstract class BaseDialog {
     }
     
     protected int getNavigationBarHeight() {
-        int result = 0;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            WindowInsets windowInsets = null;
+            windowInsets = context.get().getWindow().getDecorView().getRootView().getRootWindowInsets();
+            if (windowInsets != null) {
+                return windowInsets.getStableInsetBottom();
+            }
+        }
         int resourceId = 0;
         int rid = context.get().getResources().getIdentifier("config_showNavigationBar", "bool", "android");
         if (rid != 0) {

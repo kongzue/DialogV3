@@ -43,6 +43,8 @@ public class DialogHelper extends DialogFragment {
     private PreviewOnShowListener onShowListener;
     private AlertDialog materialDialog;
     
+    private WeakReference<BaseDialog> parent;
+    
     private int layoutId;
     private View rootView;
     private String parentId;
@@ -89,8 +91,8 @@ public class DialogHelper extends DialogFragment {
     }
     
     private void refreshDialogPosition(Dialog dialog) {
-        if (dialog != null) {
-            if (parent instanceof BottomMenu || parent instanceof ShareDialog) {
+        if (dialog != null && parent != null) {
+            if (parent.get() instanceof BottomMenu || parent.get() instanceof ShareDialog) {
                 dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
                 Window window = dialog.getWindow();
                 window.getDecorView().setPadding(0, 0, 0, 0);
@@ -103,8 +105,8 @@ public class DialogHelper extends DialogFragment {
                 window.setWindowAnimations(R.style.bottomMenuAnim);
                 window.setAttributes(lp);
             }
-            if (parent instanceof CustomDialog) {
-                CustomDialog customDialog = (CustomDialog) parent;
+            if (parent.get() instanceof CustomDialog) {
+                CustomDialog customDialog = (CustomDialog) parent.get();
                 
                 if (customDialog.isFullScreen()) {
                     dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -179,7 +181,6 @@ public class DialogHelper extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         if (savedInstanceState != null) {
-            privateNotDismissFlag = false;
             layoutId = savedInstanceState.getInt("layoutId");
             parentId = savedInstanceState.getString("parentId");
             
@@ -189,13 +190,10 @@ public class DialogHelper extends DialogFragment {
     
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        privateNotDismissFlag = true;
         outState.putInt("layoutId", layoutId);
         outState.putString("parentId", parentId);
         super.onSaveInstanceState(outState);
     }
-    
-    private BaseDialog parent;
     
     //找爸爸行动
     private void findMyParentAndBindView(View rootView) {
@@ -205,11 +203,11 @@ public class DialogHelper extends DialogFragment {
         for (BaseDialog baseDialog : cache) {
             baseDialog.context = new WeakReference<>((AppCompatActivity) getContext());
             if (baseDialog.toString().equals(parentId)) {
-                parent = baseDialog;
-                parent.dialog = new WeakReference<>(this);
+                parent = new WeakReference<>(baseDialog);
+                parent.get().dialog = new WeakReference<>(this);
                 refreshDialogPosition(getDialog());
-                parent.bindView(rootView);
-                parent.initDefaultSettings();
+                parent.get().bindView(rootView);
+                parent.get().initDefaultSettings();
             }
         }
     }
@@ -223,26 +221,27 @@ public class DialogHelper extends DialogFragment {
             baseDialog.context = new WeakReference<>((AppCompatActivity) getContext());
             if (baseDialog.toString().equals(parentId)) {
                 flag = true;
-                parent = baseDialog;
-                parent.dialog = new WeakReference<>(this);
+                parent = new WeakReference<>(baseDialog);
+                parent.get().dialog = new WeakReference<>(this);
                 refreshDialogPosition(getDialog());
             }
         }
         return flag;
     }
     
-    private boolean privateNotDismissFlag;          //此标记用于标记Dialog是重启行为而不是真正需要关闭
-    
     @Override
     public void onDismiss(DialogInterface dialog) {
-        if (parent == null) {
+        if (parent == null || parent.get() == null) {
             if (!findMyParent()) {
                 return;
             }
         }
-        if (parent.dismissEvent != null) parent.dismissEvent.onDismiss();
+        if (parent != null && parent.get().dismissEvent != null) {
+            parent.get().dismissEvent.onDismiss();
+        }
         super.onDismiss(dialog);
-        privateNotDismissFlag = false;
+        parent.clear();
+        parent = null;
     }
     
     public int getLayoutId() {
@@ -251,7 +250,7 @@ public class DialogHelper extends DialogFragment {
     
     public DialogHelper setLayoutId(BaseDialog baseDialog, int layoutId) {
         this.layoutId = layoutId;
-        this.parent = baseDialog;
+        this.parent = new WeakReference<>(baseDialog);
         this.parentId = baseDialog.toString();
         return this;
     }
@@ -290,19 +289,21 @@ public class DialogHelper extends DialogFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (parent == null) {
+        if (parent == null || parent.get() == null) {
             if (!findMyParent()) {
                 return;
             }
         }
-        if (parent instanceof TipDialog) {
-            if (parent.dismissedFlag) {
-                if (getDialog() != null) if (getDialog().isShowing()) getDialog().dismiss();
-                if (parent.dismissEvent != null) parent.dismissEvent.onDismiss();
-            }
-        } else {
-            if (parent.dismissedFlag) {
-                dismiss();
+        if (parent != null) {
+            if (parent.get() instanceof TipDialog) {
+                if (parent.get().dismissedFlag) {
+                    if (getDialog() != null) if (getDialog().isShowing()) getDialog().dismiss();
+                    if (parent.get().dismissEvent != null) parent.get().dismissEvent.onDismiss();
+                }
+            } else {
+                if (parent.get().dismissedFlag) {
+                    dismiss();
+                }
             }
         }
     }
@@ -315,5 +316,4 @@ public class DialogHelper extends DialogFragment {
     public interface PreviewOnShowListener {
         void onShow(Dialog dialog);
     }
-    
 }

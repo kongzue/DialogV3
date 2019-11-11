@@ -1,5 +1,6 @@
 package com.kongzue.dialog.v3;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -10,11 +11,13 @@ import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.os.IBinder;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -161,6 +164,7 @@ public class InputDialog extends MessageDialog {
     }
     
     private LinearLayout materialCustomViewBox;
+    private IBinder windowToken;
     
     @Override
     public void refreshView() {
@@ -272,6 +276,7 @@ public class InputDialog extends MessageDialog {
                 btnSelectPositive.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        hideInputKeyboard();
                         if (onOkButtonClickListener != null) {
                             if (!onOkButtonClickListener.onClick(InputDialog.this, v, getInputText())) {
                                 doDismiss();
@@ -286,6 +291,7 @@ public class InputDialog extends MessageDialog {
                 btnSelectNegative.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        hideInputKeyboard();
                         if (onCancelButtonClickListener != null) {
                             if (!onCancelButtonClickListener.onClick(InputDialog.this, v, getInputText())) {
                                 doDismiss();
@@ -300,6 +306,7 @@ public class InputDialog extends MessageDialog {
                 btnSelectOther.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        hideInputKeyboard();
                         if (onOtherButtonClickListener != null) {
                             if (!onOtherButtonClickListener.onClick(InputDialog.this, v, getInputText())) {
                                 doDismiss();
@@ -310,13 +317,31 @@ public class InputDialog extends MessageDialog {
                     }
                 });
             }
+            if (txtInput != null) {
+                txtInput.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (txtInput != null) {
+                            if (DialogSettings.autoShowInputKeyboard && txtInput.getVisibility() == View.VISIBLE) {
+                                txtInput.setFocusable(true);
+                                txtInput.setFocusableInTouchMode(true);
+                                txtInput.requestFocus();
+                                windowToken = txtInput.getWindowToken();
+                                InputMethodManager imm = (InputMethodManager) context.get().getSystemService(Context.INPUT_METHOD_SERVICE);
+                                imm.showSoftInput(txtInput, InputMethodManager.SHOW_FORCED);
+                            }
+                        }
+                    }
+                }, 100);
+                
+            }
         }
         refreshTextViews();
     }
     
     @Override
     protected void refreshTextViews() {
-        log(txtInput==null);
+        log(txtInput == null);
         super.refreshTextViews();
         if (txtInput != null) {
             txtInput.setText(inputText);
@@ -338,6 +363,13 @@ public class InputDialog extends MessageDialog {
                 if (inputInfo.getTextInfo() != null)
                     useTextInfo(txtInput, inputInfo.getTextInfo());
             }
+        }
+    }
+    
+    public void hideInputKeyboard() {
+        if (windowToken != null) {
+            InputMethodManager imm = (InputMethodManager) context.get().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(windowToken, 0);
         }
     }
     

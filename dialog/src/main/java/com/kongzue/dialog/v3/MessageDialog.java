@@ -264,9 +264,9 @@ public class MessageDialog extends BaseDialog {
                         btnSelectOther.setBackgroundResource(R.drawable.button_menu_ios_center_dark);
                         btnSelectNegative.setBackgroundResource(R.drawable.button_dialog_ios_left_dark);
                     }
-                    if (backgroundResId!=-1){
+                    if (backgroundResId != -1) {
                         bkg.setBackgroundResource(backgroundResId);
-                    }else{
+                    } else {
                         if (DialogSettings.isUseBlur) {
                             bkg.post(new Runnable() {
                                 @Override
@@ -588,14 +588,14 @@ public class MessageDialog extends BaseDialog {
     private ViewTreeObserver.OnGlobalLayoutListener blurViewRefreshLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
         @Override
         public void onGlobalLayout() {
-            if (isShow){
-                if (bkg!=null && blurView!=null){
+            if (isShow) {
+                if (bkg != null && blurView != null) {
                     RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, bkg.getHeight());
                     blurView.setLayoutParams(params);
                     blurView.requestLayout();
                 }
-            }else{
-                if (bkg!=null) {
+            } else {
+                if (bkg != null) {
                     bkg.getViewTreeObserver().removeOnGlobalLayoutListener(blurViewRefreshLayoutListener);
                 }
             }
