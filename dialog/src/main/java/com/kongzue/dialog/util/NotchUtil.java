@@ -20,30 +20,32 @@ public class NotchUtil {
     public static boolean hasNotchInScreen(Activity activity) {
         
         // android  P 以上有标准 API 来判断是否有刘海屏
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            DisplayCutout displayCutout = activity.getWindow().getDecorView().getRootWindowInsets().getDisplayCutout();
-            if (displayCutout != null) {
-                // 说明有刘海屏
-                return true;
-            }
-        } else {
-            // 通过其他方式判断是否有刘海屏  目前官方提供有开发文档的就 小米，vivo，华为（荣耀），oppo
-            String manufacturer = Build.MANUFACTURER;
-            
-            if (isEmpty(manufacturer)) {
-                return false;
-            } else if (manufacturer.equalsIgnoreCase("HUAWEI")) {
-                return hasNotchHw(activity);
-            } else if (manufacturer.equalsIgnoreCase("xiaomi")) {
-                return hasNotchXiaoMi(activity);
-            } else if (manufacturer.equalsIgnoreCase("oppo")) {
-                return hasNotchOPPO(activity);
-            } else if (manufacturer.equalsIgnoreCase("vivo")) {
-                return hasNotchVIVO(activity);
+        try{
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                DisplayCutout displayCutout = activity.getWindow().getDecorView().getRootWindowInsets().getDisplayCutout();
+                if (displayCutout != null) {
+                    // 说明有刘海屏
+                    return true;
+                }
             } else {
-                return false;
+                // 通过其他方式判断是否有刘海屏  目前官方提供有开发文档的就 小米，vivo，华为（荣耀），oppo
+                String manufacturer = Build.MANUFACTURER;
+        
+                if (isEmpty(manufacturer)) {
+                    return false;
+                } else if (manufacturer.equalsIgnoreCase("HUAWEI")) {
+                    return hasNotchHw(activity);
+                } else if (manufacturer.equalsIgnoreCase("xiaomi")) {
+                    return hasNotchXiaoMi(activity);
+                } else if (manufacturer.equalsIgnoreCase("oppo")) {
+                    return hasNotchOPPO(activity);
+                } else if (manufacturer.equalsIgnoreCase("vivo")) {
+                    return hasNotchVIVO(activity);
+                } else {
+                    return false;
+                }
             }
-        }
+        }catch (Exception e){}
         return false;
     }
     

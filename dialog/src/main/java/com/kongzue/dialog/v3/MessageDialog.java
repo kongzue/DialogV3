@@ -22,6 +22,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kongzue.dialog.R;
+import com.kongzue.dialog.interfaces.OnBackClickListener;
 import com.kongzue.dialog.interfaces.OnDialogButtonClickListener;
 import com.kongzue.dialog.interfaces.OnShowListener;
 import com.kongzue.dialog.interfaces.OnDismissListener;
@@ -50,9 +51,9 @@ public class MessageDialog extends BaseDialog {
     
     protected int buttonOrientation;
     
-    private OnDialogButtonClickListener onOkButtonClickListener;
-    private OnDialogButtonClickListener onCancelButtonClickListener;
-    private OnDialogButtonClickListener onOtherButtonClickListener;
+    protected OnDialogButtonClickListener onOkButtonClickListener;
+    protected OnDialogButtonClickListener onCancelButtonClickListener;
+    protected OnDialogButtonClickListener onOtherButtonClickListener;
     
     protected Drawable okButtonDrawable;
     protected Drawable cancelButtonDrawable;
@@ -612,6 +613,7 @@ public class MessageDialog extends BaseDialog {
         useTextInfo(txtDialogTip, messageTextInfo);
         useTextInfo(btnSelectNegative, buttonTextInfo);
         useTextInfo(btnSelectOther, buttonTextInfo);
+        useTextInfo(btnSelectPositive, buttonTextInfo);
         useTextInfo(btnSelectPositive, buttonPositiveTextInfo);
     }
     
@@ -1008,5 +1010,14 @@ public class MessageDialog extends BaseDialog {
     
     public String toString() {
         return getClass().getSimpleName() + "@" + Integer.toHexString(hashCode());
+    }
+    
+    public OnBackClickListener getOnBackClickListener() {
+        return onBackClickListener;
+    }
+    
+    public MessageDialog setOnBackClickListener(OnBackClickListener onBackClickListener) {
+        this.onBackClickListener = onBackClickListener;
+        return this;
     }
 }

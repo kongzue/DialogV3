@@ -1,6 +1,7 @@
 package com.kongzue.dialog.util;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.os.Build;
@@ -13,11 +14,13 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowInsets;
 import android.widget.TextView;
 
 import com.kongzue.dialog.R;
+import com.kongzue.dialog.interfaces.OnBackClickListener;
 import com.kongzue.dialog.interfaces.OnShowListener;
 import com.kongzue.dialog.interfaces.OnDismissListener;
 import com.kongzue.dialog.v3.BottomMenu;
@@ -78,6 +81,7 @@ public abstract class BaseDialog {
     protected OnDismissListener onDismissListener;
     protected OnDismissListener dismissEvent;
     protected OnShowListener onShowListener;
+    protected OnBackClickListener onBackClickListener;
     
     public void log(Object o) {
         if (DialogSettings.DEBUGMODE) Log.i(">>>", o.toString());
@@ -192,6 +196,18 @@ public abstract class BaseDialog {
             public void onShow(Dialog dialog) {
                 if (DialogSettings.dialogLifeCycleListener != null)
                     DialogSettings.dialogLifeCycleListener.onShow(BaseDialog.this);
+                dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
+                    @Override
+                    public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                        boolean flag = false;
+                        if (onBackClickListener != null) {
+                            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                return flag = onBackClickListener.onBackClick();
+                            }
+                        }
+                        return flag;
+                    }
+                });
             }
         });
         if (DialogSettings.systemDialogStyle == 0 && style == DialogSettings.STYLE.STYLE_IOS && !(baseDialog instanceof TipDialog) && !(baseDialog instanceof BottomMenu) && !(baseDialog instanceof ShareDialog))

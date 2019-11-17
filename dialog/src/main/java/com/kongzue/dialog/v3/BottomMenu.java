@@ -30,6 +30,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kongzue.dialog.R;
+import com.kongzue.dialog.interfaces.OnBackClickListener;
 import com.kongzue.dialog.interfaces.OnShowListener;
 import com.kongzue.dialog.interfaces.OnDismissListener;
 import com.kongzue.dialog.interfaces.OnMenuItemClickListener;
@@ -823,5 +824,24 @@ public class BottomMenu extends BaseDialog {
     
     public String toString() {
         return getClass().getSimpleName() + "@" + Integer.toHexString(hashCode());
+    }
+    
+    public OnBackClickListener getOnBackClickListener() {
+        return onBackClickListener;
+    }
+    
+    public BottomMenu setOnBackClickListener(OnBackClickListener onBackClickListener) {
+        this.onBackClickListener = onBackClickListener;
+        return this;
+    }
+    
+    public boolean getCancelable() {
+        return cancelable == BOOLEAN.TRUE;
+    }
+    
+    public BottomMenu setCancelable(boolean enable) {
+        this.cancelable = enable ? BOOLEAN.TRUE : BOOLEAN.FALSE;
+        if (dialog != null) dialog.get().setCancelable(cancelable == BOOLEAN.TRUE);
+        return this;
     }
 }

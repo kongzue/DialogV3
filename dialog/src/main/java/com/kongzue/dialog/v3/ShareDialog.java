@@ -24,6 +24,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kongzue.dialog.R;
+import com.kongzue.dialog.interfaces.OnBackClickListener;
 import com.kongzue.dialog.interfaces.OnDismissListener;
 import com.kongzue.dialog.interfaces.OnShowListener;
 import com.kongzue.dialog.util.BaseDialog;
@@ -311,6 +312,8 @@ public class ShareDialog extends BaseDialog {
                             imgIcon.setImageBitmap(item.getIcon());
                             txtLabel.setText(item.getText());
                             
+                            useTextInfo(txtLabel, itemTextInfo);
+                            
                             final int index = i;
                             itemView.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -381,7 +384,14 @@ public class ShareDialog extends BaseDialog {
             } else {
                 boxCustom.setVisibility(View.GONE);
             }
+    
+            refreshTextViews();
         }
+    }
+    
+    protected void refreshTextViews() {
+        useTextInfo(txtTitle, titleTextInfo);
+        useTextInfo(btnCancel, cancelButtonTextInfo);
     }
     
     private float boxBodyOldY;
@@ -722,5 +732,14 @@ public class ShareDialog extends BaseDialog {
     
     public String toString() {
         return getClass().getSimpleName() + "@" + Integer.toHexString(hashCode());
+    }
+    
+    public OnBackClickListener getOnBackClickListener() {
+        return onBackClickListener;
+    }
+    
+    public ShareDialog setOnBackClickListener(OnBackClickListener onBackClickListener) {
+        this.onBackClickListener = onBackClickListener;
+        return this;
     }
 }
