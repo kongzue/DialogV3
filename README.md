@@ -2,10 +2,10 @@
 献给要求安卓照着苹果设计稿做开发的产品们（手动滑稽
 
 <a href="https://github.com/kongzue/dialogV3/">
-<img src="https://img.shields.io/badge/Kongzue%20Dialog-3.1.5-green.svg" alt="Kongzue Dialog">
+<img src="https://img.shields.io/badge/Kongzue%20Dialog-3.1.6-green.svg" alt="Kongzue Dialog">
 </a> 
-<a href="https://bintray.com/myzchh/maven/dialogV3/3.1.5/link">
-<img src="https://img.shields.io/badge/Maven-3.1.5-blue.svg" alt="Maven">
+<a href="https://bintray.com/myzchh/maven/dialogV3/3.1.6/link">
+<img src="https://img.shields.io/badge/Maven-3.1.6-blue.svg" alt="Maven">
 </a> 
 <a href="http://www.apache.org/licenses/LICENSE-2.0">
 <img src="https://img.shields.io/badge/License-Apache%202.0-red.svg" alt="License">
@@ -90,14 +90,14 @@ Maven仓库：
 <dependency>
   <groupId>com.kongzue.dialog_v3</groupId>
   <artifactId>dialog</artifactId>
-  <version>3.1.5</version>
+  <version>3.1.6</version>
   <type>pom</type>
 </dependency>
 ```
 Gradle：
 在dependencies{}中添加引用：
 ```
-implementation 'com.kongzue.dialog_v3:dialog:3.1.5'
+implementation 'com.kongzue.dialog_v3:dialog:3.1.6'
 ```
 
 从 Kongzue Dialog V2 升级至 Kongzue Dialog V3，请参考 [Kongzue Dialog V2升级注意事项](kongzue_dialog_v2_upto_v3.md)
@@ -108,7 +108,7 @@ implementation 'com.kongzue.dialog_v3:dialog:3.1.5'
 
 在dependencies{}中添加引用：
 ```
-implementation 'com.kongzue.dialog_v3x:dialog:3.1.5'
+implementation 'com.kongzue.dialog_v3x:dialog:3.1.5'        //将尽快更新至3.1.6
 ```
 
 ## 全局配置
@@ -294,7 +294,6 @@ InputDialog.show(MainActivity.this, "输入对话框", "请输入6位密码", "�
         )
 ;
 ```
-
 备注：TextInfo（com.kongzue.dialog.util.TextInfo）类提供了基本的文字样式控制，InputInfo（com.kongzue.dialog.util.InputInfo）类提供了基础的输入文字类型控制。
 
 ### 等待和提示对话框
@@ -396,6 +395,30 @@ BottomMenu.show(MainActivity.this, baseAdapter, new OnMenuItemClickListener() {
 ⚠ 特别说明：
 
 Material 风格的 BottomMenu 默认不支持“取消”按钮，按照设计规范，使用下滑手势关闭。
+
+### 全屏对话框
+Kongzue Dialog V3 提供了全屏对话框样式，这种对话框主体采用自定义布局，启动后会占据全屏，可设置标题和标题左右两个按钮。
+
+![Kongzue Dialog V3 自定义对话框](https://github.com/kongzue/Res/raw/master/app/src/main/res/mipmap-xxxhdpi/img_dialog_v3_fullscreen.png)
+
+使用以下代码创建全屏对话框：
+```
+FullScreenDialog
+        .show(MainActivity.this, R.layout.layout_full_login, new FullScreenDialog.OnBindView() {
+            @Override
+            public void onBind(FullScreenDialog dialog, View rootView) {
+                boxUserName = rootView.findViewById(R.id.box_userName);
+                editUserName = rootView.findViewById(R.id.edit_userName);
+                boxPassword = rootView.findViewById(R.id.box_password);
+                editPassword = rootView.findViewById(R.id.edit_password);
+            }
+        })
+        .setOkButton("下一步", nextStepListener)
+        .setCancelButton("取消")
+        .setTitle("登录")
+;
+```
+其中第二个参数为自定义的布局资源 id，第三个参数为布局绑定回调，其余方法与其他 Dialog 一致。
 
 ### 通知
 这里的通知并非系统通知，且不具备在您的设备通知栏中持久显示的特性，它本质上是通过对 Toast 进行修改实现的跨界面屏幕顶部提示条。
@@ -535,6 +558,38 @@ customDialog.setAlign(CustomDialog.ALIGN.TOP)           //从屏幕顶端出现
 customDialog.setAlign(CustomDialog.ALIGN.DEFAULT)       //从屏幕中部出现
 ```
 ## 其他设置
+
+### 通用功能
+显示时执行
+```
+dialog.setOnShowListener(onShowListener);
+```
+
+关闭时执行
+```
+dialog.setOnDismissListener(onDismissListener);
+```
+
+设置是否可以点击外部区域或“返回”按键关闭对话框：
+```
+dialog.setCancelable(boolean);       
+```
+
+设置“返回”按键监听
+```
+dialog.setOnBackClickListener(new OnBackClickListener() {
+    @Override
+    public boolean onBackClick() {
+        toast("按下返回！");
+        return true;        //return 结果代表是否拦截此事件
+    }
+});
+```
+
+使用自定义的 Dialog style
+```
+dialog.setCustomDialogStyleId(R.style.XXX);
+```
 
 ### 文字样式
 因文字样式牵扯的属性较多，因此提供了封装类 `TextInfo（com.kongzue.dialog.util.TextInfo）`来进行。
@@ -689,6 +744,14 @@ limitations under the License.
 ```
 
 ## 更新日志：
+v3.1.6:
+- 新增 FullScreenDialog 全屏对话框；
+- Dialog 组件新增 setOnBackClickListener(onBackClickListener) 可监听“返回”按键，并允许阻止“返回”按键操作；
+- 改进刘海屏适配，Notification 通知组件和 FullScreenDialog 全屏对话框组件的背景部分可实现刘海部分的完美沉浸；
+- 修复 InputDialog 在 Material 主题时开启 DialogSettings.autoShowInputKeyboard 设置后键盘不自动弹出的问题；
+- 修复 InputDialog 在 Material 主题时输入框的主题颜色适配问题，已知问题：因 Google 在新版本系统中增加反射限制，已知输入框光标颜色暂时无法适配颜色；
+- 对 BottomMenu、ShareDialog 代码重新进行整理；
+
 v3.1.5:
 - 新增 DialogSettings.autoShowInputKeyboard 设置开启时，InputDialog 将自动弹出输入法；
 - 修复 WaitDialog 等待对话框动画在切换至后台再切换至前台恢复显示后消失的问题；

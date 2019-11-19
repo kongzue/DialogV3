@@ -17,6 +17,7 @@ import android.view.Display;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowInsets;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.kongzue.dialog.R;
@@ -24,6 +25,7 @@ import com.kongzue.dialog.interfaces.OnBackClickListener;
 import com.kongzue.dialog.interfaces.OnShowListener;
 import com.kongzue.dialog.interfaces.OnDismissListener;
 import com.kongzue.dialog.v3.BottomMenu;
+import com.kongzue.dialog.v3.FullScreenDialog;
 import com.kongzue.dialog.v3.ShareDialog;
 import com.kongzue.dialog.v3.TipDialog;
 import com.kongzue.dialog.v3.WaitDialog;
@@ -41,7 +43,6 @@ import java.util.List;
  */
 public abstract class BaseDialog {
     
-    protected Handler mainHandler = new Handler(Looper.getMainLooper());
     protected static WeakReference<AppCompatActivity> newContext;
     
     public BaseDialog() {
@@ -121,6 +122,7 @@ public abstract class BaseDialog {
             @Override
             public void onDismiss() {
                 log("# dismissEvent");
+                dismissEvent();
                 dismissedFlag = true;
                 isShow = false;
                 dialogList.remove(baseDialog);
@@ -194,6 +196,7 @@ public abstract class BaseDialog {
         dialog.get().setOnShowListener(new DialogHelper.PreviewOnShowListener() {
             @Override
             public void onShow(Dialog dialog) {
+                showEvent();
                 if (DialogSettings.dialogLifeCycleListener != null)
                     DialogSettings.dialogLifeCycleListener.onShow(BaseDialog.this);
                 dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
@@ -308,18 +311,33 @@ public abstract class BaseDialog {
     }
     
     protected int getRootHeight() {
-        int diaplayHeight = 0;
+        int displayHeight = 0;
         Display display = context.get().getWindowManager().getDefaultDisplay();
         Point point = new Point();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             display.getRealSize(point);
-            diaplayHeight = point.y;
+            displayHeight = point.y;
         } else {
             DisplayMetrics dm = new DisplayMetrics();
             context.get().getWindowManager().getDefaultDisplay().getMetrics(dm);
-            diaplayHeight = dm.heightPixels;
+            displayHeight = dm.heightPixels;
         }
-        return diaplayHeight;
+        return displayHeight;
+    }
+    
+    protected int getRootWidth() {
+        int displayWidth = 0;
+        Display display = context.get().getWindowManager().getDefaultDisplay();
+        Point point = new Point();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            display.getRealSize(point);
+            displayWidth = point.x;
+        } else {
+            DisplayMetrics dm = new DisplayMetrics();
+            context.get().getWindowManager().getDefaultDisplay().getMetrics(dm);
+            displayWidth = dm.widthPixels;
+        }
+        return displayWidth;
     }
     
     protected int getNavigationBarHeight() {
@@ -338,5 +356,13 @@ public abstract class BaseDialog {
         } else {
             return 0;
         }
+    }
+    
+    protected void showEvent(){
+    
+    }
+    
+    protected void dismissEvent(){
+    
     }
 }

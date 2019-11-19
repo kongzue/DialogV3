@@ -360,7 +360,6 @@ public class InputDialog extends MessageDialog {
                         }
                     }
                 }, 100);
-                
             }
         }
         refreshTextViews();

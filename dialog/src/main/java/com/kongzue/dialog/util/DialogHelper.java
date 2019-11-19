@@ -2,6 +2,7 @@ package com.kongzue.dialog.util;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -28,6 +29,8 @@ import com.kongzue.dialog.v3.TipDialog;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.view.WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
 
 /**
  * Author: @Kongzue
@@ -158,7 +161,6 @@ public class DialogHelper extends DialogFragment {
                             windowManager = getActivity().getWindowManager();
                             display = windowManager.getDefaultDisplay();
                             lp = window.getAttributes();
-                            
                             lp.width = display.getWidth();
                             lp.windowAnimations = R.style.topMenuAnim;
                             window.setGravity(Gravity.TOP);

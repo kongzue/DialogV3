@@ -207,7 +207,6 @@ public class MainActivity extends BaseActivity {
         btnFullScreenDialogLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                
                 FullScreenDialog
                         .show(me, R.layout.layout_full_login, new FullScreenDialog.OnBindView() {
                             @Override
@@ -291,7 +290,7 @@ public class MainActivity extends BaseActivity {
                             }
                         });
                     }
-                }).setAlign(CustomDialog.ALIGN.BOTTOM).setCancelable(false).show();
+                }).setAlign(CustomDialog.ALIGN.DEFAULT).setCancelable(false).show();
             }
         });
         

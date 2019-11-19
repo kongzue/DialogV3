@@ -1,5 +1,6 @@
 package com.kongzue.dialog.v3;
 
+import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Matrix;
@@ -14,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -123,24 +125,22 @@ public class FullScreenDialog extends BaseDialog {
         }
         
         Window window = dialog.get().getDialog().getWindow();
-        WindowManager windowManager = context.get().getWindowManager();
-        Display display = windowManager.getDefaultDisplay();
         WindowManager.LayoutParams lp = window.getAttributes();
-        lp.width = display.getWidth();
+        lp.width = getRootWidth();
         lp.height = getRootHeight();
-        log("getRootHeight()=" + getRootHeight());
         window.setGravity(Gravity.BOTTOM);
         window.setAttributes(lp);
-    
+        
         boxBody.setY(getRootHeight());
         boxBody.post(new Runnable() {
             @Override
             public void run() {
                 boxBody.animY(0);
-                doScreenshotActivityAndZoom();
             }
         });
-    
+        
+        boxZoomActivity.getViewTreeObserver().addOnGlobalLayoutListener(onActivityLayoutChangeListener);
+        
         boxBody.setOnYChanged(new InterceptYLinearLayout.OnYChanged() {
             @Override
             public void y(float y) {
@@ -148,29 +148,29 @@ public class FullScreenDialog extends BaseDialog {
                 if (zoomScale > 1) zoomScale = 1;
                 imgZoomActivity.setScaleX(zoomScale);
                 imgZoomActivity.setScaleY(zoomScale);
-            
+                
                 imgZoomActivity.setRadius(dip2px(15) * ((getRootHeight() - y) / getRootHeight()));
             }
         });
-    
+        
         boxBody.setOnTouchListener(materialScrollTouchListener);
-    
+        
         rootView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 doDismiss();
             }
         });
-    
+        
         boxBodyParent.setPadding(0, (int) (getStatusBarHeight() * 1.5), 0, 0);
-    
+        
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             dialog.get().getDialog().getWindow().setNavigationBarColor(Color.WHITE);
             boxBody.setPadding(0, 0, 0, getNavigationBarHeight());
         }
-    
+        
         if (customView != null) {
             boxCustom.removeAllViews();
             RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -295,15 +295,19 @@ public class FullScreenDialog extends BaseDialog {
                 case MotionEvent.ACTION_CANCEL:
                     if (isTouchDown) {
                         float deltaY = boxBody.getY() - boxBodyOldY;
-                        if (deltaY > dip2px(150)) {
-                            boxBody.animY(boxBody.getHeight()).withEndAction(new Runnable() {
-                                @Override
-                                public void run() {
-                                    realDismiss();
-                                }
-                            });
-                        } else {
+                        if (cancelable == BOOLEAN.FALSE) {
                             boxBody.animY(0);
+                        } else {
+                            if (deltaY > dip2px(150)) {
+                                boxBody.animY(boxBody.getHeight()).withEndAction(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        realDismiss();
+                                    }
+                                });
+                            } else {
+                                boxBody.animY(0);
+                            }
                         }
                     }
                     isTouchDown = false;
@@ -554,6 +558,55 @@ public class FullScreenDialog extends BaseDialog {
     
     public FullScreenDialog setOnBackClickListener(OnBackClickListener onBackClickListener) {
         this.onBackClickListener = onBackClickListener;
+        return this;
+    }
+    
+    @Override
+    protected void dismissEvent() {
+        if (boxZoomActivity != null && onActivityLayoutChangeListener != null) {
+            boxZoomActivity.getViewTreeObserver().removeOnGlobalLayoutListener(onActivityLayoutChangeListener);
+        }
+    }
+    
+    @Override
+    protected void showEvent() {
+        Dialog dialog = super.dialog.get().getDialog();
+        dialog.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+        WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+        }
+        dialog.getWindow().setAttributes(lp);
+    }
+    
+    private int screenWidth, screenHeight;
+    
+    private ViewTreeObserver.OnGlobalLayoutListener onActivityLayoutChangeListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+        @Override
+        public void onGlobalLayout() {
+            if (screenWidth != getRootWidth() || screenHeight != getRootHeight()) {
+                screenWidth = getRootWidth();
+                screenHeight = getRootHeight();
+                
+                Window window = dialog.get().getDialog().getWindow();
+                WindowManager.LayoutParams lp = window.getAttributes();
+                lp.width = screenWidth;
+                lp.height = screenHeight;
+                window.setGravity(Gravity.BOTTOM);
+                window.setAttributes(lp);
+                
+                doScreenshotActivityAndZoom();
+            }
+        }
+    };
+    
+    public boolean getCancelable() {
+        return cancelable == BOOLEAN.TRUE;
+    }
+    
+    public FullScreenDialog setCancelable(boolean enable) {
+        this.cancelable = enable ? BOOLEAN.TRUE : BOOLEAN.FALSE;
+        if (dialog != null) dialog.get().setCancelable(cancelable == BOOLEAN.TRUE);
         return this;
     }
 }
