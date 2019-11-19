@@ -396,30 +396,6 @@ BottomMenu.show(MainActivity.this, baseAdapter, new OnMenuItemClickListener() {
 
 Material 风格的 BottomMenu 默认不支持“取消”按钮，按照设计规范，使用下滑手势关闭。
 
-### 全屏对话框
-Kongzue Dialog V3 提供了全屏对话框样式，这种对话框主体采用自定义布局，启动后会占据全屏，可设置标题和标题左右两个按钮。
-
-![Kongzue Dialog V3 自定义对话框](https://github.com/kongzue/Res/raw/master/app/src/main/res/mipmap-xxxhdpi/img_dialog_v3_fullscreen.png)
-
-使用以下代码创建全屏对话框：
-```
-FullScreenDialog
-        .show(MainActivity.this, R.layout.layout_full_login, new FullScreenDialog.OnBindView() {
-            @Override
-            public void onBind(FullScreenDialog dialog, View rootView) {
-                boxUserName = rootView.findViewById(R.id.box_userName);
-                editUserName = rootView.findViewById(R.id.edit_userName);
-                boxPassword = rootView.findViewById(R.id.box_password);
-                editPassword = rootView.findViewById(R.id.edit_password);
-            }
-        })
-        .setOkButton("下一步", nextStepListener)
-        .setCancelButton("取消")
-        .setTitle("登录")
-;
-```
-其中第二个参数为自定义的布局资源 id，第三个参数为布局绑定回调，其余方法与其他 Dialog 一致。
-
 ### 通知
 这里的通知并非系统通知，且不具备在您的设备通知栏中持久显示的特性，它本质上是通过对 Toast 进行修改实现的跨界面屏幕顶部提示条。
 
@@ -479,6 +455,30 @@ ShareDialog.show(MainActivity.this, itemList, new ShareDialog.OnItemClickListene
 ⚠ 特别说明：
 
 Material 风格的 ShareDialog 默认不支持“取消”按钮，按照设计规范，使用下滑手势关闭。
+
+### 全屏对话框
+Kongzue Dialog V3 提供了全屏对话框样式，这种对话框主体采用自定义布局，启动后会占据全屏，可设置标题和标题左右两个按钮。
+
+![Kongzue Dialog V3 自定义对话框](https://github.com/kongzue/Res/raw/master/app/src/main/res/mipmap-xxxhdpi/img_dialog_v3_fullscreen.png)
+
+使用以下代码创建全屏对话框：
+```
+FullScreenDialog
+        .show(MainActivity.this, R.layout.layout_full_login, new FullScreenDialog.OnBindView() {
+            @Override
+            public void onBind(FullScreenDialog dialog, View rootView) {
+                boxUserName = rootView.findViewById(R.id.box_userName);
+                editUserName = rootView.findViewById(R.id.edit_userName);
+                boxPassword = rootView.findViewById(R.id.box_password);
+                editPassword = rootView.findViewById(R.id.edit_password);
+            }
+        })
+        .setOkButton("下一步", nextStepListener)
+        .setCancelButton("取消")
+        .setTitle("登录")
+;
+```
+其中第二个参数为自定义的布局资源 id，第三个参数为布局绑定回调，其余方法与其他 Dialog 一致。
 
 ## 定制化
 
