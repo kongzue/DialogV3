@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.kongzue.dialog.R;
+import com.kongzue.dialog.interfaces.OnBackClickListener;
 import com.kongzue.dialog.interfaces.OnShowListener;
 import com.kongzue.dialog.interfaces.OnDismissListener;
 import com.kongzue.dialog.util.BaseDialog;
@@ -214,5 +215,14 @@ public class CustomDialog extends BaseDialog {
     
     public String toString() {
         return getClass().getSimpleName() + "@" + Integer.toHexString(hashCode());
+    }
+    
+    public OnBackClickListener getOnBackClickListener() {
+        return onBackClickListener;
+    }
+    
+    public CustomDialog setOnBackClickListener(OnBackClickListener onBackClickListener) {
+        this.onBackClickListener = onBackClickListener;
+        return this;
     }
 }

@@ -4,12 +4,13 @@
     android:layout_height="match_parent">
 
     <RelativeLayout
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
         android:layout_height="300dp">
 
         <ImageView
             android:layout_width="300dp"
             android:layout_height="300dp"
+            android:layout_centerHorizontal="true"
             android:src="@mipmap/img_custom_dialog_bkg"/>
 
         <ImageView

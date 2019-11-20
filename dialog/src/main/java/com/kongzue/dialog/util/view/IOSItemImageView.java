@@ -6,7 +6,9 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 
-public class IOSItemImageView extends androidx.appcompat.widget.AppCompatImageView {
+import androidx.appcompat.widget.AppCompatImageView;
+
+public class IOSItemImageView extends AppCompatImageView {
     
     public IOSItemImageView(Context context, AttributeSet attrs) {
         super(context, attrs);

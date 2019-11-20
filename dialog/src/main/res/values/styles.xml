@@ -107,6 +107,11 @@
         <item name="android:windowExitAnimation">@anim/bottom_menu_exit</item>
     </style>
 
+    <style name="dialogNoAnim">
+        <item name="android:windowEnterAnimation">@null</item>
+        <item name="android:windowExitAnimation">@anim/alpha_exit</item>
+    </style>
+
     <style name="TopDialog" parent="BaseDialog">
         <item name="android:windowAnimationStyle">@style/topMenuAnim</item>
     </style>

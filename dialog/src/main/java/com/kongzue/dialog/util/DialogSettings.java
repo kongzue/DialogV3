@@ -100,7 +100,7 @@ public class DialogSettings {
     public static boolean checkRenderscriptSupport(Context context) {
         boolean isSupport = true;
         try {
-            DialogSettings.class.getClassLoader().loadClass("android.support.v8.renderscript.RenderScript");
+            DialogSettings.class.getClassLoader().loadClass("androidx.renderscript.RenderScript");
         } catch (ClassNotFoundException e) {
             isSupport = false;
             if (DEBUGMODE) {

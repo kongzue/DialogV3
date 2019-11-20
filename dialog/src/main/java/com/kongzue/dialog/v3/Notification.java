@@ -26,7 +26,6 @@ import com.kongzue.dialog.R;
 import com.kongzue.dialog.interfaces.OnDismissListener;
 import com.kongzue.dialog.interfaces.OnNotificationClickListener;
 import com.kongzue.dialog.util.DialogSettings;
-import com.kongzue.dialog.util.NotchUtil;
 import com.kongzue.dialog.util.view.NotifyToastShadowView;
 import com.kongzue.dialog.util.SafelyHandlerWrapper;
 import com.kongzue.dialog.util.TextInfo;
@@ -551,16 +550,6 @@ public class Notification {
     }
     
     private int getStatusBarHeight() {
-        if (context.get() instanceof  Activity){
-            Activity activity = (Activity) context.get();
-            boolean isHasNotch = NotchUtil.hasNotchInScreen(activity);
-            if (isHasNotch){
-                if (boxBody!=null){
-                    boxBody.setBackgroundColor(Color.TRANSPARENT);
-                }
-                return 0;
-            }
-        }
         try {
             Class<?> c = Class.forName("com.android.internal.R$dimen");
             Object obj = c.newInstance();
@@ -615,6 +604,9 @@ public class Notification {
                         params.flags = WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
                         params.width = WindowManager.LayoutParams.MATCH_PARENT;
                         params.height = WindowManager.LayoutParams.WRAP_CONTENT;
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                            params.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+                        }
                         
                         Field tnNextViewField = mTN.getClass().getDeclaredField("mNextView");
                         tnNextViewField.setAccessible(true);

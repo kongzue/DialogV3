@@ -1,11 +1,18 @@
 package com.kongzue.dialogdemo;
 
 import android.app.ActivityManager;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Handler;
 import android.text.InputType;
 import android.view.View;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -20,6 +27,7 @@ import com.kongzue.baseframework.interfaces.DarkStatusBarTheme;
 import com.kongzue.baseframework.interfaces.Layout;
 import com.kongzue.baseframework.interfaces.NavigationBarBackgroundColor;
 import com.kongzue.baseframework.util.JumpParameter;
+import com.kongzue.dialog.interfaces.OnBackClickListener;
 import com.kongzue.dialog.interfaces.OnDialogButtonClickListener;
 import com.kongzue.dialog.interfaces.OnDismissListener;
 import com.kongzue.dialog.interfaces.OnInputDialogButtonClickListener;
@@ -32,6 +40,7 @@ import com.kongzue.dialog.util.InputInfo;
 import com.kongzue.dialog.util.TextInfo;
 import com.kongzue.dialog.v3.BottomMenu;
 import com.kongzue.dialog.v3.CustomDialog;
+import com.kongzue.dialog.v3.FullScreenDialog;
 import com.kongzue.dialog.v3.MessageDialog;
 import com.kongzue.dialog.v3.InputDialog;
 import com.kongzue.dialog.v3.Notification;
@@ -74,6 +83,8 @@ public class MainActivity extends BaseActivity {
     private TextView btnCustomBottomMenu;
     private TextView btnCustomNotification;
     private TextView btnCustomDialog;
+    private TextView btnFullScreenDialogWebPage;
+    private TextView btnFullScreenDialogLogin;
     private RelativeLayout boxTable;
     private LinearLayout boxTableChild;
     private LinearLayout btnBack;
@@ -106,6 +117,8 @@ public class MainActivity extends BaseActivity {
         btnCustomBottomMenu = findViewById(R.id.btn_customBottomMenu);
         btnCustomNotification = findViewById(R.id.btn_customNotification);
         btnCustomDialog = findViewById(R.id.btn_customDialog);
+        btnFullScreenDialogWebPage = findViewById(R.id.btn_fullScreenDialog_webPage);
+        btnFullScreenDialogLogin = findViewById(R.id.btn_fullScreenDialog_login);
         boxTable = findViewById(R.id.box_table);
         boxTableChild = findViewById(R.id.box_table_child);
         btnBack = findViewById(R.id.btn_back);
@@ -130,8 +143,138 @@ public class MainActivity extends BaseActivity {
         
     }
     
+    private RelativeLayout boxUserName;
+    private EditText editUserName;
+    private RelativeLayout boxPassword;
+    private EditText editPassword;
+    
+    //演示登录全屏对话框用
+    OnDialogButtonClickListener nextStepListener = new OnDialogButtonClickListener() {
+        @Override
+        public boolean onClick(BaseDialog baseDialog, View v) {
+            if (isNull(editUserName.getText().toString().trim())) {
+                TipDialog.show(me, "请输入账号", TipDialog.TYPE.WARNING);
+                return true;
+            }
+            
+            boxUserName.animate().x(-getDisplayWidth()).setDuration(300);
+            boxPassword.setX(getDisplayWidth());
+            boxPassword.setVisibility(View.VISIBLE);
+            boxPassword.animate().x(0).setDuration(300);
+            
+            editPassword.setFocusable(true);
+            editPassword.requestFocus();
+            
+            ((FullScreenDialog) baseDialog).setCancelButton("上一步", new OnDialogButtonClickListener() {
+                @Override
+                public boolean onClick(BaseDialog baseDialog, View v) {
+                    boxUserName.animate().x(0).setDuration(300);
+                    boxPassword.animate().x(getDisplayWidth()).setDuration(300);
+                    
+                    editUserName.setFocusable(true);
+                    editUserName.requestFocus();
+                    
+                    ((FullScreenDialog) baseDialog).setCancelButton("取消", null);
+                    ((FullScreenDialog) baseDialog).setOkButton("下一步", nextStepListener);
+                    
+                    return true;
+                }
+            });
+            ((FullScreenDialog) baseDialog).setOkButton("登录", new OnDialogButtonClickListener() {
+                @Override
+                public boolean onClick(BaseDialog baseDialog, View v) {
+                    if (isNull(editPassword.getText().toString().trim())){
+                        TipDialog.show(me,"请输入密码", TipDialog.TYPE.WARNING);
+                        return true;
+                    }
+                    WaitDialog.show(me, "登录中...");
+                    runOnMainDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            TipDialog.show(me, "密码错误", TipDialog.TYPE.WARNING);
+                        }
+                    }, 2000);
+                    return true;
+                }
+            });
+            
+            return true;
+        }
+    };
+    
     @Override
     public void setEvents() {
+        //全屏对话框-登录
+        btnFullScreenDialogLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FullScreenDialog
+                        .show(me, R.layout.layout_full_login, new FullScreenDialog.OnBindView() {
+                            @Override
+                            public void onBind(FullScreenDialog dialog, View rootView) {
+                                boxUserName = rootView.findViewById(R.id.box_userName);
+                                editUserName = rootView.findViewById(R.id.edit_userName);
+                                boxPassword = rootView.findViewById(R.id.box_password);
+                                editPassword = rootView.findViewById(R.id.edit_password);
+                            }
+                        })
+                        .setOkButton("下一步", nextStepListener)
+                        .setCancelButton("取消")
+                        .setTitle("登录")
+                ;
+            }
+        });
+        
+        //全屏对话框-网页
+        btnFullScreenDialogWebPage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FullScreenDialog.show(me, R.layout.layout_full_webview, new FullScreenDialog.OnBindView() {
+                    @Override
+                    public void onBind(final FullScreenDialog dialog, View rootView) {
+                        WebView webView;
+                        
+                        webView = rootView.findViewById(R.id.webView);
+                        
+                        WebSettings webSettings = webView.getSettings();
+                        webSettings.setJavaScriptEnabled(true);
+                        webSettings.setLoadWithOverviewMode(true);
+                        webSettings.setUseWideViewPort(true);
+                        webSettings.setSupportZoom(false);
+                        webSettings.setAllowFileAccess(true);
+                        webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
+                        webSettings.setLoadsImagesAutomatically(true);
+                        webSettings.setDefaultTextEncodingName("utf-8");
+                        
+                        webView.setWebViewClient(new WebViewClient() {
+                            @Override
+                            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                                try {
+                                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                                    startActivity(intent);
+                                } catch (ActivityNotFoundException e) {
+                                    e.printStackTrace();
+                                }
+                                return true;
+                            }
+                            
+                            @Override
+                            public void onPageFinished(WebView view, String url) {
+                                super.onPageFinished(view, url);
+                            }
+                        });
+                        
+                        webView.loadUrl("https://github.com/kongzue/DialogV3/");
+                    }
+                }).setOkButton("关闭", new OnDialogButtonClickListener() {
+                    @Override
+                    public boolean onClick(BaseDialog baseDialog, View v) {
+                        return false;
+                    }
+                }).setTitle("关于");
+            }
+        });
+        
         //完全自定义对话框
         btnCustomDialog.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -388,7 +531,9 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 InputDialog.build(me)
+                        .setButtonTextInfo(new TextInfo().setFontColor(Color.GREEN))
                         .setTitle("提示").setMessage("请输入密码（123456）")
+                        .setInputText("111111")
                         .setOkButton("确定", new OnInputDialogButtonClickListener() {
                             @Override
                             public boolean onClick(BaseDialog baseDialog, View v, String inputStr) {
@@ -420,7 +565,13 @@ public class MainActivity extends BaseActivity {
         btnWaitDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                WaitDialog.show(me, "测试");
+                WaitDialog.show(me, "测试").setOnBackClickListener(new OnBackClickListener() {
+                    @Override
+                    public boolean onBackClick() {
+                        toast("按下返回！");
+                        return true;
+                    }
+                });
                 WaitDialog.dismiss(10000);
             }
         });

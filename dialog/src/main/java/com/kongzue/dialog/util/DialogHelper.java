@@ -22,6 +22,7 @@ import android.view.WindowManager;
 import com.kongzue.dialog.R;
 import com.kongzue.dialog.v3.BottomMenu;
 import com.kongzue.dialog.v3.CustomDialog;
+import com.kongzue.dialog.v3.FullScreenDialog;
 import com.kongzue.dialog.v3.ShareDialog;
 import com.kongzue.dialog.v3.TipDialog;
 
@@ -105,6 +106,19 @@ public class DialogHelper extends DialogFragment {
                 window.setWindowAnimations(R.style.bottomMenuAnim);
                 window.setAttributes(lp);
             }
+            if (parent.get() instanceof FullScreenDialog) {
+                dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                Window window = dialog.getWindow();
+                window.getDecorView().setPadding(0, 0, 0, 0);
+                WindowManager windowManager = getActivity().getWindowManager();
+                Display display = windowManager.getDefaultDisplay();
+                WindowManager.LayoutParams lp = window.getAttributes();
+                lp.width = display.getWidth();
+                lp.windowAnimations = R.style.dialogNoAnim;
+                window.setGravity(Gravity.BOTTOM);
+                window.setWindowAnimations(R.style.dialogNoAnim);
+                window.setAttributes(lp);
+            }
             if (parent.get() instanceof CustomDialog) {
                 CustomDialog customDialog = (CustomDialog) parent.get();
                 
@@ -145,7 +159,6 @@ public class DialogHelper extends DialogFragment {
                             windowManager = getActivity().getWindowManager();
                             display = windowManager.getDefaultDisplay();
                             lp = window.getAttributes();
-                            
                             lp.width = display.getWidth();
                             lp.windowAnimations = R.style.topMenuAnim;
                             window.setGravity(Gravity.TOP);

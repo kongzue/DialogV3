@@ -17,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kongzue.dialog.R;
+import com.kongzue.dialog.interfaces.OnBackClickListener;
 import com.kongzue.dialog.interfaces.OnShowListener;
 import com.kongzue.dialog.interfaces.OnDismissListener;
 import com.kongzue.dialog.util.BaseDialog;
@@ -558,5 +559,14 @@ public class TipDialog extends BaseDialog {
     
     public String toString() {
         return getClass().getSimpleName() + "@" + Integer.toHexString(hashCode());
+    }
+    
+    public OnBackClickListener getOnBackClickListener() {
+        return onBackClickListener;
+    }
+    
+    public TipDialog setOnBackClickListener(OnBackClickListener onBackClickListener) {
+        this.onBackClickListener = onBackClickListener;
+        return this;
     }
 }

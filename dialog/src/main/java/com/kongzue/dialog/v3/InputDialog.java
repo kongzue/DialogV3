@@ -2,6 +2,7 @@ package com.kongzue.dialog.v3;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 
@@ -11,6 +12,7 @@ import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.os.Build;
 import android.os.IBinder;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -24,6 +26,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kongzue.dialog.R;
+import com.kongzue.dialog.interfaces.OnBackClickListener;
 import com.kongzue.dialog.interfaces.OnDialogButtonClickListener;
 import com.kongzue.dialog.interfaces.OnShowListener;
 import com.kongzue.dialog.interfaces.OnDismissListener;
@@ -182,6 +185,27 @@ public class InputDialog extends MessageDialog {
                             txtInput.requestLayout();
                         }
                     });
+                    txtInput.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (txtInput != null) {
+                                if (DialogSettings.autoShowInputKeyboard && txtInput.getVisibility() == View.VISIBLE) {
+                                    txtInput.setFocusable(true);
+                                    txtInput.setFocusableInTouchMode(true);
+                                    txtInput.requestFocus();
+                                    windowToken = txtInput.getWindowToken();
+                                    InputMethodManager imm = (InputMethodManager) context.get().getSystemService(Context.INPUT_METHOD_SERVICE);
+                                    imm.showSoftInput(txtInput, InputMethodManager.SHOW_FORCED);
+                                }
+                            }
+                        }
+                    }, 100);
+                    
+                    if (buttonTextInfo != null) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            txtInput.setBackgroundTintList(ColorStateList.valueOf(buttonTextInfo.getFontColor()));
+                        }
+                    }
                     if (customView == null) {
                         materialAlertDialog.setView(txtInput);
                     } else {
@@ -203,6 +227,7 @@ public class InputDialog extends MessageDialog {
                             positiveButton.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
+                                    hideInputKeyboard();
                                     if (onOkButtonClickListener != null) {
                                         if (!onOkButtonClickListener.onClick(InputDialog.this, v, getInputText()))
                                             materialAlertDialog.dismiss();
@@ -217,6 +242,7 @@ public class InputDialog extends MessageDialog {
                             negativeButton.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
+                                    hideInputKeyboard();
                                     if (onCancelButtonClickListener != null) {
                                         if (!onCancelButtonClickListener.onClick(InputDialog.this, v, getInputText()))
                                             materialAlertDialog.dismiss();
@@ -232,6 +258,7 @@ public class InputDialog extends MessageDialog {
                                 otherButton.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
+                                        hideInputKeyboard();
                                         if (onOtherButtonClickListener != null) {
                                             if (!onOtherButtonClickListener.onClick(InputDialog.this, v, getInputText()))
                                                 materialAlertDialog.dismiss();
@@ -333,7 +360,6 @@ public class InputDialog extends MessageDialog {
                         }
                     }
                 }, 100);
-                
             }
         }
         refreshTextViews();
@@ -345,6 +371,7 @@ public class InputDialog extends MessageDialog {
         super.refreshTextViews();
         if (txtInput != null) {
             txtInput.setText(inputText);
+            txtInput.setSelection(inputText.length());
             txtInput.setVisibility(View.VISIBLE);
             
             if (theme == DialogSettings.THEME.DARK) {
@@ -833,5 +860,14 @@ public class InputDialog extends MessageDialog {
     
     public String toString() {
         return getClass().getSimpleName() + "@" + Integer.toHexString(hashCode());
+    }
+    
+    public OnBackClickListener getOnBackClickListener() {
+        return onBackClickListener;
+    }
+    
+    public InputDialog setOnBackClickListener(OnBackClickListener onBackClickListener) {
+        this.onBackClickListener = onBackClickListener;
+        return this;
     }
 }

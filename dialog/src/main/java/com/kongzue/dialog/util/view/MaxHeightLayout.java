@@ -43,10 +43,10 @@ public class MaxHeightLayout extends RelativeLayout {
     
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int heightMode = View.MeasureSpec.getMode(heightMeasureSpec);
-        int heightSize = View.MeasureSpec.getSize(heightMeasureSpec);
+        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
         heightSize = heightSize <= maxHeight ? heightSize : maxHeight;
-        int maxHeightMeasureSpec = View.MeasureSpec.makeMeasureSpec(heightSize, heightMode);
+        int maxHeightMeasureSpec = MeasureSpec.makeMeasureSpec(heightSize, heightMode);
         super.onMeasure(widthMeasureSpec, maxHeightMeasureSpec);
     }
     
