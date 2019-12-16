@@ -204,7 +204,7 @@ public abstract class BaseDialog {
                     public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
                         boolean flag = false;
                         if (onBackClickListener != null) {
-                            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                            if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction()== KeyEvent.ACTION_UP) {
                                 return flag = onBackClickListener.onBackClick();
                             }
                         }
@@ -238,7 +238,9 @@ public abstract class BaseDialog {
     
     public void doDismiss() {
         dismissedFlag = true;
-        dialog.get().dismiss();
+        if (dialog.get() != null) {
+            dialog.get().dismiss();
+        }
     }
     
     protected void initDefaultSettings() {
@@ -358,11 +360,11 @@ public abstract class BaseDialog {
         }
     }
     
-    protected void showEvent(){
+    protected void showEvent() {
     
     }
     
-    protected void dismissEvent(){
+    protected void dismissEvent() {
     
     }
 }

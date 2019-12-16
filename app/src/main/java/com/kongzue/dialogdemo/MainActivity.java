@@ -1,14 +1,17 @@
 package com.kongzue.dialogdemo;
 
 import android.app.ActivityManager;
+import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.text.InputType;
 import android.view.View;
+import android.view.WindowManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -33,6 +36,7 @@ import com.kongzue.dialog.interfaces.OnDismissListener;
 import com.kongzue.dialog.interfaces.OnInputDialogButtonClickListener;
 import com.kongzue.dialog.interfaces.OnMenuItemClickListener;
 import com.kongzue.dialog.interfaces.OnNotificationClickListener;
+import com.kongzue.dialog.interfaces.OnShowListener;
 import com.kongzue.dialog.util.BaseDialog;
 import com.kongzue.dialog.util.DialogSettings;
 import com.kongzue.dialog.util.InputInfo;
@@ -182,8 +186,8 @@ public class MainActivity extends BaseActivity {
             ((FullScreenDialog) baseDialog).setOkButton("登录", new OnDialogButtonClickListener() {
                 @Override
                 public boolean onClick(BaseDialog baseDialog, View v) {
-                    if (isNull(editPassword.getText().toString().trim())){
-                        TipDialog.show(me,"请输入密码", TipDialog.TYPE.WARNING);
+                    if (isNull(editPassword.getText().toString().trim())) {
+                        TipDialog.show(me, "请输入密码", TipDialog.TYPE.WARNING);
                         return true;
                     }
                     WaitDialog.show(me, "登录中...");
@@ -290,7 +294,7 @@ public class MainActivity extends BaseActivity {
                             }
                         });
                     }
-                }).setAlign(CustomDialog.ALIGN.DEFAULT).setCancelable(false).show();
+                }).setAlign(CustomDialog.ALIGN.TOP).setCancelable(false).show();
             }
         });
         
@@ -571,7 +575,7 @@ public class MainActivity extends BaseActivity {
                         return true;
                     }
                 });
-                WaitDialog.dismiss(10000);
+                WaitDialog.dismiss(2000);
             }
         });
         

@@ -8,9 +8,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="@drawable/rect_share_material_bkg">
+        android:background="@drawable/rect_bottom_dialog">
 
         <ImageView
+            android:id="@+id/img_tab"
             android:layout_width="30dp"
             android:layout_height="4dp"
             android:layout_gravity="center_horizontal"

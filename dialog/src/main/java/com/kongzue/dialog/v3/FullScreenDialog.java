@@ -1,11 +1,13 @@
 package com.kongzue.dialog.v3;
 
 import android.app.Dialog;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Typeface;
 import android.os.Build;
+import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.TypedValue;
@@ -55,6 +57,7 @@ public class FullScreenDialog extends BaseDialog {
     
     private TextInfo titleTextInfo;
     private TextInfo cancelButtonTextInfo;
+    private int backgroundColor;
     
     private RelativeLayout boxZoomActivity;
     private ActivityScreenShotImageView imgZoomActivity;
@@ -122,6 +125,16 @@ public class FullScreenDialog extends BaseDialog {
                 Typeface font = Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL);
                 txtTitle.setTypeface(font);
                 break;
+        }
+        
+        if (theme == DialogSettings.THEME.LIGHT) {
+            boxBody.setBackgroundResource(R.drawable.rect_bottom_dialog);
+            imgMaterialSlideBar.setBackgroundResource(R.drawable.rect_share_material_tab);
+            txtTitle.setTextColor(context.get().getResources().getColor(R.color.tipTextColor));
+        } else {
+            boxBody.setBackgroundResource(R.drawable.rect_bottom_dialog_dark);
+            imgMaterialSlideBar.setBackgroundResource(R.drawable.rect_share_material_tab_dark);
+            txtTitle.setTextColor(context.get().getResources().getColor(R.color.materialDarkTitleColor));
         }
         
         Window window = dialog.get().getDialog().getWindow();
@@ -202,6 +215,12 @@ public class FullScreenDialog extends BaseDialog {
                 txtTitle.setVisibility(View.VISIBLE);
             } else {
                 txtTitle.setVisibility(View.GONE);
+            }
+            
+            if (backgroundColor != 0) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    boxBody.setBackgroundTintList(ColorStateList.valueOf(backgroundColor));
+                }
             }
             
             if (okButton != null) {
@@ -509,6 +528,12 @@ public class FullScreenDialog extends BaseDialog {
     
     public FullScreenDialog setCustomView(View customView) {
         this.customView = customView;
+        refreshView();
+        return this;
+    }
+    
+    public FullScreenDialog setBackgroundColor(@ColorInt int color) {
+        backgroundColor = color;
         refreshView();
         return this;
     }

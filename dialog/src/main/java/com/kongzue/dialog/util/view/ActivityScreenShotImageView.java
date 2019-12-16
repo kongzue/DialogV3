@@ -67,6 +67,8 @@ public class ActivityScreenShotImageView extends android.support.v7.widget.AppCo
             
             canvas.clipPath(path);
         }
-        super.onDraw(canvas);
+        try {
+            super.onDraw(canvas);
+        }catch (Exception e){}
     }
 }

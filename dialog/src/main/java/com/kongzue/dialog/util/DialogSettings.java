@@ -108,7 +108,7 @@ public class DialogSettings {
                         "\nandroid { \n...\n  defaultConfig { \n    ...\n    renderscriptTargetApi 17 \n    renderscriptSupportModeEnabled true \n  }\n}");
             }
         }
-    
+        
         RenderScript renderScript = null;
         ScriptIntrinsicBlur blurScript = null;
         try {
@@ -116,7 +116,7 @@ public class DialogSettings {
             blurScript = ScriptIntrinsicBlur.create(renderScript, Element.U8_4(renderScript));
         } catch (Exception e) {
             isSupport = false;
-        }finally {
+        } finally {
             if (renderScript != null) {
                 renderScript.destroy();
                 renderScript = null;
@@ -127,14 +127,14 @@ public class DialogSettings {
             }
         }
         isUseBlur = isSupport;
-    
+        
         if (DEBUGMODE) {
-            Log.i(">>>", "检查Renderscript支持性: "+isSupport);
+            Log.i(">>>", "检查Renderscript支持性: " + isSupport);
         }
         return isSupport;
     }
     
-    public static void init(){
+    public static void init() {
         BaseDialog.reset();
     }
 }

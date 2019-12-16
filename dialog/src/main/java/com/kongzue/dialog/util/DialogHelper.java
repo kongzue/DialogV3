@@ -131,6 +131,9 @@ public class DialogHelper extends DialogFragment {
                     WindowManager windowManager = getActivity().getWindowManager();
                     Display display = windowManager.getDefaultDisplay();
                     WindowManager.LayoutParams lp = window.getAttributes();
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                        lp.layoutInDisplayCutoutMode = LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+                    }
                     lp.width = display.getWidth();
                     lp.height = display.getHeight();
                     window.setAttributes(lp);
