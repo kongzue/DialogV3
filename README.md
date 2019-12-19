@@ -108,7 +108,7 @@ implementation 'com.kongzue.dialog_v3:dialog:3.1.7'
 
 在dependencies{}中添加引用：
 ```
-implementation 'com.kongzue.dialog_v3x:dialog:3.1.6'       
+implementation 'com.kongzue.dialog_v3x:dialog:3.1.7'       
 ```
 
 ## 全局配置
@@ -720,6 +720,10 @@ A：首先请检查您传入的 Context 是否为已回收的上下文索引，�
 **Q：显示位置或大小异常**
 
 A：您可能是用了第三方的屏幕适配方案，例如头条适配方案，此问题是适配方案导致的，请查询适配方案是否有解决办法，DialogV3 库主要支持标准适配方案，在第三方适配方案下可能存在显示问题。
+
+**Q：API-29（AndroidQ）下，通知（Notification）组件无法显示**
+
+A：经查证是 Google 在 API-29 下限制了反射功能导致的，Notification 组件是依赖反射修改 Toast 来完成跨域悬浮显示功能的，您可以修改项目 targetSdkVersion 为 28 来解决此问题。
 
 ## 混淆设置
 为避免不必要的问题，可以将以下代码加入 proguard-rules.pro 文件中。
