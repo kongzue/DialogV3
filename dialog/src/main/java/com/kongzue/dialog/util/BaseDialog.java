@@ -5,12 +5,6 @@ import android.content.DialogInterface;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -19,6 +13,10 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowInsets;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.kongzue.dialog.R;
 import com.kongzue.dialog.interfaces.OnBackClickListener;
@@ -203,7 +201,7 @@ public abstract class BaseDialog {
                     public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
                         boolean flag = false;
                         if (onBackClickListener != null) {
-                            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                            if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction()== KeyEvent.ACTION_UP) {
                                 return flag = onBackClickListener.onBackClick();
                             }
                         }
@@ -237,7 +235,9 @@ public abstract class BaseDialog {
     
     public void doDismiss() {
         dismissedFlag = true;
-        dialog.get().dismiss();
+        if (dialog.get() != null) {
+            dialog.get().dismiss();
+        }
     }
     
     protected void initDefaultSettings() {
@@ -357,11 +357,11 @@ public abstract class BaseDialog {
         }
     }
     
-    protected void showEvent(){
+    protected void showEvent() {
     
     }
     
-    protected void dismissEvent(){
+    protected void dismissEvent() {
     
     }
 }

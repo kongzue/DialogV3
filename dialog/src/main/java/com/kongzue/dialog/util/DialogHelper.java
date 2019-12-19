@@ -1,16 +1,10 @@
 package com.kongzue.dialog.util;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -19,16 +13,25 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.kongzue.dialog.R;
+import com.kongzue.dialog.v3.FullScreenDialog;
 import com.kongzue.dialog.v3.BottomMenu;
 import com.kongzue.dialog.v3.CustomDialog;
-import com.kongzue.dialog.v3.FullScreenDialog;
 import com.kongzue.dialog.v3.ShareDialog;
 import com.kongzue.dialog.v3.TipDialog;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.view.WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
 
 /**
  * Author: @Kongzue
@@ -129,6 +132,9 @@ public class DialogHelper extends DialogFragment {
                     WindowManager windowManager = getActivity().getWindowManager();
                     Display display = windowManager.getDefaultDisplay();
                     WindowManager.LayoutParams lp = window.getAttributes();
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                        lp.layoutInDisplayCutoutMode = LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+                    }
                     lp.width = display.getWidth();
                     lp.height = display.getHeight();
                     window.setAttributes(lp);

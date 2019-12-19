@@ -14,6 +14,8 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowInsets;
 import android.view.WindowManager;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
@@ -576,7 +578,7 @@ public class Notification {
             toast.setDuration(durationTime.ordinal());
             toast.setView(view);
             toast.getView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-            
+    
             view.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
                 @Override
                 public void onViewAttachedToWindow(View v) {
@@ -607,7 +609,7 @@ public class Notification {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                             params.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
                         }
-                        
+    
                         Field tnNextViewField = mTN.getClass().getDeclaredField("mNextView");
                         tnNextViewField.setAccessible(true);
                         tnNextViewField.set(mTN, toast.getView());

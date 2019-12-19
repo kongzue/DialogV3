@@ -3,30 +3,18 @@ package com.kongzue.dialog.util.view;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.ColorFilter;
 import android.graphics.Paint;
-import android.graphics.PixelFormat;
-import android.graphics.Rect;
+import android.graphics.Paint.Cap;
 import android.graphics.RectF;
-import android.graphics.drawable.Animatable;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
-import android.os.SystemClock;
-import androidx.annotation.NonNull;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.Property;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.AnimationUtils;
-import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 
@@ -79,14 +67,14 @@ public class ProgressView extends View {
         mColors = getResources().getColor(R.color.white);
         mCurrentColorIndex = 0;
         mNextColorIndex = 1;
-        
+    
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
         mPaint.setStyle(Paint.Style.STROKE);
-        mPaint.setStrokeCap(Paint.Cap.ROUND);
+        mPaint.setStrokeCap(Cap.ROUND);
         mPaint.setStrokeWidth(mBorderWidth);
         mPaint.setColor(mColors);
-        
+    
         setupAnimations();
     }
     
@@ -95,14 +83,14 @@ public class ProgressView extends View {
         mNextColorIndex = 1;
         
         mColors = getResources().getColor(colorResId);
-        
+    
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
         mPaint.setStyle(Paint.Style.STROKE);
-        mPaint.setStrokeCap(Paint.Cap.ROUND);
+        mPaint.setStrokeCap(Cap.ROUND);
         mPaint.setStrokeWidth(mBorderWidth);
         mPaint.setColor(mColors);
-        
+    
         setupAnimations();
     }
     

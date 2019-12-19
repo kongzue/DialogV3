@@ -2,7 +2,6 @@ package com.kongzue.dialog.util.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
@@ -11,7 +10,7 @@ import android.widget.RelativeLayout;
  * @github: https://github.com/kongzue/
  * @homepage: http://kongzue.com/
  * @mail: myzcxhh@live.cn
- * @createTime: 2019/10/12 21:51
+ * @createTime: 2019/9/24 17:34
  */
 public class MaxHeightLayout extends RelativeLayout {
     

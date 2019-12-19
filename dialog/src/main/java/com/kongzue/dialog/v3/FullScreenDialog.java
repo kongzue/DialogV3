@@ -1,12 +1,14 @@
 package com.kongzue.dialog.v3;
 
 import android.app.Dialog;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.util.TypedValue;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -19,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -55,6 +58,7 @@ public class FullScreenDialog extends BaseDialog {
     
     private TextInfo titleTextInfo;
     private TextInfo cancelButtonTextInfo;
+    private int backgroundColor;
     
     private RelativeLayout boxZoomActivity;
     private ActivityScreenShotImageView imgZoomActivity;
@@ -122,6 +126,16 @@ public class FullScreenDialog extends BaseDialog {
                 Typeface font = Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL);
                 txtTitle.setTypeface(font);
                 break;
+        }
+        
+        if (theme == DialogSettings.THEME.LIGHT) {
+            boxBody.setBackgroundResource(R.drawable.rect_bottom_dialog);
+            imgMaterialSlideBar.setBackgroundResource(R.drawable.rect_share_material_tab);
+            txtTitle.setTextColor(context.get().getResources().getColor(R.color.tipTextColor));
+        } else {
+            boxBody.setBackgroundResource(R.drawable.rect_bottom_dialog_dark);
+            imgMaterialSlideBar.setBackgroundResource(R.drawable.rect_share_material_tab_dark);
+            txtTitle.setTextColor(context.get().getResources().getColor(R.color.materialDarkTitleColor));
         }
         
         Window window = dialog.get().getDialog().getWindow();
@@ -202,6 +216,12 @@ public class FullScreenDialog extends BaseDialog {
                 txtTitle.setVisibility(View.VISIBLE);
             } else {
                 txtTitle.setVisibility(View.GONE);
+            }
+            
+            if (backgroundColor != 0) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    boxBody.setBackgroundTintList(ColorStateList.valueOf(backgroundColor));
+                }
             }
             
             if (okButton != null) {
@@ -479,7 +499,7 @@ public class FullScreenDialog extends BaseDialog {
         return onDismissListener == null ? new OnDismissListener() {
             @Override
             public void onDismiss() {
-            
+                
             }
         } : onDismissListener;
     }
@@ -493,7 +513,7 @@ public class FullScreenDialog extends BaseDialog {
         return onShowListener == null ? new OnShowListener() {
             @Override
             public void onShow(BaseDialog dialog) {
-            
+                
             }
         } : onShowListener;
     }
@@ -513,9 +533,15 @@ public class FullScreenDialog extends BaseDialog {
         return this;
     }
     
-    private FullScreenDialog.OnBindView onBindView;
+    public FullScreenDialog setBackgroundColor(@ColorInt int color) {
+        backgroundColor = color;
+        refreshView();
+        return this;
+    }
     
-    public FullScreenDialog setCustomView(int customViewLayoutId, FullScreenDialog.OnBindView onBindView) {
+    private OnBindView onBindView;
+    
+    public FullScreenDialog setCustomView(int customViewLayoutId, OnBindView onBindView) {
         customView = LayoutInflater.from(context.get()).inflate(customViewLayoutId, null);
         this.onBindView = onBindView;
         refreshView();

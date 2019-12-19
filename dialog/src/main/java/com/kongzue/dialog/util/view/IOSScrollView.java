@@ -105,5 +105,5 @@ public class IOSScrollView extends HorizontalScrollView {
         }
         return false;
     }
-    
+
 }

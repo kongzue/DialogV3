@@ -2,19 +2,17 @@ package com.kongzue.dialog.v3;
 
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-
-import androidx.annotation.DrawableRes;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.DrawableRes;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.kongzue.dialog.R;
 import com.kongzue.dialog.interfaces.OnBackClickListener;
@@ -80,7 +78,6 @@ public class TipDialog extends BaseDialog {
                     waitDialogTemp = waitDialog;
                 } else {
                     waitDialog = waitDialogTemp;
-                    return null;
                 }
             }
             waitDialog.log("装载提示/等待框: " + waitDialog.toString());
@@ -222,10 +219,13 @@ public class TipDialog extends BaseDialog {
     
     @Override
     public void bindView(View rootView) {
-        
+        if (boxTip != null) {
+            boxTip.removeAllViews();
+        }
+        if (boxBlur != null) {
+            boxBlur.removeAllViews();
+        }
         this.rootView = rootView;
-        
-        if (boxBlur != null) boxBlur.removeAllViews();
         boxBody = rootView.findViewById(R.id.box_body);
         boxBlur = rootView.findViewById(R.id.box_blur);
         boxProgress = rootView.findViewById(R.id.box_progress);
@@ -421,8 +421,8 @@ public class TipDialog extends BaseDialog {
     public static void dismiss() {
         if (waitDialogTemp != null) waitDialogTemp.doDismiss();
         waitDialogTemp = null;
-        for (BaseDialog dialog:dialogList){
-            if (dialog instanceof TipDialog){
+        for (BaseDialog dialog : dialogList) {
+            if (dialog instanceof TipDialog) {
                 dialog.doDismiss();
             }
         }

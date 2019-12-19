@@ -68,6 +68,7 @@
                     android:background="@color/dialogSplitIOSLight" />
 
                 <ImageView
+                    android:id="@+id/img_split"
                     android:layout_width="match_parent"
                     android:layout_height="15dp"
                     android:background="@color/menuSplitSpaceKongzue" />

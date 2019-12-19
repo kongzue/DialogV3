@@ -69,6 +69,8 @@ public class ActivityScreenShotImageView extends AppCompatImageView {
             
             canvas.clipPath(path);
         }
-        super.onDraw(canvas);
+        try {
+            super.onDraw(canvas);
+        }catch (Exception e){}
     }
 }

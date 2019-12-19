@@ -3,9 +3,6 @@ package com.kongzue.dialog.v3;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -21,6 +18,9 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.kongzue.dialog.R;
 import com.kongzue.dialog.interfaces.OnBackClickListener;
@@ -59,6 +59,7 @@ public class BottomMenu extends BaseDialog {
     private TextInfo menuTitleTextInfo;
     private TextInfo cancelButtonTextInfo;
     
+    private LinearLayout boxRoot;
     private LinearLayout boxBody;
     private RelativeLayout boxList;
     private TextView txtTitle;
@@ -68,6 +69,8 @@ public class BottomMenu extends BaseDialog {
     private ViewGroup boxCancel;
     private TextView btnCancel;
     private TextInfo menuTextInfo;
+    private ImageView imgTab;
+    private ImageView imgSplit;
     
     private BottomMenu() {
     }
@@ -159,7 +162,9 @@ public class BottomMenu extends BaseDialog {
         log("启动底部菜单 -> " + toString());
         this.rootView = rootView;
         if (boxCustom != null) boxCustom.removeAllViews();
+        boxRoot = rootView.findViewById(R.id.box_root);
         boxBody = rootView.findViewById(R.id.box_body);
+        imgTab = rootView.findViewById(R.id.img_tab);
         boxList = rootView.findViewById(R.id.box_list);
         txtTitle = rootView.findViewById(R.id.txt_title);
         boxCustom = rootView.findViewById(R.id.box_custom);
@@ -167,6 +172,7 @@ public class BottomMenu extends BaseDialog {
         listMenu = rootView.findViewById(R.id.list_menu);
         boxCancel = rootView.findViewById(R.id.box_cancel);
         btnCancel = rootView.findViewById(R.id.btn_cancel);
+        imgSplit = rootView.findViewById(R.id.img_split);
         
         switch (style) {
             case STYLE_MATERIAL:
@@ -187,6 +193,16 @@ public class BottomMenu extends BaseDialog {
                 listMenu.setOnTouchListener(listViewTouchListener);
                 boxBody.setOnTouchListener(listViewTouchListener);
                 
+                if (theme == DialogSettings.THEME.LIGHT) {
+                    boxBody.setBackgroundResource(R.drawable.rect_bottom_dialog);
+                    imgTab.setBackgroundResource(R.drawable.rect_share_material_tab);
+                    txtTitle.setTextColor(context.get().getResources().getColor(R.color.tipTextColor));
+                } else {
+                    boxBody.setBackgroundResource(R.drawable.rect_bottom_dialog_dark);
+                    imgTab.setBackgroundResource(R.drawable.rect_share_material_tab_dark);
+                    txtTitle.setTextColor(context.get().getResources().getColor(R.color.materialDarkTitleColor));
+                }
+                
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     Window window = dialog.get().getDialog().getWindow();
                     window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -204,11 +220,33 @@ public class BottomMenu extends BaseDialog {
                     window.setNavigationBarColor(Color.WHITE);
                     boxBody.setPadding(0, 0, 0, getNavigationBarHeight());
                     
+                    if (theme == DialogSettings.THEME.LIGHT) {
+                        boxRoot.setBackgroundColor(context.get().getResources().getColor(R.color.menuSplitSpaceKongzue));
+                        txtTitle.setBackgroundColor(context.get().getResources().getColor(R.color.white));
+                        boxCustom.setBackgroundColor(context.get().getResources().getColor(R.color.white));
+                        listMenu.setBackgroundColor(context.get().getResources().getColor(R.color.white));
+                        boxCancel.setBackgroundColor(context.get().getResources().getColor(R.color.white));
+                        imgSplit.setBackgroundColor(context.get().getResources().getColor(R.color.menuSplitSpaceKongzue));
+                        btnCancel.setTextColor(context.get().getResources().getColor(R.color.dark));
+                        btnCancel.setBackgroundResource(R.drawable.button_menu_kongzue);
+                        txtTitle.setTextColor(context.get().getResources().getColor(R.color.tipTextColor));
+                    } else {
+                        boxRoot.setBackgroundColor(context.get().getResources().getColor(R.color.kongzueDarkBkgColor));
+                        txtTitle.setBackgroundColor(context.get().getResources().getColor(R.color.materialDarkBackgroundColor));
+                        boxCustom.setBackgroundColor(context.get().getResources().getColor(R.color.materialDarkBackgroundColor));
+                        listMenu.setBackgroundColor(context.get().getResources().getColor(R.color.materialDarkBackgroundColor));
+                        boxCancel.setBackgroundColor(context.get().getResources().getColor(R.color.materialDarkBackgroundColor));
+                        imgSplit.setBackgroundColor(context.get().getResources().getColor(R.color.kongzueDarkBkgColor));
+                        btnCancel.setTextColor(context.get().getResources().getColor(R.color.materialDarkTextColor));
+                        btnCancel.setBackgroundResource(R.drawable.button_menu_kongzue_dark);
+                        txtTitle.setTextColor(context.get().getResources().getColor(R.color.materialDarkTitleColor));
+                    }
+                    
                     //设置底部导航栏按钮暗色，无效，悬赏解决————
                     View decorView = window.getDecorView();
                     int vis = decorView.getSystemUiVisibility();
                     vis |= View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
-                    vis |= android.view.WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS;
+                    vis |= WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS;
                     vis |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
                     decorView.setSystemUiVisibility(vis);
                 }
@@ -501,6 +539,21 @@ public class BottomMenu extends BaseDialog {
             String text = objects.get(position);
             if (null != text) {
                 viewHolder.textView.setText(text);
+                
+                if (style == DialogSettings.STYLE.STYLE_KONGZUE) {
+                    if (theme == DialogSettings.THEME.LIGHT) {
+                        viewHolder.textView.setTextColor(context.getResources().getColor(R.color.dark));
+                    } else {
+                        viewHolder.textView.setTextColor(context.getResources().getColor(R.color.materialDarkTextColor));
+                    }
+                }
+                if (style == DialogSettings.STYLE.STYLE_MATERIAL) {
+                    if (theme == DialogSettings.THEME.LIGHT) {
+                        viewHolder.textView.setTextColor(context.getResources().getColor(R.color.notificationTipTextColorMaterial));
+                    } else {
+                        viewHolder.textView.setTextColor(context.getResources().getColor(R.color.materialDarkTextColor));
+                    }
+                }
                 
                 useTextInfo(viewHolder.textView, menuTextInfo);
             }

@@ -1,11 +1,18 @@
 package com.kongzue.dialog.util.view;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
-import androidx.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
+
+import androidx.annotation.Nullable;
 
 import com.kongzue.dialog.interfaces.OnNotificationClickListener;
 

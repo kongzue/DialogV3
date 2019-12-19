@@ -33,4 +33,9 @@
     <color name="notificationTipTextColorMaterial">#757575</color>
     <color name="tipTextColor">#8f8f8f</color>
     <color name="menuSplitSpaceKongzue">#f1f2f4</color>
+
+    <color name="materialDarkTextColor">#E9EAEE</color>
+    <color name="materialDarkTitleColor">#9BA0A6</color>
+    <color name="kongzueDarkBkgColor">#202125</color>
+    <color name="materialDarkBackgroundColor">#2D2E30</color>
 </resources>
