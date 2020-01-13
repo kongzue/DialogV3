@@ -25,6 +25,8 @@ import com.kongzue.dialog.util.view.BlurView;
 import com.kongzue.dialog.util.view.ProgressView;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -421,7 +423,9 @@ public class TipDialog extends BaseDialog {
     public static void dismiss() {
         if (waitDialogTemp != null) waitDialogTemp.doDismiss();
         waitDialogTemp = null;
-        for (BaseDialog dialog : dialogList) {
+        List<BaseDialog> temp = new ArrayList<>();
+        temp.addAll(dialogList);
+        for (BaseDialog dialog : temp) {
             if (dialog instanceof TipDialog) {
                 dialog.doDismiss();
             }

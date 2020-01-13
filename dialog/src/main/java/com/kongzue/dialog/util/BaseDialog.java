@@ -170,8 +170,8 @@ public abstract class BaseDialog {
     private void showNow() {
         log("# showNow: " + toString());
         isShow = true;
-        if (context.get().isDestroyed()) {
-            if (newContext.get() == null) {
+        if (context.get() == null || context.get().isDestroyed()) {
+            if (newContext == null || newContext.get() == null) {
                 error("Context错误的指向了一个已被关闭的Activity或者Null，有可能是Activity因横竖屏切换被重启或者您手动执行了unload()方法，请确认其能够正确指向一个正在使用的Activity");
                 return;
             }
@@ -201,7 +201,7 @@ public abstract class BaseDialog {
                     public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
                         boolean flag = false;
                         if (onBackClickListener != null) {
-                            if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction()== KeyEvent.ACTION_UP) {
+                            if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
                                 return flag = onBackClickListener.onBackClick();
                             }
                         }
@@ -210,8 +210,9 @@ public abstract class BaseDialog {
                 });
             }
         });
-        if (DialogSettings.systemDialogStyle == 0 && style == DialogSettings.STYLE.STYLE_IOS && !(baseDialog instanceof TipDialog) && !(baseDialog instanceof BottomMenu) && !(baseDialog instanceof ShareDialog))
+        if (DialogSettings.systemDialogStyle == 0 && style == DialogSettings.STYLE.STYLE_IOS && !(baseDialog instanceof TipDialog) && !(baseDialog instanceof BottomMenu) && !(baseDialog instanceof ShareDialog)) {
             dialog.get().setAnim(R.style.iOSDialogAnimStyle);
+        }
         
         if (baseDialog instanceof TipDialog) {
             if (cancelable == null)
@@ -220,9 +221,7 @@ public abstract class BaseDialog {
             if (cancelable == null)
                 cancelable = DialogSettings.cancelable ? BOOLEAN.TRUE : BOOLEAN.FALSE;
         }
-        if (dialog != null) {
-            dialog.get().setCancelable(cancelable == BOOLEAN.TRUE);
-        }
+        dialog.get().setCancelable(cancelable == BOOLEAN.TRUE);
     }
     
     public abstract void bindView(View rootView);
@@ -235,7 +234,7 @@ public abstract class BaseDialog {
     
     public void doDismiss() {
         dismissedFlag = true;
-        if (dialog.get() != null) {
+        if (dialog != null && dialog.get() != null) {
             dialog.get().dismiss();
         }
     }

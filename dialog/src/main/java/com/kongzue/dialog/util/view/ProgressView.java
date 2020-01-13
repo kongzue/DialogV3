@@ -45,8 +45,6 @@ public class ProgressView extends View {
     private float mBorderWidth;
     private boolean mRunning;
     private int mColors;
-    private int mCurrentColorIndex;
-    private int mNextColorIndex;
     
     public ProgressView(Context context) {
         this(context, null);
@@ -65,32 +63,28 @@ public class ProgressView extends View {
                 DEFAULT_BORDER_WIDTH * density);
         a.recycle();
         mColors = getResources().getColor(R.color.white);
-        mCurrentColorIndex = 0;
-        mNextColorIndex = 1;
-    
+        
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeCap(Cap.ROUND);
         mPaint.setStrokeWidth(mBorderWidth);
         mPaint.setColor(mColors);
-    
+        
         setupAnimations();
     }
     
     public void setup(int colorResId){
-        mCurrentColorIndex = 0;
-        mNextColorIndex = 1;
         
         mColors = getResources().getColor(colorResId);
-    
+        
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeCap(Cap.ROUND);
         mPaint.setStrokeWidth(mBorderWidth);
         mPaint.setColor(mColors);
-    
+        
         setupAnimations();
     }
     
@@ -154,13 +148,11 @@ public class ProgressView extends View {
         float startAngle = mCurrentGlobalAngle - mCurrentGlobalAngleOffset;
         float sweepAngle = mCurrentSweepAngle;
         if (mModeAppearing) {
-//            mPaint.setColor(gradient(mColors, mColors,
-//                    mCurrentSweepAngle / (360 - MIN_SWEEP_ANGLE * 2)));       //根据旋转角度渐变
             mPaint.setColor(mColors);
             sweepAngle += MIN_SWEEP_ANGLE;
         } else {
             startAngle = startAngle + sweepAngle;
-            sweepAngle = 359 - sweepAngle - MIN_SWEEP_ANGLE;
+            sweepAngle = 360 - sweepAngle - MIN_SWEEP_ANGLE;
         }
         canvas.drawArc(fBounds, startAngle, sweepAngle, false, mPaint);
     }
@@ -181,8 +173,6 @@ public class ProgressView extends View {
     private void toggleAppearingMode() {
         mModeAppearing = !mModeAppearing;
         if (mModeAppearing) {
-            mCurrentColorIndex = ++mCurrentColorIndex % 4;
-            mNextColorIndex = ++mNextColorIndex % 4;
             mCurrentGlobalAngleOffset = (mCurrentGlobalAngleOffset + MIN_SWEEP_ANGLE * 2) % 360;
         }
     }
