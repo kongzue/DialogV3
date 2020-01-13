@@ -2,10 +2,10 @@
 献给要求安卓照着苹果设计稿做开发的产品们（手动滑稽
 
 <a href="https://github.com/kongzue/dialogV3/">
-<img src="https://img.shields.io/badge/Kongzue%20Dialog-3.1.7-green.svg" alt="Kongzue Dialog">
+<img src="https://img.shields.io/badge/Kongzue%20Dialog-3.1.8-green.svg" alt="Kongzue Dialog">
 </a> 
-<a href="https://bintray.com/myzchh/maven/dialogV3/3.1.7/link">
-<img src="https://img.shields.io/badge/Maven-3.1.7-blue.svg" alt="Maven">
+<a href="https://bintray.com/myzchh/maven/dialogV3/3.1.8/link">
+<img src="https://img.shields.io/badge/Maven-3.1.8-blue.svg" alt="Maven">
 </a> 
 <a href="http://www.apache.org/licenses/LICENSE-2.0">
 <img src="https://img.shields.io/badge/License-Apache%202.0-red.svg" alt="License">
@@ -90,14 +90,14 @@ Maven仓库：
 <dependency>
   <groupId>com.kongzue.dialog_v3</groupId>
   <artifactId>dialog</artifactId>
-  <version>3.1.7</version>
+  <version>3.1.8</version>
   <type>pom</type>
 </dependency>
 ```
 Gradle：
 在dependencies{}中添加引用：
 ```
-implementation 'com.kongzue.dialog_v3:dialog:3.1.7'
+implementation 'com.kongzue.dialog_v3:dialog:3.1.8'
 ```
 
 从 Kongzue Dialog V2 升级至 Kongzue Dialog V3，请参考 [Kongzue Dialog V2升级注意事项](kongzue_dialog_v2_upto_v3.md)
@@ -108,7 +108,7 @@ implementation 'com.kongzue.dialog_v3:dialog:3.1.7'
 
 在dependencies{}中添加引用：
 ```
-implementation 'com.kongzue.dialog_v3x:dialog:3.1.7'       
+implementation 'com.kongzue.dialog_v3x:dialog:3.1.8'       
 ```
 
 ## 全局配置
@@ -761,6 +761,12 @@ limitations under the License.
 ```
 
 ## 更新日志：
+v3.1.8:
+- 完善 DialogSettings.checkRenderscriptSupport(context) 判断 Renderscript 支持性逻辑；
+- CustomDialog 创建布局默认使用 WRAP_CONTENT 的 LayoutParams；
+- 修复 TipDialog 或 WaitDialog 在执行 dismiss() 方法时可能出现的异常；
+- 修复 BaseDialog 存在的 dialog 空指针异常；
+
 v3.1.7:
 - BottomMenu 的 Material 和 Kongzue 风格新增暗色模式；
 - FullScreenDialog 新增 setBackgroundColor(colorInt) 设置背景颜色；

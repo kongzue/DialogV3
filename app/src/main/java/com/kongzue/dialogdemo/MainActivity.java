@@ -294,7 +294,7 @@ public class MainActivity extends BaseActivity {
                             }
                         });
                     }
-                }).setAlign(CustomDialog.ALIGN.TOP).setCancelable(false).show();
+                }).setAlign(CustomDialog.ALIGN.DEFAULT).setCancelable(false).show();
             }
         });
         
@@ -572,10 +572,10 @@ public class MainActivity extends BaseActivity {
                     @Override
                     public boolean onBackClick() {
                         toast("按下返回！");
-                        return true;
+                        return false;
                     }
                 });
-                WaitDialog.dismiss(2000);
+                WaitDialog.dismiss(20000);
             }
         });
         
