@@ -2,10 +2,10 @@
 献给要求安卓照着苹果设计稿做开发的产品们（手动滑稽
 
 <a href="https://github.com/kongzue/dialogV3/">
-<img src="https://img.shields.io/badge/Kongzue%20Dialog-3.1.8-green.svg" alt="Kongzue Dialog">
+<img src="https://img.shields.io/badge/Kongzue%20Dialog-3.1.9-green.svg" alt="Kongzue Dialog">
 </a> 
-<a href="https://bintray.com/myzchh/maven/dialogV3/3.1.8/link">
-<img src="https://img.shields.io/badge/Maven-3.1.8-blue.svg" alt="Maven">
+<a href="https://bintray.com/myzchh/maven/dialogV3/3.1.9/link">
+<img src="https://img.shields.io/badge/Maven-3.1.9-blue.svg" alt="Maven">
 </a> 
 <a href="http://www.apache.org/licenses/LICENSE-2.0">
 <img src="https://img.shields.io/badge/License-Apache%202.0-red.svg" alt="License">
@@ -90,14 +90,14 @@ Maven仓库：
 <dependency>
   <groupId>com.kongzue.dialog_v3</groupId>
   <artifactId>dialog</artifactId>
-  <version>3.1.8</version>
+  <version>3.1.9</version>
   <type>pom</type>
 </dependency>
 ```
 Gradle：
 在dependencies{}中添加引用：
 ```
-implementation 'com.kongzue.dialog_v3:dialog:3.1.8'
+implementation 'com.kongzue.dialog_v3:dialog:3.1.9'
 ```
 
 从 Kongzue Dialog V2 升级至 Kongzue Dialog V3，请参考 [Kongzue Dialog V2升级注意事项](kongzue_dialog_v2_upto_v3.md)
@@ -108,7 +108,7 @@ implementation 'com.kongzue.dialog_v3:dialog:3.1.8'
 
 在dependencies{}中添加引用：
 ```
-implementation 'com.kongzue.dialog_v3x:dialog:3.1.8'       
+implementation 'com.kongzue.dialog_v3x:dialog:3.1.9'       
 ```
 
 ## 全局配置
@@ -139,6 +139,9 @@ DialogSettings.defaultCancelButtonText = (String);      //设置 BottomMenu 和 
 DialogSettings.tipBackgroundResId = (drawableResId);    //设置 TipDialog 和 WaitDialog 的背景资源
 DialogSettings.tipTextInfo = (InputInfo);               //设置 TipDialog 和 WaitDialog 文字样式
 DialogSettings.autoShowInputKeyboard = (boolean);       //设置 InputDialog 是否自动弹出输入法
+DialogSettings.okButtonDrawable = (drawable);           //设置确定按钮背景资源
+DialogSettings.cancelButtonDrawable = (drawable);       //设置取消按钮背景资源
+DialogSettings.otherButtonDrawable = (drawable);        //设置其他按钮背景资源
 
 //检查 Renderscript 兼容性，若设备不支持，DialogSettings.isUseBlur 会自动关闭；
 boolean renderscriptSupport = DialogSettings.checkRenderscriptSupport(context)
@@ -562,6 +565,38 @@ customDialog.setAlign(CustomDialog.ALIGN.BOTTOM)        //从屏幕底端出现
 customDialog.setAlign(CustomDialog.ALIGN.TOP)           //从屏幕顶端出现
 customDialog.setAlign(CustomDialog.ALIGN.DEFAULT)       //从屏幕中部出现
 ```
+### 自定义对话框按钮背景（颜色）资源：
+除 Material 风格外，iOS 和 Kongzue 风格支持自定义 drawable 的方式修改按钮背景（颜色）资源：
+
+您可以通过以下方式全局指定自定义按钮背景资源：
+```
+//修改确定按钮背景资源：
+DialogSettings.okButtonDrawable = getDrawable(R.drawable.btn_ok);
+//其他按钮：
+DialogSettings.cancelButtonDrawable = getDrawable(R.drawable.btn_cancel);
+DialogSettings.otherButtonDrawable = getDrawable(R.drawable.btn_other);
+```
+也可以单独指定对话框的按钮背景资源：
+```
+//使用资源 id：
+messageDialog.setOkButtonDrawable(resId);
+//或直接使用 drawable：
+messageDialog.setOkButtonDrawable(drawable);
+```
+
+drawable资源可按照如下方式设计：
+btn_ok.xml
+```
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@color/dialogButtonBlueLightPress" android:state_pressed="true" />
+    <item android:drawable="@color/dialogButtonBlueLight" android:state_focused="false" android:state_pressed="false" />
+    <item android:drawable="@color/dialogButtonBlueLight" android:state_focused="true" />
+    <item android:drawable="@color/dialogButtonBlueLight" android:state_focused="false" />
+</selector>
+```
+其中，dialogButtonBlueLight为默认颜色，dialogButtonBlueLightPress为按下时颜色，请在您的colors.xml资源文件中添加其颜色。
+
 ## 其他设置
 
 ### 通用功能
@@ -630,10 +665,11 @@ MessageDialog.show(MainActivity.this, "提示", "这个窗口附带自定义布�
 ```
 InputDialog.show(MainActivity.this, "提示", "请输入密码（123456）", "确定", "取消")
     .setInputInfo(new InputInfo()       //设置输入样式
-        .setMAX_LENGTH(6)
-        .setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD)
-        .setTextInfo(new TextInfo()
-                             .setFontColor(Color.RED)
+        .setSelectAllText(true)                                     //默认选中全部文字
+        .setMAX_LENGTH(6)                                           //最大允许6个字
+        .setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD)       //密码类型
+        .setTextInfo(new TextInfo()     //设置文字样式
+                             .setFontColor(Color.RED)               //颜色指定为红色
         )
 ;
 ```
@@ -761,6 +797,12 @@ limitations under the License.
 ```
 
 ## 更新日志：
+v3.1.9:
+- 增加全局设置，可修改对话框按钮背景资源；
+- InputInfo 新增 selectAllText 设置，可实现启动对话框后默认选中已输入的文字；
+- BottomMenu 新增 onCancelButtonClickListener 设置，可监听或拦截“取消”按钮点击事件；
+- 修复部分情况下 InputDialog 对话框关闭输入法不消失的 bug；
+
 v3.1.8:
 - 完善 DialogSettings.checkRenderscriptSupport(context) 判断 Renderscript 支持性逻辑；
 - CustomDialog 创建布局默认使用 WRAP_CONTENT 的 LayoutParams；

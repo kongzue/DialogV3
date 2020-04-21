@@ -91,6 +91,10 @@ public class MessageDialog extends BaseDialog {
             messageDialog.log("装载对话框: " + messageDialog.toString());
             messageDialog.context = new WeakReference<>(context);
             
+            messageDialog.okButtonDrawable = DialogSettings.okButtonDrawable;
+            messageDialog.cancelButtonDrawable = DialogSettings.cancelButtonDrawable;
+            messageDialog.otherButtonDrawable = DialogSettings.otherButtonDrawable;
+            
             switch (messageDialog.style) {
                 case STYLE_IOS:
                     messageDialog.build(messageDialog, R.layout.dialog_select_ios);
@@ -286,8 +290,9 @@ public class MessageDialog extends BaseDialog {
                         }
                     }
                     if (customView != null) {
+                        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                         boxCustom.removeAllViews();
-                        boxCustom.addView(customView);
+                        boxCustom.addView(customView, lp);
                         if (onBindView != null) onBindView.onBind(this, customView);
                         boxCustom.setVisibility(View.VISIBLE);
                     } else {
@@ -316,8 +321,9 @@ public class MessageDialog extends BaseDialog {
                         bkg.setBackgroundColor(backgroundColor);
                     }
                     if (customView != null) {
+                        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                         boxCustom.removeAllViews();
-                        boxCustom.addView(customView);
+                        boxCustom.addView(customView, lp);
                         if (onBindView != null) onBindView.onBind(this, customView);
                         boxCustom.setVisibility(View.VISIBLE);
                     } else {
@@ -333,9 +339,10 @@ public class MessageDialog extends BaseDialog {
                         
                         if (boxCustom != null) boxCustom.removeAllViews();
                         boxCustom = new RelativeLayout(context.get());
-                        boxCustom.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-                        customView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                        boxCustom.addView(customView);
+                        ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        boxCustom.setLayoutParams(lp);
+                        customView.setLayoutParams(lp);
+                        boxCustom.addView(customView, lp);
                         boxCustom.requestLayout();
                         
                         materialAlertDialog.setView(boxCustom);

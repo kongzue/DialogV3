@@ -2,6 +2,7 @@ package com.kongzue.dialog.util;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.support.v8.renderscript.Element;
 import android.support.v8.renderscript.RenderScript;
 import android.support.v8.renderscript.ScriptIntrinsicBlur;
@@ -92,6 +93,11 @@ public class DialogSettings {
     
     //全局提示框背景资源，值0时不生效
     public static int tipBackgroundResId = 0;
+    
+    //对话框，全局按钮资源
+    public static Drawable okButtonDrawable;
+    public static Drawable cancelButtonDrawable;
+    public static Drawable otherButtonDrawable;
     
     //输入对话框，是否自动弹出输入键盘
     public static boolean autoShowInputKeyboard = false;

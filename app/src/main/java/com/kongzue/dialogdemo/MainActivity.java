@@ -143,7 +143,6 @@ public class MainActivity extends BaseActivity {
         
         refreshLayout.setEnableLoadMore(false).setEnableRefresh(false).setEnableOverScrollDrag(true);
         boxBody.setPadding(dip2px(15), dip2px(50), dip2px(15), dip2px(20));
-        
     }
     
     private RelativeLayout boxUserName;
@@ -558,7 +557,7 @@ public class MainActivity extends BaseActivity {
                                         .setFontColor(Color.RED)
                                 )
                         )
-                        .setCancelable(false)
+                        .setCancelable(true)
                         .show();
                 ;
             }
@@ -575,7 +574,7 @@ public class MainActivity extends BaseActivity {
                         return false;
                     }
                 });
-                WaitDialog.dismiss(20000);
+                WaitDialog.dismiss(3000);
             }
         });
         
