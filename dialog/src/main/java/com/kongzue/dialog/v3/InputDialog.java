@@ -65,6 +65,10 @@ public class InputDialog extends MessageDialog {
             inputDialog.log("装载对话框: " + inputDialog.toString());
             inputDialog.context = new WeakReference<>(context);
             
+            inputDialog.okButtonDrawable = DialogSettings.okButtonDrawable;
+            inputDialog.cancelButtonDrawable = DialogSettings.cancelButtonDrawable;
+            inputDialog.otherButtonDrawable = DialogSettings.otherButtonDrawable;
+            
             switch (inputDialog.style) {
                 case STYLE_IOS:
                     inputDialog.build(inputDialog, R.layout.dialog_select_ios);
@@ -196,7 +200,7 @@ public class InputDialog extends MessageDialog {
                                     txtInput.requestFocus();
                                     windowToken = txtInput.getWindowToken();
                                     InputMethodManager imm = (InputMethodManager) context.get().getSystemService(Context.INPUT_METHOD_SERVICE);
-                                    imm.showSoftInput(txtInput, InputMethodManager.SHOW_FORCED);
+                                    imm.showSoftInput(txtInput, InputMethodManager.SHOW_IMPLICIT);
                                 }
                             }
                         }
@@ -356,7 +360,7 @@ public class InputDialog extends MessageDialog {
                                 txtInput.requestFocus();
                                 windowToken = txtInput.getWindowToken();
                                 InputMethodManager imm = (InputMethodManager) context.get().getSystemService(Context.INPUT_METHOD_SERVICE);
-                                imm.showSoftInput(txtInput, InputMethodManager.SHOW_FORCED);
+                                imm.showSoftInput(txtInput, InputMethodManager.SHOW_IMPLICIT);
                             }
                         }
                     }
@@ -390,6 +394,15 @@ public class InputDialog extends MessageDialog {
                 txtInput.setInputType(inputType);
                 if (inputInfo.getTextInfo() != null)
                     useTextInfo(txtInput, inputInfo.getTextInfo());
+                
+                if (inputInfo.isSelectAllText()) {
+                    txtInput.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            txtInput.selectAll();
+                        }
+                    });
+                }
             }
         }
     }

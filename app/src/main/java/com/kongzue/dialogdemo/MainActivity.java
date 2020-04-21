@@ -140,7 +140,6 @@ public class MainActivity extends BaseActivity {
         
         refreshLayout.setEnableLoadMore(false).setEnableRefresh(false).setEnableOverScrollDrag(true);
         boxBody.setPadding(dip2px(15), dip2px(50), dip2px(15), dip2px(20));
-        
     }
     
     private RelativeLayout boxUserName;
@@ -183,8 +182,8 @@ public class MainActivity extends BaseActivity {
             ((FullScreenDialog) baseDialog).setOkButton("登录", new OnDialogButtonClickListener() {
                 @Override
                 public boolean onClick(BaseDialog baseDialog, View v) {
-                    if (isNull(editPassword.getText().toString().trim())){
-                        TipDialog.show(me,"请输入密码", TipDialog.TYPE.WARNING);
+                    if (isNull(editPassword.getText().toString().trim())) {
+                        TipDialog.show(me, "请输入密码", TipDialog.TYPE.WARNING);
                         return true;
                     }
                     WaitDialog.show(me, "登录中...");
@@ -555,7 +554,7 @@ public class MainActivity extends BaseActivity {
                                         .setFontColor(Color.RED)
                                 )
                         )
-                        .setCancelable(false)
+                        .setCancelable(true)
                         .show();
                 ;
             }
@@ -569,10 +568,10 @@ public class MainActivity extends BaseActivity {
                     @Override
                     public boolean onBackClick() {
                         toast("按下返回！");
-                        return true;
+                        return false;
                     }
                 });
-                WaitDialog.dismiss(10000);
+                WaitDialog.dismiss(3000);
             }
         });
         

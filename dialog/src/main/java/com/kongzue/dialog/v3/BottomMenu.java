@@ -24,6 +24,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.kongzue.dialog.R;
 import com.kongzue.dialog.interfaces.OnBackClickListener;
+import com.kongzue.dialog.interfaces.OnDialogButtonClickListener;
 import com.kongzue.dialog.interfaces.OnShowListener;
 import com.kongzue.dialog.interfaces.OnDismissListener;
 import com.kongzue.dialog.interfaces.OnMenuItemClickListener;
@@ -54,7 +55,8 @@ public class BottomMenu extends BaseDialog {
     private String title;
     private String cancelButtonText = DialogSettings.defaultCancelButtonText;
     private boolean showCancelButton = true;
-    private OnMenuItemClickListener onMenuItemClickListener;
+    protected OnMenuItemClickListener onMenuItemClickListener;
+    protected OnDialogButtonClickListener onCancelButtonClickListener;
     
     private TextInfo menuTitleTextInfo;
     private TextInfo cancelButtonTextInfo;
@@ -246,7 +248,7 @@ public class BottomMenu extends BaseDialog {
                     View decorView = window.getDecorView();
                     int vis = decorView.getSystemUiVisibility();
                     vis |= View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
-                    vis |= WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS;
+                    vis |= android.view.WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS;
                     vis |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
                     decorView.setSystemUiVisibility(vis);
                 }
@@ -390,7 +392,13 @@ public class BottomMenu extends BaseDialog {
             btnCancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    doDismiss();
+                    if (onCancelButtonClickListener!=null){
+                        if (!onCancelButtonClickListener.onClick(BottomMenu.this,btnCancel)){
+                            doDismiss();
+                        }
+                    }else {
+                        doDismiss();
+                    }
                 }
             });
         }
@@ -718,6 +726,15 @@ public class BottomMenu extends BaseDialog {
     
     public DialogSettings.STYLE getStyle() {
         return style;
+    }
+    
+    public OnDialogButtonClickListener getOnCancelButtonClickListener() {
+        return onCancelButtonClickListener;
+    }
+    
+    public BottomMenu setOnCancelButtonClickListener(OnDialogButtonClickListener onCancelButtonClickListener) {
+        this.onCancelButtonClickListener = onCancelButtonClickListener;
+        return this;
     }
     
     public BottomMenu setStyle(DialogSettings.STYLE style) {
