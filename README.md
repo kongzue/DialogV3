@@ -775,8 +775,8 @@ A：经查证是 Google 在 API-29 下限制了反射功能导致的，Notificat
 -keep public class android.support.v8.renderscript.** { *; }
 
 # AndroidX版本请使用如下配置：
--dontwarn androidx.renderscript.RenderScript.**
--keep public class androidx.renderscript.RenderScript.** { *; }
+-dontwarn androidx.renderscript.**
+-keep public class androidx.renderscript.** { *; }
 ```
 
 ## 开源协议
