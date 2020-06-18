@@ -128,7 +128,7 @@ public class DialogHelper extends DialogFragment {
                     if (parent.get().style == DialogSettings.STYLE.STYLE_IOS) {
                         lp.windowAnimations = R.style.iOSDialogAnimStyle;
                     } else {
-                        lp.windowAnimations = R.style.dialogNoAnim;
+                        lp.windowAnimations = R.style.dialogDefaultAnim;
                     }
                     break;
             }
@@ -138,7 +138,9 @@ public class DialogHelper extends DialogFragment {
                 dialogWindow.getDecorView().setPadding(0, 0, 0, 0);
                 dialogWindow.setAttributes(lp);
             }
-            
+            if (parent.get() instanceof FullScreenDialog) {
+                lp.windowAnimations = R.style.dialogNoAnim;
+            }
             if (parent.get() instanceof CustomDialog) {
                 CustomDialog customDialog = (CustomDialog) parent.get();
                 

@@ -107,6 +107,11 @@
         <item name="android:windowExitAnimation">@anim/bottom_menu_exit</item>
     </style>
 
+    <style name="dialogDefaultAnim" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="android:windowEnterAnimation">@anim/dialog_anim_default_enter</item>
+        <item name="android:windowExitAnimation">@anim/dialog_anim_default_exit</item>
+    </style>
+
     <style name="dialogNoAnim">
         <item name="android:windowEnterAnimation">@null</item>
         <item name="android:windowExitAnimation">@anim/alpha_exit</item>
