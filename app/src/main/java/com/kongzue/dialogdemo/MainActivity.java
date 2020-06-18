@@ -430,12 +430,15 @@ public class MainActivity extends BaseActivity {
         btnBottomMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BottomMenu.show(me, new String[]{"菜单1", "菜单2", "菜单3"}, new OnMenuItemClickListener() {
-                    @Override
-                    public void onClick(String text, int index) {
-                        toast(text);
-                    }
-                });
+//                BottomMenu.show(me, new String[]{"菜单1", "菜单2", "菜单3"}, new OnMenuItemClickListener() {
+//                    @Override
+//                    public void onClick(String text, int index) {
+//                        toast(text);
+//                    }
+//                });
+                BottomMenu.build(me).setAlign(BaseDialog.ALIGN.DEFAULT)
+                        .setMenuTextList(new String[]{"菜单1", "菜单2", "菜单3"})
+                        .show();
                 
                 //List<String> datas = new ArrayList<>();
                 //datas.add("菜单1");
@@ -511,7 +514,7 @@ public class MainActivity extends BaseActivity {
                     public void onDismiss() {
                         log("消息溜走了");
                     }
-                }).setBackgroundColor(Color.RED);
+                });
             }
         });
         

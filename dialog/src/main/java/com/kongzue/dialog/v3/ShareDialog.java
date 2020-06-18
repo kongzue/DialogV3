@@ -825,4 +825,13 @@ public class ShareDialog extends BaseDialog {
         this.onBackClickListener = onBackClickListener;
         return this;
     }
+    
+    public ALIGN getAlign() {
+        return align;
+    }
+    
+    public ShareDialog setAlign(ALIGN align) {
+        this.align = align;
+        return this;
+    }
 }

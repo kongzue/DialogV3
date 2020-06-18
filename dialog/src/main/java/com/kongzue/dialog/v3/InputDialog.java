@@ -61,7 +61,7 @@ public class InputDialog extends MessageDialog {
             InputDialog inputDialog = new InputDialog();
             inputDialog.log("装载对话框: " + inputDialog.toString());
             inputDialog.context = new WeakReference<>(context);
-    
+            
             inputDialog.okButtonDrawable = DialogSettings.okButtonDrawable;
             inputDialog.cancelButtonDrawable = DialogSettings.cancelButtonDrawable;
             inputDialog.otherButtonDrawable = DialogSettings.otherButtonDrawable;
@@ -394,7 +394,7 @@ public class InputDialog extends MessageDialog {
                 txtInput.setInputType(inputType);
                 if (inputInfo.getTextInfo() != null)
                     useTextInfo(txtInput, inputInfo.getTextInfo());
-    
+                
                 if (inputInfo.isSelectAllText()) {
                     txtInput.post(new Runnable() {
                         @Override
@@ -704,7 +704,10 @@ public class InputDialog extends MessageDialog {
                 build(this, R.layout.dialog_select);
                 break;
             case STYLE_MATERIAL:
-                
+                build(this);
+                break;
+            case STYLE_MIUI:
+                build(this, R.layout.dialog_select_miui);
                 break;
         }
         
@@ -882,6 +885,15 @@ public class InputDialog extends MessageDialog {
     
     public InputDialog setOnBackClickListener(OnBackClickListener onBackClickListener) {
         this.onBackClickListener = onBackClickListener;
+        return this;
+    }
+    
+    public ALIGN getAlign() {
+        return align;
+    }
+    
+    public InputDialog setAlign(ALIGN align) {
+        this.align = align;
         return this;
     }
 }

@@ -635,4 +635,13 @@ public class FullScreenDialog extends BaseDialog {
         if (dialog != null) dialog.get().setCancelable(cancelable == BOOLEAN.TRUE);
         return this;
     }
+    
+    public ALIGN getAlign() {
+        return align;
+    }
+    
+    public FullScreenDialog setAlign(ALIGN align) {
+        this.align = align;
+        return this;
+    }
 }

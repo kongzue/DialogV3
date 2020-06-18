@@ -942,6 +942,9 @@ public class MessageDialog extends BaseDialog {
             case STYLE_MATERIAL:
                 build(this);
                 break;
+            case STYLE_MIUI:
+                build(this, R.layout.dialog_select_miui);
+                break;
         }
         
         return this;
@@ -1076,6 +1079,15 @@ public class MessageDialog extends BaseDialog {
     
     public MessageDialog setOnBackClickListener(OnBackClickListener onBackClickListener) {
         this.onBackClickListener = onBackClickListener;
+        return this;
+    }
+    
+    public ALIGN getAlign() {
+        return align;
+    }
+    
+    public MessageDialog setAlign(ALIGN align) {
+        this.align = align;
         return this;
     }
 }

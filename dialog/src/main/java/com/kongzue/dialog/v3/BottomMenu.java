@@ -212,7 +212,6 @@ public class BottomMenu extends BaseDialog {
                     window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
                     window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
                     dialog.get().getDialog().getWindow().setNavigationBarColor(Color.WHITE);
-                    boxBody.setPadding(0, 0, 0, getNavigationBarHeight());
                 }
                 break;
             case STYLE_KONGZUE:
@@ -222,7 +221,6 @@ public class BottomMenu extends BaseDialog {
                     window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
                     window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
                     window.setNavigationBarColor(Color.WHITE);
-                    boxBody.setPadding(0, 0, 0, getNavigationBarHeight());
                     
                     if (theme == DialogSettings.THEME.LIGHT) {
                         boxRoot.setBackgroundColor(context.get().getResources().getColor(R.color.menuSplitSpaceKongzue));
@@ -305,7 +303,6 @@ public class BottomMenu extends BaseDialog {
                     window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
                     window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
                     window.setNavigationBarColor(Color.WHITE);
-                    boxBody.setPadding(0, 0, 0, getNavigationBarHeight());
                     
                     if (theme == DialogSettings.THEME.LIGHT) {
                         boxRoot.setBackgroundResource(R.drawable.rect_selectdialog_miui_bkg_light);
@@ -807,6 +804,9 @@ public class BottomMenu extends BaseDialog {
             case STYLE_MATERIAL:
                 build(this, R.layout.bottom_menu_material);
                 break;
+            case STYLE_MIUI:
+                build(this, R.layout.bottom_menu_miui);
+                break;
         }
         
         return this;
@@ -967,6 +967,15 @@ public class BottomMenu extends BaseDialog {
     public BottomMenu setCancelable(boolean enable) {
         this.cancelable = enable ? BOOLEAN.TRUE : BOOLEAN.FALSE;
         if (dialog != null) dialog.get().setCancelable(cancelable == BOOLEAN.TRUE);
+        return this;
+    }
+    
+    public ALIGN getAlign() {
+        return align;
+    }
+    
+    public BottomMenu setAlign(ALIGN align) {
+        this.align = align;
         return this;
     }
 }

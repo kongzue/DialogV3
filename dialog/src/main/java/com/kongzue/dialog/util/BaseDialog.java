@@ -22,6 +22,7 @@ import com.kongzue.dialog.interfaces.OnBackClickListener;
 import com.kongzue.dialog.interfaces.OnShowListener;
 import com.kongzue.dialog.interfaces.OnDismissListener;
 import com.kongzue.dialog.v3.BottomMenu;
+import com.kongzue.dialog.v3.CustomDialog;
 import com.kongzue.dialog.v3.MessageDialog;
 import com.kongzue.dialog.v3.ShareDialog;
 import com.kongzue.dialog.v3.TipDialog;
@@ -39,33 +40,33 @@ import java.util.List;
  * CreateTime: 2019/3/22 16:17
  */
 public abstract class BaseDialog {
-
+    
     protected static WeakReference<AppCompatActivity> newContext;
-
+    
     public BaseDialog() {
         initDefaultSettings();
     }
-
+    
     protected enum BOOLEAN {
         NULL, FALSE, TRUE
     }
-
+    
     protected static List<BaseDialog> dialogList = new ArrayList<>();           //对话框队列
-
+    
     public WeakReference<AppCompatActivity> context;
     public WeakReference<DialogHelper> dialog;                                                 //我才是本体！
-
+    
     private BaseDialog baseDialog;
     private int layoutId;
     private int styleId;
     public boolean isShow;
     protected boolean isAlreadyShown;
     protected int customDialogStyleId;                                          //Dialog的style资源文件
-
+    
     protected DialogSettings.STYLE style;
     protected DialogSettings.THEME theme;
     protected BOOLEAN cancelable;
-
+    
     protected TextInfo titleTextInfo;
     protected TextInfo messageTextInfo;
     protected TextInfo tipTextInfo;
@@ -75,37 +76,52 @@ public abstract class BaseDialog {
     protected int backgroundColor = 0;
     protected View customView;
     protected int backgroundResId = -1;
-
+    
+    public enum ALIGN {
+        DEFAULT,
+        TOP,
+        BOTTOM
+    }
+    
+    protected ALIGN align = ALIGN.DEFAULT;
+    
     protected OnDismissListener onDismissListener;
     protected OnDismissListener dismissEvent;
     protected OnShowListener onShowListener;
     protected OnBackClickListener onBackClickListener;
-
+    
     public void log(Object o) {
         if (DialogSettings.DEBUGMODE) Log.i(">>>", o.toString());
     }
-
+    
     public void error(Object o) {
         if (DialogSettings.DEBUGMODE) Log.e(">>>", o.toString());
     }
-
+    
     public BaseDialog build(BaseDialog baseDialog, int layoutId) {
         this.baseDialog = baseDialog;
         this.layoutId = layoutId;
+        if ((style == DialogSettings.STYLE.STYLE_MIUI && baseDialog instanceof MessageDialog) ||
+                baseDialog instanceof BottomMenu ||
+                baseDialog instanceof ShareDialog) {
+            align = ALIGN.BOTTOM;
+        } else {
+            align = ALIGN.DEFAULT;
+        }
         return baseDialog;
     }
-
+    
     public BaseDialog build(BaseDialog baseDialog) {
         this.baseDialog = baseDialog;
         this.layoutId = -1;
         return baseDialog;
     }
-
+    
     protected void showDialog() {
         log("# showDialog");
         showDialog(R.style.BaseDialog);
     }
-
+    
     protected void showDialog(int style) {
         if (isAlreadyShown) {
             return;
@@ -140,7 +156,7 @@ public abstract class BaseDialog {
             }
         }
     }
-
+    
     protected void showNext() {
         log("# showNext:" + dialogList.size());
         List<BaseDialog> cache = new ArrayList<>();
@@ -166,7 +182,7 @@ public abstract class BaseDialog {
             }
         }
     }
-
+    
     private void showNow() {
         log("# showNow: " + toString());
         isShow = true;
@@ -216,7 +232,7 @@ public abstract class BaseDialog {
         if (DialogSettings.systemDialogStyle == 0 && style == DialogSettings.STYLE.STYLE_IOS && !(baseDialog instanceof TipDialog) && !(baseDialog instanceof BottomMenu) && !(baseDialog instanceof ShareDialog)) {
             dialog.get().setAnim(R.style.iOSDialogAnimStyle);
         }
-
+        
         if (baseDialog instanceof TipDialog) {
             if (cancelable == null)
                 cancelable = DialogSettings.cancelableTipDialog ? BOOLEAN.TRUE : BOOLEAN.FALSE;
@@ -226,22 +242,22 @@ public abstract class BaseDialog {
         }
         dialog.get().setCancelable(cancelable == BOOLEAN.TRUE);
     }
-
+    
     public abstract void bindView(View rootView);
-
+    
     public abstract void refreshView();
-
+    
     public abstract void show();
-
+    
     protected boolean dismissedFlag = false;
-
+    
     public void doDismiss() {
         dismissedFlag = true;
         if (dialog != null && dialog.get() != null) {
             dialog.get().dismiss();
         }
     }
-
+    
     protected void initDefaultSettings() {
         if (theme == null) theme = DialogSettings.theme;
         if (style == null) style = DialogSettings.style;
@@ -259,7 +275,7 @@ public abstract class BaseDialog {
             }
         }
     }
-
+    
     protected void useTextInfo(TextView textView, TextInfo textInfo) {
         if (textInfo == null) return;
         if (textView == null) return;
@@ -275,7 +291,7 @@ public abstract class BaseDialog {
         Typeface font = Typeface.create(Typeface.SANS_SERIF, textInfo.isBold() ? Typeface.BOLD : Typeface.NORMAL);
         textView.setTypeface(font);
     }
-
+    
     //网络传输文本判空规则
     protected boolean isNull(String s) {
         if (s == null || s.trim().isEmpty() || s.equals("null") || s.equals("(null)")) {
@@ -283,17 +299,17 @@ public abstract class BaseDialog {
         }
         return false;
     }
-
+    
     protected int dip2px(float dpValue) {
         final float scale = context.get().getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
     }
-
+    
     //不放心或强迫症可用的卸载方法
     public static void unload() {
         reset();
     }
-
+    
     public static void reset() {
         for (BaseDialog dialog : dialogList) {
             if (dialog.isShow) {
@@ -306,11 +322,11 @@ public abstract class BaseDialog {
         if (newContext != null) newContext.clear();
         WaitDialog.waitDialogTemp = null;
     }
-
+    
     public static int getSize() {
         return dialogList.size();
     }
-
+    
     protected int getRootHeight() {
         int displayHeight = 0;
         Display display = context.get().getWindowManager().getDefaultDisplay();
@@ -325,7 +341,7 @@ public abstract class BaseDialog {
         }
         return displayHeight;
     }
-
+    
     protected int getRootWidth() {
         int displayWidth = 0;
         Display display = context.get().getWindowManager().getDefaultDisplay();
@@ -340,7 +356,7 @@ public abstract class BaseDialog {
         }
         return displayWidth;
     }
-
+    
     protected int getNavigationBarHeight() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             WindowInsets windowInsets = null;
@@ -351,12 +367,12 @@ public abstract class BaseDialog {
         }
         return 0;
     }
-
+    
     protected void showEvent() {
-
+    
     }
-
+    
     protected void dismissEvent() {
-
+    
     }
 }
