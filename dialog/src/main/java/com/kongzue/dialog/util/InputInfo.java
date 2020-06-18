@@ -1,7 +1,5 @@
 package com.kongzue.dialog.util;
 
-import android.text.InputType;
-
 /**
  * Author: @Kongzue
  * Github: https://github.com/kongzue/

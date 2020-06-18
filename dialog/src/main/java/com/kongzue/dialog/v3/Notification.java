@@ -1,8 +1,6 @@
 package com.kongzue.dialog.v3;
 
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Handler;
@@ -14,8 +12,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowInsets;
 import android.view.WindowManager;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
@@ -249,6 +245,7 @@ public class Notification {
         isShow = true;
         if (style == null) style = DialogSettings.style;
         switch (style) {
+            case STYLE_MIUI:
             case STYLE_IOS:
                 showIOSNotification();
                 break;
@@ -485,7 +482,7 @@ public class Notification {
     }
     
     private void refreshView() {
-        if (style != DialogSettings.STYLE.STYLE_IOS) {
+        if (style != DialogSettings.STYLE.STYLE_IOS && style != DialogSettings.STYLE.STYLE_MIUI) {
             if (btnNotic != null) {
                 if (backgroundColor == 0)
                     if (style == DialogSettings.STYLE.STYLE_KONGZUE) {

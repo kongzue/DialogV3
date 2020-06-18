@@ -5,8 +5,6 @@ import android.content.DialogInterface;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -17,7 +15,6 @@ import android.view.Display;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowInsets;
-import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.kongzue.dialog.R;
@@ -25,7 +22,7 @@ import com.kongzue.dialog.interfaces.OnBackClickListener;
 import com.kongzue.dialog.interfaces.OnShowListener;
 import com.kongzue.dialog.interfaces.OnDismissListener;
 import com.kongzue.dialog.v3.BottomMenu;
-import com.kongzue.dialog.v3.FullScreenDialog;
+import com.kongzue.dialog.v3.MessageDialog;
 import com.kongzue.dialog.v3.ShareDialog;
 import com.kongzue.dialog.v3.TipDialog;
 import com.kongzue.dialog.v3.WaitDialog;
@@ -182,6 +179,9 @@ public abstract class BaseDialog {
         }
         FragmentManager fragmentManager = context.get().getSupportFragmentManager();
         dialog = new WeakReference<>(new DialogHelper().setLayoutId(baseDialog, layoutId));
+        if (baseDialog instanceof MessageDialog && style == DialogSettings.STYLE.STYLE_MIUI) {
+            styleId = R.style.BottomDialog;
+        }
         if (baseDialog instanceof BottomMenu || baseDialog instanceof ShareDialog) {
             styleId = R.style.BottomDialog;
         }
@@ -349,14 +349,7 @@ public abstract class BaseDialog {
                 return windowInsets.getStableInsetBottom();
             }
         }
-        int resourceId = 0;
-        int rid = context.get().getResources().getIdentifier("config_showNavigationBar", "bool", "android");
-        if (rid != 0) {
-            resourceId = context.get().getResources().getIdentifier("navigation_bar_height", "dimen", "android");
-            return context.get().getResources().getDimensionPixelSize(resourceId);
-        } else {
-            return 0;
-        }
+        return 0;
     }
 
     protected void showEvent() {

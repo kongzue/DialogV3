@@ -2,9 +2,6 @@ package com.kongzue.dialog.v3;
 
 import android.support.v7.app.AppCompatActivity;
 
-import com.kongzue.dialog.interfaces.OnDismissListener;
-import com.kongzue.dialog.util.DialogSettings;
-
 /**
  * Author: @Kongzue
  * Github: https://github.com/kongzue/

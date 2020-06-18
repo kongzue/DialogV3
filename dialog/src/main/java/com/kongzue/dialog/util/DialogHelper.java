@@ -2,6 +2,7 @@ package com.kongzue.dialog.util;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -23,6 +24,7 @@ import com.kongzue.dialog.R;
 import com.kongzue.dialog.v3.FullScreenDialog;
 import com.kongzue.dialog.v3.BottomMenu;
 import com.kongzue.dialog.v3.CustomDialog;
+import com.kongzue.dialog.v3.MessageDialog;
 import com.kongzue.dialog.v3.ShareDialog;
 import com.kongzue.dialog.v3.TipDialog;
 
@@ -95,6 +97,7 @@ public class DialogHelper extends DialogFragment {
     
     private void refreshDialogPosition(Dialog dialog) {
         if (dialog != null && parent != null) {
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             if (parent.get() instanceof BottomMenu || parent.get() instanceof ShareDialog) {
                 dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
                 Window window = dialog.getWindow();
@@ -117,9 +120,21 @@ public class DialogHelper extends DialogFragment {
                 WindowManager.LayoutParams lp = window.getAttributes();
                 lp.width = display.getWidth();
                 lp.windowAnimations = R.style.dialogNoAnim;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    lp.layoutInDisplayCutoutMode = LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+                }
                 window.setGravity(Gravity.BOTTOM);
                 window.setWindowAnimations(R.style.dialogNoAnim);
                 window.setAttributes(lp);
+            }
+            if (parent.get() instanceof MessageDialog && parent.get().style == DialogSettings.STYLE.STYLE_MIUI) {
+                Window window = dialog.getWindow();
+                window.setGravity(Gravity.BOTTOM);
+                WindowManager.LayoutParams params = window.getAttributes();
+                params.width = WindowManager.LayoutParams.MATCH_PARENT;
+                params.height = WindowManager.LayoutParams.WRAP_CONTENT;
+                window.getDecorView().setPadding(0, 0, 0, 0);
+                window.setAttributes(params);
             }
             if (parent.get() instanceof CustomDialog) {
                 CustomDialog customDialog = (CustomDialog) parent.get();

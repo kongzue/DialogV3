@@ -1,6 +1,5 @@
 package com.kongzue.dialog.v3;
 
-import android.app.Dialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;

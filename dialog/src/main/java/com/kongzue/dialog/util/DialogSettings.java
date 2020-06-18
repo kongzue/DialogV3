@@ -1,7 +1,6 @@
 package com.kongzue.dialog.util;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v8.renderscript.Element;
 import android.support.v8.renderscript.RenderScript;
@@ -21,7 +20,7 @@ import com.kongzue.dialog.util.view.BlurView;
 public class DialogSettings {
     
     public enum STYLE {
-        STYLE_MATERIAL, STYLE_KONGZUE, STYLE_IOS
+        STYLE_MATERIAL, STYLE_KONGZUE, STYLE_IOS, STYLE_MIUI
     }
     
     public enum THEME {

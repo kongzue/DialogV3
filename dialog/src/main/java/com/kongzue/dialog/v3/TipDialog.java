@@ -1,18 +1,11 @@
 package com.kongzue.dialog.v3;
 
-import android.app.ActivityManager;
-import android.app.Dialog;
-import android.content.ComponentName;
-import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.DrawableRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -273,7 +266,9 @@ public class TipDialog extends BaseDialog {
                     bkgResId = R.drawable.rect_light;
                     int darkColor = Color.rgb(0, 0, 0);
                     blurFrontColor = Color.argb(blurAlpha, 255, 255, 255);
-                    progress.setup(R.color.black);
+                    if (progress != null) {
+                        progress.setup(R.color.black);
+                    }
                     txtInfo.setTextColor(darkColor);
                     if (type != null) {
                         boxProgress.setVisibility(View.GONE);
@@ -301,7 +296,9 @@ public class TipDialog extends BaseDialog {
                     bkgResId = R.drawable.rect_dark;
                     int lightColor = Color.rgb(255, 255, 255);
                     blurFrontColor = Color.argb(blurAlpha, 0, 0, 0);
-                    progress.setup(R.color.white);
+                    if (progress != null) {
+                        progress.setup(R.color.white);
+                    }
                     txtInfo.setTextColor(lightColor);
                     if (type != null) {
                         boxProgress.setVisibility(View.GONE);
@@ -538,12 +535,24 @@ public class TipDialog extends BaseDialog {
         void onBind(TipDialog dialog, View v);
     }
     
+    @Deprecated
     public TextInfo getMessageTextInfo() {
         return messageTextInfo;
     }
     
+    @Deprecated
     public TipDialog setMessageTextInfo(TextInfo messageTextInfo) {
         this.messageTextInfo = messageTextInfo;
+        refreshView();
+        return this;
+    }
+    
+    public TextInfo getTipTextInfo() {
+        return tipTextInfo;
+    }
+    
+    public TipDialog setTipTextInfo(TextInfo tipTextInfo) {
+        this.tipTextInfo = tipTextInfo;
         refreshView();
         return this;
     }

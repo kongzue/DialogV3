@@ -11,7 +11,6 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.TypedValue;
-import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -598,6 +597,7 @@ public class FullScreenDialog extends BaseDialog {
         Dialog dialog = super.dialog.get().getDialog();
         dialog.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
+        //lp.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
         }
@@ -615,6 +615,7 @@ public class FullScreenDialog extends BaseDialog {
                 
                 Window window = dialog.get().getDialog().getWindow();
                 WindowManager.LayoutParams lp = window.getAttributes();
+                //lp.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
                 lp.width = screenWidth;
                 lp.height = screenHeight;
                 window.setGravity(Gravity.BOTTOM);

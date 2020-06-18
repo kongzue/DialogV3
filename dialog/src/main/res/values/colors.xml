@@ -38,4 +38,5 @@
     <color name="materialDarkTitleColor">#9BA0A6</color>
     <color name="kongzueDarkBkgColor">#202125</color>
     <color name="materialDarkBackgroundColor">#2D2E30</color>
+    <color name="dialogButtonMIUITextGray">#606060</color>
 </resources>

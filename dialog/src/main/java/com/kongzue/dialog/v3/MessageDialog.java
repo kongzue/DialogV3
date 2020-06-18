@@ -105,6 +105,9 @@ public class MessageDialog extends BaseDialog {
                 case STYLE_MATERIAL:
                     messageDialog.build(messageDialog);
                     break;
+                case STYLE_MIUI:
+                    messageDialog.build(messageDialog, R.layout.dialog_select_miui);
+                    break;
             }
             return messageDialog;
         }
@@ -446,6 +449,40 @@ public class MessageDialog extends BaseDialog {
                         }
                     });
                     break;
+                case STYLE_MIUI:
+                    if (theme == DialogSettings.THEME.LIGHT) {
+                        bkgResId = R.drawable.rect_selectdialog_miui_bkg_light;
+                    } else {
+                        bkgResId = R.drawable.rect_selectdialog_miui_bkg_dark;
+                        
+                        txtDialogTitle.setTextColor(Color.parseColor("#D3D3D3"));
+                        txtDialogTip.setTextColor(Color.parseColor("#D3D3D3"));
+                        txtInput.setBackgroundResource(R.drawable.editbox_dialog_bkg_miui_dark);
+                        
+                        btnSelectPositive.setBackgroundResource(R.drawable.button_selectdialog_miui_blue_dark);
+                        btnSelectOther.setBackgroundResource(R.drawable.button_selectdialog_miui_gray_dark);
+                        btnSelectNegative.setBackgroundResource(R.drawable.button_selectdialog_miui_gray_dark);
+                        
+                        btnSelectPositive.setTextColor(Color.parseColor("#D3D3D3"));
+                        btnSelectOther.setTextColor(Color.parseColor("#D3D3D3"));
+                        btnSelectNegative.setTextColor(Color.parseColor("#D3D3D3"));
+                    }
+                    if (customView != null) {
+                        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        boxCustom.removeAllViews();
+                        boxCustom.addView(customView, lp);
+                        if (onBindView != null) onBindView.onBind(this, customView);
+                        boxCustom.setVisibility(View.VISIBLE);
+                    } else {
+                        boxCustom.setVisibility(View.GONE);
+                    }
+                    if (backgroundResId != -1) {
+                        bkg.setBackgroundResource(backgroundResId);
+                    } else {
+                        bkg.setBackgroundResource(bkgResId);
+                    }
+                    refreshTextViews();
+                    break;
             }
         }
         
@@ -576,17 +613,31 @@ public class MessageDialog extends BaseDialog {
                     boxButton.addView(btnSelectNegative);
                     boxButton.addView(btnSelectOther);
                     
-                    if (okButtonDrawable == null && cancelButtonDrawable == null && otherButtonDrawable == null && theme == DialogSettings.THEME.LIGHT) {
-                        btnSelectPositive.setBackgroundResource(R.drawable.button_selectdialog_kongzue_white);
-                        btnSelectNegative.setBackgroundResource(R.drawable.button_selectdialog_kongzue_white);
-                        btnSelectOther.setBackgroundResource(R.drawable.button_selectdialog_kongzue_white);
+                    if (style == DialogSettings.STYLE.STYLE_MIUI) {
+                        if (okButtonDrawable == null && cancelButtonDrawable == null && otherButtonDrawable == null && theme == DialogSettings.THEME.LIGHT) {
+                            btnSelectPositive.setBackgroundResource(R.drawable.button_selectdialog_miui_blue);
+                            btnSelectNegative.setBackgroundResource(R.drawable.button_selectdialog_miui_gray);
+                            btnSelectOther.setBackgroundResource(R.drawable.button_selectdialog_miui_gray);
+                        }
+                        
+                        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) btnSelectOther.getLayoutParams();
+                        lp.setMargins(0, dip2px(10), 0, 0);
+                        btnSelectOther.setLayoutParams(lp);
+                        btnSelectNegative.setLayoutParams(lp);
+                        btnSelectPositive.setLayoutParams(lp);
+                    } else {
+                        if (okButtonDrawable == null && cancelButtonDrawable == null && otherButtonDrawable == null && theme == DialogSettings.THEME.LIGHT) {
+                            btnSelectPositive.setBackgroundResource(R.drawable.button_selectdialog_kongzue_white);
+                            btnSelectNegative.setBackgroundResource(R.drawable.button_selectdialog_kongzue_white);
+                            btnSelectOther.setBackgroundResource(R.drawable.button_selectdialog_kongzue_white);
+                        }
+                        
+                        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) btnSelectOther.getLayoutParams();
+                        lp.setMargins(0, 1, 0, 0);
+                        btnSelectOther.setLayoutParams(lp);
+                        btnSelectNegative.setLayoutParams(lp);
+                        btnSelectPositive.setLayoutParams(lp);
                     }
-                    
-                    LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) btnSelectOther.getLayoutParams();
-                    lp.setMargins(0, 1, 0, 0);
-                    btnSelectOther.setLayoutParams(lp);
-                    btnSelectNegative.setLayoutParams(lp);
-                    btnSelectPositive.setLayoutParams(lp);
                 }
                 
             }

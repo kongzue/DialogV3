@@ -92,6 +92,9 @@ public class ShareDialog extends BaseDialog {
                 case STYLE_MATERIAL:
                     shareDialog.build(shareDialog, R.layout.dialog_share_material);
                     break;
+                case STYLE_MIUI:
+                    shareDialog.build(shareDialog, R.layout.dialog_share_miui);
+                    break;
             }
             return shareDialog;
         }
@@ -242,6 +245,27 @@ public class ShareDialog extends BaseDialog {
                     txtTitle.setTextColor(context.get().getResources().getColor(R.color.materialDarkTitleColor));
                 }
                 break;
+            case STYLE_MIUI:
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    window = dialog.get().getDialog().getWindow();
+                    window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                    dialog.get().getDialog().getWindow().setNavigationBarColor(Color.WHITE);
+                    boxBody.setPadding(0, 0, 0, getNavigationBarHeight());
+                }
+        
+                if (theme == DialogSettings.THEME.LIGHT) {
+                    boxBody.setBackgroundResource(R.drawable.rect_selectdialog_miui_bkg_light);
+                    btnCancel.setBackgroundResource(R.drawable.button_selectdialog_miui_gray);
+                    btnCancel.setTextColor(context.get().getResources().getColor(R.color.dialogButtonMIUITextGray));
+                    txtTitle.setTextColor(context.get().getResources().getColor(R.color.black));
+                } else {
+                    boxBody.setBackgroundResource(R.drawable.rect_selectdialog_miui_bkg_dark);
+                    btnCancel.setBackgroundResource(R.drawable.button_selectdialog_miui_gray_dark);
+                    btnCancel.setTextColor(Color.parseColor("#D3D3D3"));
+                    txtTitle.setTextColor(Color.parseColor("#D3D3D3"));
+                }
+                break;
         }
         
         refreshView();
@@ -357,6 +381,7 @@ public class ShareDialog extends BaseDialog {
                         }
                     }
                     break;
+                case STYLE_MIUI:
                 case STYLE_KONGZUE:
                     if (items != null) {
                         boxItem.removeAllViews();
@@ -612,6 +637,7 @@ public class ShareDialog extends BaseDialog {
             case STYLE_IOS:
                 build(this, R.layout.dialog_share_ios);
                 break;
+            case STYLE_MIUI:
             case STYLE_KONGZUE:
                 build(this, R.layout.dialog_share_kongzue);
                 break;

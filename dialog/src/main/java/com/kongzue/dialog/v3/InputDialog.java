@@ -3,9 +3,7 @@ package com.kongzue.dialog.v3;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.ColorStateList;
-import android.content.res.Resources;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.IBinder;
@@ -77,6 +75,9 @@ public class InputDialog extends MessageDialog {
                     break;
                 case STYLE_MATERIAL:
                     inputDialog.build(inputDialog);
+                    break;
+                case STYLE_MIUI:
+                    inputDialog.build(inputDialog, R.layout.dialog_select_miui);
                     break;
             }
             return inputDialog;
