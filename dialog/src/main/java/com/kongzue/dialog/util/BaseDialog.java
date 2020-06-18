@@ -23,6 +23,7 @@ import com.kongzue.dialog.interfaces.OnBackClickListener;
 import com.kongzue.dialog.interfaces.OnShowListener;
 import com.kongzue.dialog.interfaces.OnDismissListener;
 import com.kongzue.dialog.v3.BottomMenu;
+import com.kongzue.dialog.v3.MessageDialog;
 import com.kongzue.dialog.v3.ShareDialog;
 import com.kongzue.dialog.v3.TipDialog;
 import com.kongzue.dialog.v3.WaitDialog;
@@ -76,6 +77,14 @@ public abstract class BaseDialog {
     protected View customView;
     protected int backgroundResId = -1;
     
+    public enum ALIGN {
+        DEFAULT,
+        TOP,
+        BOTTOM
+    }
+    
+    protected ALIGN align = ALIGN.DEFAULT;
+    
     protected OnDismissListener onDismissListener;
     protected OnDismissListener dismissEvent;
     protected OnShowListener onShowListener;
@@ -92,6 +101,13 @@ public abstract class BaseDialog {
     public BaseDialog build(BaseDialog baseDialog, int layoutId) {
         this.baseDialog = baseDialog;
         this.layoutId = layoutId;
+        if ((style == DialogSettings.STYLE.STYLE_MIUI && baseDialog instanceof MessageDialog) ||
+                baseDialog instanceof BottomMenu ||
+                baseDialog instanceof ShareDialog) {
+            align = ALIGN.BOTTOM;
+        } else {
+            align = ALIGN.DEFAULT;
+        }
         return baseDialog;
     }
     
@@ -179,6 +195,9 @@ public abstract class BaseDialog {
         }
         FragmentManager fragmentManager = context.get().getSupportFragmentManager();
         dialog = new WeakReference<>(new DialogHelper().setLayoutId(baseDialog, layoutId));
+        if (baseDialog instanceof MessageDialog && style == DialogSettings.STYLE.STYLE_MIUI) {
+            styleId = R.style.BottomDialog;
+        }
         if (baseDialog instanceof BottomMenu || baseDialog instanceof ShareDialog) {
             styleId = R.style.BottomDialog;
         }
@@ -346,14 +365,7 @@ public abstract class BaseDialog {
                 return windowInsets.getStableInsetBottom();
             }
         }
-        int resourceId = 0;
-        int rid = context.get().getResources().getIdentifier("config_showNavigationBar", "bool", "android");
-        if (rid != 0) {
-            resourceId = context.get().getResources().getIdentifier("navigation_bar_height", "dimen", "android");
-            return context.get().getResources().getDimensionPixelSize(resourceId);
-        } else {
-            return 0;
-        }
+        return 0;
     }
     
     protected void showEvent() {

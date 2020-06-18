@@ -2,6 +2,7 @@ package com.kongzue.dialog.util;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.RippleDrawable;
 import android.util.Log;
 
 import androidx.renderscript.Element;
@@ -20,7 +21,7 @@ import com.kongzue.dialog.interfaces.DialogLifeCycleListener;
 public class DialogSettings {
     
     public enum STYLE {
-        STYLE_MATERIAL, STYLE_KONGZUE, STYLE_IOS
+        STYLE_MATERIAL, STYLE_KONGZUE, STYLE_IOS, STYLE_MIUI
     }
     
     public enum THEME {

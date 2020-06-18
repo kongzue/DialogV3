@@ -539,9 +539,9 @@ public class FullScreenDialog extends BaseDialog {
         return this;
     }
     
-    private OnBindView onBindView;
+    private FullScreenDialog.OnBindView onBindView;
     
-    public FullScreenDialog setCustomView(int customViewLayoutId, OnBindView onBindView) {
+    public FullScreenDialog setCustomView(int customViewLayoutId, FullScreenDialog.OnBindView onBindView) {
         customView = LayoutInflater.from(context.get()).inflate(customViewLayoutId, null);
         this.onBindView = onBindView;
         refreshView();
@@ -599,6 +599,7 @@ public class FullScreenDialog extends BaseDialog {
         Dialog dialog = super.dialog.get().getDialog();
         dialog.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
+        //lp.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
         }
@@ -616,6 +617,7 @@ public class FullScreenDialog extends BaseDialog {
                 
                 Window window = dialog.get().getDialog().getWindow();
                 WindowManager.LayoutParams lp = window.getAttributes();
+                //lp.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
                 lp.width = screenWidth;
                 lp.height = screenHeight;
                 window.setGravity(Gravity.BOTTOM);
@@ -633,6 +635,15 @@ public class FullScreenDialog extends BaseDialog {
     public FullScreenDialog setCancelable(boolean enable) {
         this.cancelable = enable ? BOOLEAN.TRUE : BOOLEAN.FALSE;
         if (dialog != null) dialog.get().setCancelable(cancelable == BOOLEAN.TRUE);
+        return this;
+    }
+    
+    public ALIGN getAlign() {
+        return align;
+    }
+    
+    public FullScreenDialog setAlign(ALIGN align) {
+        this.align = align;
         return this;
     }
 }

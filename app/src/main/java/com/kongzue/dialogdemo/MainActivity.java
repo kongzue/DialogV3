@@ -1,14 +1,19 @@
 package com.kongzue.dialogdemo;
 
 import android.app.ActivityManager;
+import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.text.InputType;
+import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
+import android.view.WindowManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -38,9 +43,9 @@ import com.kongzue.dialog.util.BaseDialog;
 import com.kongzue.dialog.util.DialogSettings;
 import com.kongzue.dialog.util.InputInfo;
 import com.kongzue.dialog.util.TextInfo;
-import com.kongzue.dialog.v3.BottomMenu;
 import com.kongzue.dialog.v3.CustomDialog;
 import com.kongzue.dialog.v3.FullScreenDialog;
+import com.kongzue.dialog.v3.BottomMenu;
 import com.kongzue.dialog.v3.MessageDialog;
 import com.kongzue.dialog.v3.InputDialog;
 import com.kongzue.dialog.v3.Notification;
@@ -64,6 +69,7 @@ public class MainActivity extends BaseActivity {
     private RadioButton rdoIos;
     private RadioButton rdoMaterial;
     private RadioButton rdoKongzue;
+    private RadioButton rdoMiui;
     private RadioGroup grpTheme;
     private RadioButton rdoLight;
     private RadioButton rdoDark;
@@ -98,6 +104,7 @@ public class MainActivity extends BaseActivity {
         rdoIos = findViewById(R.id.rdo_ios);
         rdoMaterial = findViewById(R.id.rdo_material);
         rdoKongzue = findViewById(R.id.rdo_kongzue);
+        rdoMiui = findViewById(R.id.rdo_miui);
         grpTheme = findViewById(R.id.grp_theme);
         rdoLight = findViewById(R.id.rdo_light);
         rdoDark = findViewById(R.id.rdo_dark);
@@ -126,7 +133,7 @@ public class MainActivity extends BaseActivity {
     }
     
     @Override
-    public void initDatas(JumpParameter paramer) {
+    public void initDatas(JumpParameter parameter) {
         DialogSettings.init();
         DialogSettings.checkRenderscriptSupport(this);
         DialogSettings.DEBUGMODE = true;
@@ -530,7 +537,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 InputDialog.build(me)
-                        .setButtonTextInfo(new TextInfo().setFontColor(Color.GREEN))
+                        //.setButtonTextInfo(new TextInfo().setFontColor(Color.GREEN))
                         .setTitle("提示").setMessage("请输入密码（123456）")
                         .setInputText("111111")
                         .setOkButton("确定", new OnInputDialogButtonClickListener() {
@@ -548,11 +555,11 @@ public class MainActivity extends BaseActivity {
                         .setCancelButton("取消")
                         .setHintText("请输入密码")
                         .setInputInfo(new InputInfo()
-                                .setMAX_LENGTH(6)
-                                .setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD)
-                                .setTextInfo(new TextInfo()
-                                        .setFontColor(Color.RED)
-                                )
+                                        .setMAX_LENGTH(6)
+                                        .setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD)
+                                //.setTextInfo(new TextInfo()
+                                //        .setFontColor(Color.RED)
+                                //)
                         )
                         .setCancelable(true)
                         .show();
@@ -645,6 +652,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 MessageDialog.show(me, "提示", "一般的AlertDialog在显示时如果其依附的Activity被finish掉，会发生WindowLeaked错误导致程序崩溃，但Kongzue Dialog没有这个问题，您可以点击下边的按钮开始，等待几秒钟，Activity会被finish掉，但您不会遇到任何崩溃问题。", "开始崩溃", "取消")
+                        .setMessageTextInfo(new TextInfo().setGravity(Gravity.LEFT))
                         .setOnOkButtonClickListener(new OnDialogButtonClickListener() {
                             @Override
                             public boolean onClick(BaseDialog baseDialog, View v) {
@@ -680,6 +688,9 @@ public class MainActivity extends BaseActivity {
                         break;
                     case R.id.rdo_material:
                         DialogSettings.style = DialogSettings.STYLE.STYLE_MATERIAL;
+                        break;
+                    case R.id.rdo_miui:
+                        DialogSettings.style = DialogSettings.STYLE.STYLE_MIUI;
                         break;
                 }
             }

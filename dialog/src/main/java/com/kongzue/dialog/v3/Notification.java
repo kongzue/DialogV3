@@ -249,6 +249,7 @@ public class Notification {
         isShow = true;
         if (style == null) style = DialogSettings.style;
         switch (style) {
+            case STYLE_MIUI:
             case STYLE_IOS:
                 showIOSNotification();
                 break;
@@ -485,7 +486,7 @@ public class Notification {
     }
     
     private void refreshView() {
-        if (style != DialogSettings.STYLE.STYLE_IOS) {
+        if (style != DialogSettings.STYLE.STYLE_IOS && style != DialogSettings.STYLE.STYLE_MIUI) {
             if (btnNotic != null) {
                 if (backgroundColor == 0)
                     if (style == DialogSettings.STYLE.STYLE_KONGZUE) {
@@ -578,7 +579,7 @@ public class Notification {
             toast.setDuration(durationTime.ordinal());
             toast.setView(view);
             toast.getView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-    
+            
             view.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
                 @Override
                 public void onViewAttachedToWindow(View v) {
@@ -609,7 +610,7 @@ public class Notification {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                             params.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
                         }
-    
+                        
                         Field tnNextViewField = mTN.getClass().getDeclaredField("mNextView");
                         tnNextViewField.setAccessible(true);
                         tnNextViewField.set(mTN, toast.getView());

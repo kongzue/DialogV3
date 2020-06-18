@@ -93,6 +93,9 @@ public class BottomMenu extends BaseDialog {
                 case STYLE_MATERIAL:
                     bottomMenu.build(bottomMenu, R.layout.bottom_menu_material);
                     break;
+                case STYLE_MIUI:
+                    bottomMenu.build(bottomMenu, R.layout.bottom_menu_miui);
+                    break;
             }
             return bottomMenu;
         }
@@ -210,7 +213,6 @@ public class BottomMenu extends BaseDialog {
                     window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
                     window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
                     dialog.get().getDialog().getWindow().setNavigationBarColor(Color.WHITE);
-                    boxBody.setPadding(0, 0, 0, getNavigationBarHeight());
                 }
                 break;
             case STYLE_KONGZUE:
@@ -220,7 +222,6 @@ public class BottomMenu extends BaseDialog {
                     window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
                     window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
                     window.setNavigationBarColor(Color.WHITE);
-                    boxBody.setPadding(0, 0, 0, getNavigationBarHeight());
                     
                     if (theme == DialogSettings.THEME.LIGHT) {
                         boxRoot.setBackgroundColor(context.get().getResources().getColor(R.color.menuSplitSpaceKongzue));
@@ -296,6 +297,35 @@ public class BottomMenu extends BaseDialog {
                     boxCancel.setBackgroundResource(bkgResId);
                 }
                 break;
+            case STYLE_MIUI:
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    Window window = dialog.get().getDialog().getWindow();
+                    window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                    window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+                    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                    window.setNavigationBarColor(Color.WHITE);
+                    
+                    if (theme == DialogSettings.THEME.LIGHT) {
+                        boxRoot.setBackgroundResource(R.drawable.rect_selectdialog_miui_bkg_light);
+                        btnCancel.setBackgroundResource(R.drawable.button_selectdialog_miui_gray);
+                        btnCancel.setTextColor(context.get().getResources().getColor(R.color.dialogButtonMIUITextGray));
+                        txtTitle.setTextColor(context.get().getResources().getColor(R.color.black));
+                    } else {
+                        boxRoot.setBackgroundResource(R.drawable.rect_selectdialog_miui_bkg_dark);
+                        btnCancel.setBackgroundResource(R.drawable.button_selectdialog_miui_gray_dark);
+                        btnCancel.setTextColor(Color.parseColor("#D3D3D3"));
+                        txtTitle.setTextColor(Color.parseColor("#D3D3D3"));
+                    }
+                    
+                    //设置底部导航栏按钮暗色，无效，悬赏解决————
+                    View decorView = window.getDecorView();
+                    int vis = decorView.getSystemUiVisibility();
+                    vis |= View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
+                    vis |= android.view.WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS;
+                    vis |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+                    decorView.setSystemUiVisibility(vis);
+                }
+                break;
         }
         
         refreshView();
@@ -356,7 +386,19 @@ public class BottomMenu extends BaseDialog {
                         menuArrayAdapter = new IOSMenuArrayAdapter(context.get(), R.layout.item_bottom_menu_ios, menuTextList);
                     }
                     listMenu.setAdapter(menuArrayAdapter);
-                    
+                    break;
+                case STYLE_MIUI:
+                    if (showCancelButton) {
+                        if (boxCancel != null) boxCancel.setVisibility(View.VISIBLE);
+                    } else {
+                        if (boxCancel != null) boxCancel.setVisibility(View.GONE);
+                    }
+                    if (customAdapter != null) {
+                        menuArrayAdapter = customAdapter;
+                    } else {
+                        menuArrayAdapter = new NormalMenuArrayAdapter(context.get(), R.layout.item_bottom_menu_miui, menuTextList);
+                    }
+                    listMenu.setAdapter(menuArrayAdapter);
                     break;
             }
             if (customView != null) {
@@ -392,11 +434,11 @@ public class BottomMenu extends BaseDialog {
             btnCancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (onCancelButtonClickListener!=null){
-                        if (!onCancelButtonClickListener.onClick(BottomMenu.this,btnCancel)){
+                    if (onCancelButtonClickListener != null) {
+                        if (!onCancelButtonClickListener.onClick(BottomMenu.this, btnCancel)) {
                             doDismiss();
                         }
-                    }else {
+                    } else {
                         doDismiss();
                     }
                 }
@@ -548,19 +590,28 @@ public class BottomMenu extends BaseDialog {
             if (null != text) {
                 viewHolder.textView.setText(text);
                 
-                if (style == DialogSettings.STYLE.STYLE_KONGZUE) {
-                    if (theme == DialogSettings.THEME.LIGHT) {
-                        viewHolder.textView.setTextColor(context.getResources().getColor(R.color.dark));
-                    } else {
-                        viewHolder.textView.setTextColor(context.getResources().getColor(R.color.materialDarkTextColor));
-                    }
-                }
-                if (style == DialogSettings.STYLE.STYLE_MATERIAL) {
-                    if (theme == DialogSettings.THEME.LIGHT) {
-                        viewHolder.textView.setTextColor(context.getResources().getColor(R.color.notificationTipTextColorMaterial));
-                    } else {
-                        viewHolder.textView.setTextColor(context.getResources().getColor(R.color.materialDarkTextColor));
-                    }
+                switch (style) {
+                    case STYLE_MATERIAL:
+                        if (theme == DialogSettings.THEME.LIGHT) {
+                            viewHolder.textView.setTextColor(context.getResources().getColor(R.color.notificationTipTextColorMaterial));
+                        } else {
+                            viewHolder.textView.setTextColor(context.getResources().getColor(R.color.materialDarkTextColor));
+                        }
+                        break;
+                    case STYLE_KONGZUE:
+                        if (theme == DialogSettings.THEME.LIGHT) {
+                            viewHolder.textView.setTextColor(context.getResources().getColor(R.color.dark));
+                        } else {
+                            viewHolder.textView.setTextColor(context.getResources().getColor(R.color.materialDarkTextColor));
+                        }
+                        break;
+                    case STYLE_MIUI:
+                        if (theme == DialogSettings.THEME.LIGHT) {
+                            viewHolder.textView.setTextColor(context.getResources().getColor(R.color.dark));
+                        } else {
+                            viewHolder.textView.setTextColor(Color.parseColor("#D3D3D3"));
+                        }
+                        break;
                 }
                 
                 useTextInfo(viewHolder.textView, menuTextInfo);
@@ -754,6 +805,9 @@ public class BottomMenu extends BaseDialog {
             case STYLE_MATERIAL:
                 build(this, R.layout.bottom_menu_material);
                 break;
+            case STYLE_MIUI:
+                build(this, R.layout.bottom_menu_miui);
+                break;
         }
         
         return this;
@@ -914,6 +968,15 @@ public class BottomMenu extends BaseDialog {
     public BottomMenu setCancelable(boolean enable) {
         this.cancelable = enable ? BOOLEAN.TRUE : BOOLEAN.FALSE;
         if (dialog != null) dialog.get().setCancelable(cancelable == BOOLEAN.TRUE);
+        return this;
+    }
+    
+    public ALIGN getAlign() {
+        return align;
+    }
+    
+    public BottomMenu setAlign(ALIGN align) {
+        this.align = align;
         return this;
     }
 }

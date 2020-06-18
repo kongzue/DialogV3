@@ -27,14 +27,6 @@ public class CustomDialog extends BaseDialog {
     private boolean fullScreen = false;
     private OnBindView onBindView;
     
-    public enum ALIGN {
-        DEFAULT,
-        TOP,
-        BOTTOM
-    }
-    
-    protected ALIGN align;
-    
     private CustomDialog() {
         log("装载自定义对话框: " + toString());
     }

@@ -96,82 +96,65 @@ public class DialogHelper extends DialogFragment {
     
     private void refreshDialogPosition(Dialog dialog) {
         if (dialog != null && parent != null) {
-            if (parent.get() instanceof BottomMenu || parent.get() instanceof ShareDialog) {
-                dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                Window window = dialog.getWindow();
-                window.getDecorView().setPadding(0, 0, 0, 0);
-                WindowManager windowManager = getActivity().getWindowManager();
-                Display display = windowManager.getDefaultDisplay();
-                WindowManager.LayoutParams lp = window.getAttributes();
-                lp.width = display.getWidth();
-                lp.windowAnimations = R.style.bottomMenuAnim;
-                window.setGravity(Gravity.BOTTOM);
-                window.setWindowAnimations(R.style.bottomMenuAnim);
-                window.setAttributes(lp);
-            }
+            Window dialogWindow = dialog.getWindow();
+            WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+            dialogWindow.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             if (parent.get() instanceof FullScreenDialog) {
-                dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                Window window = dialog.getWindow();
-                window.getDecorView().setPadding(0, 0, 0, 0);
+                dialogWindow.addFlags(lp.FLAG_TRANSLUCENT_STATUS);
+                dialogWindow.getDecorView().setPadding(0, 0, 0, 0);
                 WindowManager windowManager = getActivity().getWindowManager();
                 Display display = windowManager.getDefaultDisplay();
-                WindowManager.LayoutParams lp = window.getAttributes();
                 lp.width = display.getWidth();
                 lp.windowAnimations = R.style.dialogNoAnim;
-                window.setGravity(Gravity.BOTTOM);
-                window.setWindowAnimations(R.style.dialogNoAnim);
-                window.setAttributes(lp);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    lp.layoutInDisplayCutoutMode = LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+                }
+                dialogWindow.setGravity(Gravity.BOTTOM);
+                dialogWindow.setWindowAnimations(R.style.dialogNoAnim);
+                dialogWindow.setAttributes(lp);
             }
+            switch (parent.get().align) {
+                case TOP:
+                    dialogWindow.setGravity(Gravity.TOP);
+                    lp.windowAnimations = R.style.topMenuAnim;
+                    break;
+                case BOTTOM:
+                    dialogWindow.setGravity(Gravity.BOTTOM);
+                    lp.windowAnimations = R.style.bottomMenuAnim;
+                    break;
+                case DEFAULT:
+                    dialogWindow.setGravity(Gravity.CENTER);
+                    if (parent.get().style == DialogSettings.STYLE.STYLE_IOS) {
+                        lp.windowAnimations = R.style.iOSDialogAnimStyle;
+                    } else {
+                        lp.windowAnimations = R.style.dialogNoAnim;
+                    }
+                    break;
+            }
+            if (parent.get().style == DialogSettings.STYLE.STYLE_MIUI || parent.get() instanceof BottomMenu || parent.get() instanceof ShareDialog) {
+                lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+                lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+                dialogWindow.getDecorView().setPadding(0, 0, 0, 0);
+                dialogWindow.setAttributes(lp);
+            }
+            if (parent.get() instanceof  FullScreenDialog){
+                lp.windowAnimations = R.style.dialogNoAnim;
+            }
+            
             if (parent.get() instanceof CustomDialog) {
                 CustomDialog customDialog = (CustomDialog) parent.get();
                 
                 if (customDialog.isFullScreen()) {
-                    dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                    Window window = dialog.getWindow();
-                    window.getDecorView().setPadding(0, 0, 0, 0);
+                    dialogWindow.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                    dialogWindow.getDecorView().setPadding(0, 0, 0, 0);
                     WindowManager windowManager = getActivity().getWindowManager();
                     Display display = windowManager.getDefaultDisplay();
-                    WindowManager.LayoutParams lp = window.getAttributes();
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                         lp.layoutInDisplayCutoutMode = LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
                     }
                     lp.width = display.getWidth();
                     lp.height = display.getHeight();
-                    window.setAttributes(lp);
-                }
-                Window window;
-                WindowManager windowManager;
-                Display display;
-                WindowManager.LayoutParams lp;
-                if (customDialog.getAlign() != null) {
-                    switch (customDialog.getAlign()) {
-                        case BOTTOM:
-                            dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                            window = dialog.getWindow();
-                            window.getDecorView().setPadding(0, 0, 0, 0);
-                            windowManager = getActivity().getWindowManager();
-                            display = windowManager.getDefaultDisplay();
-                            lp = window.getAttributes();
-                            lp.width = display.getWidth();
-                            lp.windowAnimations = R.style.bottomMenuAnim;
-                            window.setGravity(Gravity.BOTTOM);
-                            window.setWindowAnimations(R.style.bottomMenuAnim);
-                            window.setAttributes(lp);
-                            break;
-                        case TOP:
-                            dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                            window = dialog.getWindow();
-                            window.getDecorView().setPadding(0, 0, 0, 0);
-                            windowManager = getActivity().getWindowManager();
-                            display = windowManager.getDefaultDisplay();
-                            lp = window.getAttributes();
-                            lp.width = display.getWidth();
-                            lp.windowAnimations = R.style.topMenuAnim;
-                            window.setGravity(Gravity.TOP);
-                            window.setWindowAnimations(R.style.topMenuAnim);
-                            window.setAttributes(lp);
-                            break;
-                    }
+                    dialogWindow.setAttributes(lp);
                 }
             }
         }

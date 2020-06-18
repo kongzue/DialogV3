@@ -79,6 +79,9 @@ public class InputDialog extends MessageDialog {
                 case STYLE_MATERIAL:
                     inputDialog.build(inputDialog);
                     break;
+                case STYLE_MIUI:
+                    inputDialog.build(inputDialog, R.layout.dialog_select_miui);
+                    break;
             }
             return inputDialog;
         }
@@ -704,7 +707,10 @@ public class InputDialog extends MessageDialog {
                 build(this, R.layout.dialog_select);
                 break;
             case STYLE_MATERIAL:
-                
+                build(this);
+                break;
+            case STYLE_MIUI:
+                build(this, R.layout.dialog_select_miui);
                 break;
         }
         
@@ -882,6 +888,15 @@ public class InputDialog extends MessageDialog {
     
     public InputDialog setOnBackClickListener(OnBackClickListener onBackClickListener) {
         this.onBackClickListener = onBackClickListener;
+        return this;
+    }
+    
+    public ALIGN getAlign() {
+        return align;
+    }
+    
+    public InputDialog setAlign(ALIGN align) {
+        this.align = align;
         return this;
     }
 }

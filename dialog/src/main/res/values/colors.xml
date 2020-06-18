@@ -15,8 +15,8 @@
     <color name="dialogSplitIOSDark">#4e4e50</color>
     <color name="dialogButtonIOSNormal">#007aff</color>
 
-    <color name="dialogBkgIOSLight">#e6F4F5F6</color>
-    <color name="dialogBkgDark">#f0181818</color>
+    <color name="dialogBkgIOSLight">#F4F5F6</color>
+    <color name="dialogBkgDark">#181818</color>
     <color name="dialogButtonBlueDark">#14dfdfdf</color>
     <color name="dialogButtonBlueDarkPress">#1ec0d4f1</color>
     <color name="dialogButtonGrayDark">#14dfdfdf</color>
@@ -38,4 +38,5 @@
     <color name="materialDarkTitleColor">#9BA0A6</color>
     <color name="kongzueDarkBkgColor">#202125</color>
     <color name="materialDarkBackgroundColor">#2D2E30</color>
+    <color name="dialogButtonMIUITextGray">#606060</color>
 </resources>
