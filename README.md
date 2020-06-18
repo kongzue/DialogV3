@@ -16,6 +16,8 @@
 
 ![Kongzue Dialog V3](https://github.com/kongzue/Res/raw/master/app/src/main/res/mipmap-xxxhdpi/img_dialog_v3.png)
 
+![Kongzue Dialog V3 MIUI](https://github.com/kongzue/Res/raw/master/app/src/main/res/mipmap-xxxhdpi/img_dialog_v3_miui.jpg)
+
 ### Kongzue Dialog V3 的优势
 
 #### 1，不会发生 WindowLeaked 错误
