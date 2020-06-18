@@ -127,7 +127,7 @@ public class DialogHelper extends DialogFragment {
                     if (parent.get().style == DialogSettings.STYLE.STYLE_IOS) {
                         lp.windowAnimations = R.style.iOSDialogAnimStyle;
                     } else {
-                        lp.windowAnimations = R.style.dialogNoAnim;
+                        lp.windowAnimations = R.style.dialogDefaultAnim;
                     }
                     break;
             }
