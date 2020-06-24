@@ -19,6 +19,7 @@
 
     <style name="DarkDialogWithShadow" parent="Theme.AppCompat.Dialog.Alert">
         <item name="android:backgroundDimAmount">0.4</item>
+        <item name="android:background">@color/dark</item>
     </style>
 
     <style name="iOSDialogAnimStyle">

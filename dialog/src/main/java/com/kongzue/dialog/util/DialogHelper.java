@@ -94,7 +94,7 @@ public class DialogHelper extends DialogFragment {
         return dialog;
     }
     
-    private void refreshDialogPosition(Dialog dialog) {
+    private void refreshDialogPosition(final Dialog dialog) {
         if (dialog != null && parent != null) {
             Window dialogWindow = dialog.getWindow();
             WindowManager.LayoutParams lp = dialogWindow.getAttributes();
@@ -137,7 +137,7 @@ public class DialogHelper extends DialogFragment {
                 dialogWindow.getDecorView().setPadding(0, 0, 0, 0);
                 dialogWindow.setAttributes(lp);
             }
-            if (parent.get() instanceof  FullScreenDialog){
+            if (parent.get() instanceof FullScreenDialog) {
                 lp.windowAnimations = R.style.dialogNoAnim;
             }
             
