@@ -436,7 +436,7 @@ public class MainActivity extends BaseActivity {
 //                        toast(text);
 //                    }
 //                });
-                BottomMenu.build(me).setAlign(BaseDialog.ALIGN.DEFAULT)
+                BottomMenu.build(me)
                         .setMenuTextList(new String[]{"菜单1", "菜单2", "菜单3"})
                         .show();
                 

@@ -206,22 +206,9 @@ public class BottomMenu extends BaseDialog {
                     imgTab.setBackgroundResource(R.drawable.rect_share_material_tab_dark);
                     txtTitle.setTextColor(context.get().getResources().getColor(R.color.materialDarkTitleColor));
                 }
-                
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    Window window = dialog.get().getDialog().getWindow();
-                    window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                    dialog.get().getDialog().getWindow().setNavigationBarColor(Color.WHITE);
-                }
                 break;
             case STYLE_KONGZUE:
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    Window window = dialog.get().getDialog().getWindow();
-                    window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                    window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-                    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                    window.setNavigationBarColor(Color.WHITE);
-                    
                     if (theme == DialogSettings.THEME.LIGHT) {
                         boxRoot.setBackgroundColor(context.get().getResources().getColor(R.color.menuSplitSpaceKongzue));
                         txtTitle.setBackgroundColor(context.get().getResources().getColor(R.color.white));
@@ -243,14 +230,6 @@ public class BottomMenu extends BaseDialog {
                         btnCancel.setBackgroundResource(R.drawable.button_menu_kongzue_dark);
                         txtTitle.setTextColor(context.get().getResources().getColor(R.color.materialDarkTitleColor));
                     }
-                    
-                    //设置底部导航栏按钮暗色，无效，悬赏解决————
-                    View decorView = window.getDecorView();
-                    int vis = decorView.getSystemUiVisibility();
-                    vis |= View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
-                    vis |= android.view.WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS;
-                    vis |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
-                    decorView.setSystemUiVisibility(vis);
                 }
                 break;
             case STYLE_IOS:
@@ -298,12 +277,6 @@ public class BottomMenu extends BaseDialog {
                 break;
             case STYLE_MIUI:
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    Window window = dialog.get().getDialog().getWindow();
-                    window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                    window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-                    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                    window.setNavigationBarColor(Color.WHITE);
-                    
                     if (theme == DialogSettings.THEME.LIGHT) {
                         boxRoot.setBackgroundResource(R.drawable.rect_selectdialog_miui_bkg_light);
                         btnCancel.setBackgroundResource(R.drawable.button_selectdialog_miui_gray);
@@ -315,14 +288,6 @@ public class BottomMenu extends BaseDialog {
                         btnCancel.setTextColor(Color.parseColor("#D3D3D3"));
                         txtTitle.setTextColor(Color.parseColor("#D3D3D3"));
                     }
-                    
-                    //设置底部导航栏按钮暗色，无效，悬赏解决————
-                    View decorView = window.getDecorView();
-                    int vis = decorView.getSystemUiVisibility();
-                    vis |= View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
-                    vis |= android.view.WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS;
-                    vis |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
-                    decorView.setSystemUiVisibility(vis);
                 }
                 break;
         }

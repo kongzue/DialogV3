@@ -170,15 +170,6 @@ public class ShareDialog extends BaseDialog {
                 }
                 break;
             case STYLE_MATERIAL:
-                window = dialog.get().getDialog().getWindow();
-                WindowManager windowManager = context.get().getWindowManager();
-                Display display = windowManager.getDefaultDisplay();
-                WindowManager.LayoutParams lp = window.getAttributes();
-                lp.width = display.getWidth();
-                lp.height = display.getHeight() - getStatusBarHeight();
-                window.setGravity(Gravity.BOTTOM);
-                window.setAttributes(lp);
-                
                 boxBody.setY(boxBody.getHeight());
                 boxBody.post(new Runnable() {
                     @Override
@@ -205,23 +196,8 @@ public class ShareDialog extends BaseDialog {
                         doDismiss();
                     }
                 });
-                
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                    dialog.get().getDialog().getWindow().setNavigationBarColor(Color.WHITE);
-                    boxBody.setPadding(0, 0, 0, getNavigationBarHeight());
-                }
                 break;
             case STYLE_KONGZUE:
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    window = dialog.get().getDialog().getWindow();
-                    window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                    dialog.get().getDialog().getWindow().setNavigationBarColor(Color.WHITE);
-                    boxBody.setPadding(0, 0, 0, getNavigationBarHeight());
-                }
-                
                 if (theme == DialogSettings.THEME.LIGHT) {
                     boxBody.setBackgroundColor(context.get().getResources().getColor(R.color.menuSplitSpaceKongzue));
                     txtTitle.setBackgroundColor(context.get().getResources().getColor(R.color.white));
@@ -246,14 +222,6 @@ public class ShareDialog extends BaseDialog {
                 }
                 break;
             case STYLE_MIUI:
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    window = dialog.get().getDialog().getWindow();
-                    window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                    dialog.get().getDialog().getWindow().setNavigationBarColor(Color.WHITE);
-                    boxBody.setPadding(0, 0, 0, getNavigationBarHeight());
-                }
-        
                 if (theme == DialogSettings.THEME.LIGHT) {
                     boxBody.setBackgroundResource(R.drawable.rect_selectdialog_miui_bkg_light);
                     btnCancel.setBackgroundResource(R.drawable.button_selectdialog_miui_gray);

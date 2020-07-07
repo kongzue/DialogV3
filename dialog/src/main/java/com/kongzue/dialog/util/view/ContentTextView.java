@@ -12,8 +12,10 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.kongzue.dialog.R;
+import com.kongzue.dialog.util.DialogSettings;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -72,7 +74,7 @@ public class ContentTextView extends android.support.v7.widget.AppCompatTextView
     
     public ContentTextView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        init(context,attrs);
+        init(context, attrs);
     }
     
     public ContentTextView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
@@ -145,15 +147,17 @@ public class ContentTextView extends android.support.v7.widget.AppCompatTextView
         try {
             android.content.ClipData clip = android.content.ClipData.newPlainText(null, sb.toString());
             clipboard.setPrimaryClip(clip);
-        }catch (Exception e){
-            Log.e(TAG, e.getMessage());
+        } catch (Exception e) {
+            if (DialogSettings.DEBUGMODE) {
+                Log.e(TAG, e.getMessage());
+            }
         }
     }
     
     /**
      * 重置状态
      */
-    public void reset(){
+    public void reset() {
         inProcess = false;
         addCharPosition.clear();
         newText = "";
@@ -301,7 +305,7 @@ public class ContentTextView extends android.support.v7.widget.AppCompatTextView
         }
         if (!inProcess && getVisibility() == VISIBLE) {
             addCharPosition.clear();
-           
+            
             if (getWidth() == 0) {
                 //没有测量完毕，等待测量完毕后处理
                 post(new Runnable() {

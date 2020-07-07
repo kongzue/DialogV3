@@ -2,10 +2,10 @@
 献给要求安卓照着苹果设计稿做开发的产品们（手动滑稽
 
 <a href="https://github.com/kongzue/dialogV3/">
-<img src="https://img.shields.io/badge/Kongzue%20Dialog-3.2.0-green.svg" alt="Kongzue Dialog">
+<img src="https://img.shields.io/badge/Kongzue%20Dialog-3.2.1-green.svg" alt="Kongzue Dialog">
 </a> 
-<a href="https://bintray.com/myzchh/maven/dialogV3/3.2.0/link">
-<img src="https://img.shields.io/badge/Maven-3.2.0-blue.svg" alt="Maven">
+<a href="https://bintray.com/myzchh/maven/dialogV3/3.2.1/link">
+<img src="https://img.shields.io/badge/Maven-3.2.1-blue.svg" alt="Maven">
 </a> 
 <a href="http://www.apache.org/licenses/LICENSE-2.0">
 <img src="https://img.shields.io/badge/License-Apache%202.0-red.svg" alt="License">
@@ -92,14 +92,14 @@ Maven仓库：
 <dependency>
   <groupId>com.kongzue.dialog_v3</groupId>
   <artifactId>dialog</artifactId>
-  <version>3.2.0</version>
+  <version>3.2.1</version>
   <type>pom</type>
 </dependency>
 ```
 Gradle：
 在dependencies{}中添加引用：
 ```
-implementation 'com.kongzue.dialog_v3:dialog:3.2.0'
+implementation 'com.kongzue.dialog_v3:dialog:3.2.1'
 ```
 
 从 Kongzue Dialog V2 升级至 Kongzue Dialog V3，请参考 [Kongzue Dialog V2升级注意事项](kongzue_dialog_v2_upto_v3.md)
@@ -110,7 +110,7 @@ implementation 'com.kongzue.dialog_v3:dialog:3.2.0'
 
 在dependencies{}中添加引用：
 ```
-implementation 'com.kongzue.dialog_v3x:dialog:3.2.0'       
+implementation 'com.kongzue.dialog_v3x:dialog:3.2.1'       
 ```
 
 ## 全局配置
@@ -812,6 +812,9 @@ limitations under the License.
 ```
 
 ## 更新日志：
+v3.2.1:
+- 修复 BottomDialog 以及 ShareDialog 底部导航栏折叠问题；
+
 v3.2.0:
 - 调整对齐方式，为所有非提示和等待的 Dialog 组件提供 setAlign(...) 自定义屏幕顶端/底部的额外设置；
 - 新增 MIUI12 主题；
