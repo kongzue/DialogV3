@@ -1,12 +1,17 @@
 package com.kongzue.dialog.util.view;
 
+import android.animation.Animator;
 import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.kongzue.dialog.R;
+import com.kongzue.dialog.interfaces.OnDismissListener;
 import com.kongzue.dialog.interfaces.OnNotificationClickListener;
 
 /**
@@ -18,8 +23,7 @@ import com.kongzue.dialog.interfaces.OnNotificationClickListener;
  */
 public class NotifyToastShadowView extends RelativeLayout {
     
-    private Activity activity;
-    private int notifyHeight;
+    private OnDismissListener onDismissListener;
     private OnNotificationClickListener onNotificationClickListener;
     private boolean dispatchTouchEvent = true;
     
@@ -35,35 +39,91 @@ public class NotifyToastShadowView extends RelativeLayout {
         super(context, attrs, defStyleAttr);
     }
     
+    private boolean isTouched = false;
+    private boolean isTouchDown = false;
+    private float touchDownY = 0;
+    
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (dispatchTouchEvent) {
-            if (ev.getAction() == MotionEvent.ACTION_CANCEL || ev.getAction() == MotionEvent.ACTION_DOWN || ev.getAction() == MotionEvent.ACTION_UP) {
-                if (ev.getY() < notifyHeight) {
-                    if (onNotificationClickListener != null) onNotificationClickListener.onClick();
-                    onNotificationClickListener = null;
-                    return super.dispatchTouchEvent(ev);
-                } else {
-                    if (activity != null) activity.dispatchTouchEvent(ev);
-                    return false;
-                }
-            } else {
-                return super.dispatchTouchEvent(ev);
+            switch (ev.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    isTouched = true;
+                    isTouchDown = true;
+                    touchDownY = ev.getY();
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    if (isTouchDown) {
+                        float delta = ev.getY() - touchDownY;
+                        setY(delta > 0 ? 0 : delta);
+                    }
+                    break;
+                case MotionEvent.ACTION_CANCEL:
+                case MotionEvent.ACTION_UP:
+                    isTouchDown = false;
+                    if (getY() > -dip2px(5)) {
+                        LinearLayout BoxNotic = findViewById(R.id.btn_notic);
+                        if (ev.getY() > 0 && ev.getY() < BoxNotic.getHeight()) {
+                            if (onNotificationClickListener != null)
+                                onNotificationClickListener.onClick();
+                        }
+                    }
+                    if (getY() > -dip2px(30)) {
+                        animate().y(0).setDuration(100).setListener(null);
+                    } else {
+                        animate().y(-getHeight()).alpha(0).setDuration(200).setListener(new Animator.AnimatorListener() {
+                            @Override
+                            public void onAnimationStart(Animator animation) {
+                            
+                            }
+                            
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                setVisibility(GONE);
+                                if (onDismissListener != null) onDismissListener.onDismiss();
+                            }
+                            
+                            @Override
+                            public void onAnimationCancel(Animator animation) {
+                            
+                            }
+                            
+                            @Override
+                            public void onAnimationRepeat(Animator animation) {
+                            
+                            }
+                        });
+                    }
+                    break;
             }
-        }else{
+            return true;
+        } else {
             return super.dispatchTouchEvent(ev);
         }
     }
     
-    public void setParent(Context c) {
-        if (c instanceof Activity) this.activity = (Activity) c;
+    public int dip2px(float dpValue) {
+        final float scale = getResources().getDisplayMetrics().density;
+        return (int) (dpValue * scale + 0.5f);
     }
     
-    public void setNotifyHeight(int notifyHeight) {
-        this.notifyHeight = notifyHeight;
+    public boolean isTouched() {
+        return isTouched;
+    }
+    
+    public OnDismissListener getOnDismissListener() {
+        return onDismissListener;
+    }
+    
+    public NotifyToastShadowView setOnDismissListener(OnDismissListener onDismissListener) {
+        this.onDismissListener = onDismissListener;
+        return this;
     }
     
     public void setOnNotificationClickListener(OnNotificationClickListener onNotificationClickListener) {
+        setFocusable(true);
+        setEnabled(true);
+        setClickable(true);
         this.onNotificationClickListener = onNotificationClickListener;
     }
     

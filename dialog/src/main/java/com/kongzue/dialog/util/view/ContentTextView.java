@@ -305,7 +305,6 @@ public class ContentTextView extends android.support.v7.widget.AppCompatTextView
         }
         if (!inProcess && getVisibility() == VISIBLE) {
             addCharPosition.clear();
-            
             if (getWidth() == 0) {
                 //没有测量完毕，等待测量完毕后处理
                 post(new Runnable() {

@@ -2,10 +2,10 @@
 献给要求安卓照着苹果设计稿做开发的产品们（手动滑稽
 
 <a href="https://github.com/kongzue/dialogV3/">
-<img src="https://img.shields.io/badge/Kongzue%20Dialog-3.2.1-green.svg" alt="Kongzue Dialog">
+<img src="https://img.shields.io/badge/Kongzue%20Dialog-3.2.2-green.svg" alt="Kongzue Dialog">
 </a> 
-<a href="https://bintray.com/myzchh/maven/dialogV3/3.2.1/link">
-<img src="https://img.shields.io/badge/Maven-3.2.1-blue.svg" alt="Maven">
+<a href="https://bintray.com/myzchh/maven/dialogV3/3.2.2/link">
+<img src="https://img.shields.io/badge/Maven-3.2.2-blue.svg" alt="Maven">
 </a> 
 <a href="http://www.apache.org/licenses/LICENSE-2.0">
 <img src="https://img.shields.io/badge/License-Apache%202.0-red.svg" alt="License">
@@ -92,14 +92,14 @@ Maven仓库：
 <dependency>
   <groupId>com.kongzue.dialog_v3</groupId>
   <artifactId>dialog</artifactId>
-  <version>3.2.1</version>
+  <version>3.2.2</version>
   <type>pom</type>
 </dependency>
 ```
 Gradle：
 在dependencies{}中添加引用：
 ```
-implementation 'com.kongzue.dialog_v3:dialog:3.2.1'
+implementation 'com.kongzue.dialog_v3:dialog:3.2.2'
 ```
 
 从 Kongzue Dialog V2 升级至 Kongzue Dialog V3，请参考 [Kongzue Dialog V2升级注意事项](kongzue_dialog_v2_upto_v3.md)
@@ -110,7 +110,7 @@ implementation 'com.kongzue.dialog_v3:dialog:3.2.1'
 
 在dependencies{}中添加引用：
 ```
-implementation 'com.kongzue.dialog_v3x:dialog:3.2.1'       
+implementation 'com.kongzue.dialog_v3x:dialog:3.2.2'       
 ```
 
 ## 全局配置
@@ -144,6 +144,7 @@ DialogSettings.autoShowInputKeyboard = (boolean);       //设置 InputDialog 是
 DialogSettings.okButtonDrawable = (drawable);           //设置确定按钮背景资源
 DialogSettings.cancelButtonDrawable = (drawable);       //设置取消按钮背景资源
 DialogSettings.otherButtonDrawable = (drawable);        //设置其他按钮背景资源
+Notification.mode = Notification.Mode.FLOATING_WINDOW;  //通知实现方式。可选 TOAST 使用自定义吐司实现以及 FLOATING_WINDOW 悬浮窗实现方式
 
 //检查 Renderscript 兼容性，若设备不支持，DialogSettings.isUseBlur 会自动关闭；
 boolean renderscriptSupport = DialogSettings.checkRenderscriptSupport(context)
@@ -428,7 +429,21 @@ Notification.show(MainActivity.this, "提示", "提示信息", R.mipmap.ico_wech
 });
 ```
 
-⚠️请注意，通知功能为避免使用悬浮窗权限因此是基于反射 Toast 实现的，但在 Android Q 以上版本中 Google 逐渐缩紧反射权限，此功能可能运行不稳定，包括不限于出现点击无效、无法显示等问题，请谨慎使用。
+在 3.2.2 版本以上，由于最 Android 10+ 对自定义 Toast 进行了屏蔽，可能导致部分功能无法正常工作，您可以通过以下方式修改通知的实现方式：
+```
+Notification.mode = Notification.Mode.TOAST;                //使用自定义 Toast 实现方式
+Notification.mode = Notification.Mode.FLOATING_WINDOW;      //使用悬浮窗实现方式
+```
+使用悬浮窗实现方式默认只能够在一个界面显示通知，您可以在 AndroidManifest.xml 增加以下权限声明来开启跨窗口悬浮窗权限：
+```
+<uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+```
+另附申请开启悬浮窗权限的代码：
+```
+Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
+intent.setData(Uri.parse("package:" + getPackageName()));
+startActivityForResult(intent, 0);
+```
 
 ### 分享对话框
 分享对话框会从屏幕底部弹出，并提供图标加文字的选择分享列表。
@@ -812,6 +827,11 @@ limitations under the License.
 ```
 
 ## 更新日志：
+v3.2.2:
+- 新增 Notification.mode 通知实现方式修改，具体请参照章节 <a href="#通知">通知</a>；
+- 所有组件的文本入参方式由 String 修改为 CharSequence，以支持更多的文本形式；
+- 修复其他 bug；
+
 v3.2.1:
 - 修复 BottomDialog 以及 ShareDialog 底部导航栏折叠问题；
 

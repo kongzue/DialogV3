@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.RelativeLayout;
 
 import com.kongzue.dialog.R;
 import com.kongzue.dialog.v3.FullScreenDialog;
@@ -32,6 +33,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.view.WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
 import static android.view.WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
 
 /**
@@ -101,7 +103,7 @@ public class DialogHelper extends DialogFragment {
             WindowManager.LayoutParams lp = dialogWindow.getAttributes();
             dialogWindow.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             if (parent.get() instanceof FullScreenDialog) {
-                dialogWindow.addFlags(lp.FLAG_TRANSLUCENT_STATUS);
+                dialogWindow.addFlags(FLAG_TRANSLUCENT_STATUS);
                 dialogWindow.getDecorView().setPadding(0, 0, 0, 0);
                 WindowManager windowManager = getActivity().getWindowManager();
                 Display display = windowManager.getDefaultDisplay();
@@ -144,9 +146,15 @@ public class DialogHelper extends DialogFragment {
             
             if (parent.get() instanceof CustomDialog) {
                 CustomDialog customDialog = (CustomDialog) parent.get();
+                if (customDialog.getCustomLayoutParams() != null) {
+                    if (customDialog.getCustomLayoutParams().width == ViewGroup.LayoutParams.MATCH_PARENT ||
+                            customDialog.getCustomLayoutParams().height == ViewGroup.LayoutParams.MATCH_PARENT) {
+                        dialogWindow.getDecorView().setPadding(0, 0, 0, 0);
+                    }
+                }
                 
                 if (customDialog.isFullScreen()) {
-                    dialogWindow.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                    dialogWindow.addFlags(FLAG_TRANSLUCENT_STATUS);
                     dialogWindow.getDecorView().setPadding(0, 0, 0, 0);
                     WindowManager windowManager = getActivity().getWindowManager();
                     Display display = windowManager.getDefaultDisplay();

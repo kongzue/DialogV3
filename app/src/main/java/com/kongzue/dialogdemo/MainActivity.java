@@ -13,6 +13,7 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -139,6 +140,7 @@ public class MainActivity extends BaseActivity {
         DialogSettings.DEBUGMODE = true;
         DialogSettings.isUseBlur = true;
         DialogSettings.autoShowInputKeyboard = true;
+        Notification.mode = Notification.Mode.FLOATING_WINDOW;
         //DialogSettings.backgroundColor = Color.BLUE;
         //DialogSettings.titleTextInfo = new TextInfo().setFontSize(50);
         //DialogSettings.buttonPositiveTextInfo = new TextInfo().setFontColor(Color.GREEN);
@@ -297,7 +299,11 @@ public class MainActivity extends BaseActivity {
                             }
                         });
                     }
-                }).setAlign(CustomDialog.ALIGN.DEFAULT).setCancelable(false).show();
+                })
+                        .setCustomLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
+                        .setAlign(CustomDialog.ALIGN.DEFAULT)
+                        .setCancelable(false)
+                        .show();
             }
         });
         
@@ -504,7 +510,7 @@ public class MainActivity extends BaseActivity {
         btnNotify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Notification.show(me, "提示", "提示信息", R.mipmap.ico_wechat).setOnNotificationClickListener(new OnNotificationClickListener() {
+                Notification.show(me.getApplication(), "提示", "提示信息", R.mipmap.ico_wechat).setOnNotificationClickListener(new OnNotificationClickListener() {
                     @Override
                     public void onClick() {
                         MessageDialog.show(me, "提示", "点击了消息");

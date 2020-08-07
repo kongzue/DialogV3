@@ -47,7 +47,7 @@ import java.lang.reflect.Field;
 public class InputDialog extends MessageDialog {
     
     private String inputText = "";
-    private String hintText;
+    private CharSequence hintText;
     
     private OnInputDialogButtonClickListener onOkButtonClickListener;
     private OnInputDialogButtonClickListener onCancelButtonClickListener;
@@ -84,7 +84,7 @@ public class InputDialog extends MessageDialog {
         }
     }
     
-    public static InputDialog show(@NonNull AppCompatActivity context, String title, String message) {
+    public static InputDialog show(@NonNull AppCompatActivity context, CharSequence title, CharSequence message) {
         synchronized (InputDialog.class) {
             InputDialog inputDialog = show(context, title, message, null, null, null);
             return inputDialog;
@@ -102,7 +102,7 @@ public class InputDialog extends MessageDialog {
         }
     }
     
-    public static InputDialog show(@NonNull AppCompatActivity context, String title, String message, String okButton) {
+    public static InputDialog show(@NonNull AppCompatActivity context, CharSequence title, CharSequence message, CharSequence okButton) {
         synchronized (InputDialog.class) {
             InputDialog inputDialog = show(context, title, message, okButton, null, null);
             return inputDialog;
@@ -121,7 +121,7 @@ public class InputDialog extends MessageDialog {
         }
     }
     
-    public static InputDialog show(@NonNull AppCompatActivity context, String title, String message, String okButton, String cancelButton) {
+    public static InputDialog show(@NonNull AppCompatActivity context, CharSequence title, CharSequence message, CharSequence okButton, CharSequence cancelButton) {
         synchronized (InputDialog.class) {
             InputDialog inputDialog = show(context, title, message, okButton, cancelButton, null);
             return inputDialog;
@@ -142,7 +142,7 @@ public class InputDialog extends MessageDialog {
         }
     }
     
-    public static InputDialog show(@NonNull AppCompatActivity context, String title, String message, String okButton, String cancelButton, String otherButton) {
+    public static InputDialog show(@NonNull AppCompatActivity context, CharSequence title, CharSequence message, CharSequence okButton, CharSequence cancelButton, CharSequence otherButton) {
         synchronized (InputDialog.class) {
             InputDialog inputDialog = build(context);
             
@@ -325,7 +325,7 @@ public class InputDialog extends MessageDialog {
                     public void onClick(View v) {
                         hideInputKeyboard();
                         if (onCancelButtonClickListener != null) {
-                            if (!onCancelButtonClickListener.onClick(InputDialog.this, v, getInputText())) {
+                            if (!onCancelButtonClickListener.onClick(InputDialog.this, v, getInputText().toString())) {
                                 doDismiss();
                             }
                         } else {
@@ -340,7 +340,7 @@ public class InputDialog extends MessageDialog {
                     public void onClick(View v) {
                         hideInputKeyboard();
                         if (onOtherButtonClickListener != null) {
-                            if (!onOtherButtonClickListener.onClick(InputDialog.this, v, getInputText())) {
+                            if (!onOtherButtonClickListener.onClick(InputDialog.this, v, getInputText().toString())) {
                                 doDismiss();
                             }
                         } else {
@@ -416,18 +416,18 @@ public class InputDialog extends MessageDialog {
     
     public String getInputText() {
         if (txtInput == null) {
-            return inputText;
+            return inputText.toString();
         } else {
             return txtInput.getText().toString();
         }
     }
     
     //其他设置
-    public String getTitle() {
+    public CharSequence getTitle() {
         return title;
     }
     
-    public InputDialog setTitle(String title) {
+    public InputDialog setTitle(CharSequence title) {
         this.title = title;
         return this;
     }
@@ -437,11 +437,11 @@ public class InputDialog extends MessageDialog {
         return this;
     }
     
-    public String getMessage() {
+    public CharSequence getMessage() {
         return message;
     }
     
-    public InputDialog setMessage(String content) {
+    public InputDialog setMessage(CharSequence content) {
         this.message = content;
         return this;
     }
@@ -451,11 +451,11 @@ public class InputDialog extends MessageDialog {
         return this;
     }
     
-    public String getOkButton() {
+    public CharSequence getOkButton() {
         return okButton;
     }
     
-    public InputDialog setOkButton(String okButton) {
+    public InputDialog setOkButton(CharSequence okButton) {
         this.okButton = okButton;
         refreshView();
         return this;
@@ -466,7 +466,7 @@ public class InputDialog extends MessageDialog {
         return this;
     }
     
-    public InputDialog setOkButton(String okButton, OnInputDialogButtonClickListener
+    public InputDialog setOkButton(CharSequence okButton, OnInputDialogButtonClickListener
             onOkButtonClickListener) {
         this.okButton = okButton;
         this.onOkButtonClickListener = onOkButtonClickListener;
@@ -486,11 +486,11 @@ public class InputDialog extends MessageDialog {
         return this;
     }
     
-    public String getCancelButton() {
+    public CharSequence getCancelButton() {
         return cancelButton;
     }
     
-    public InputDialog setCancelButton(String cancelButton) {
+    public InputDialog setCancelButton(CharSequence cancelButton) {
         this.cancelButton = cancelButton;
         refreshView();
         return this;
@@ -501,7 +501,7 @@ public class InputDialog extends MessageDialog {
         return this;
     }
     
-    public InputDialog setCancelButton(String cancelButton, OnInputDialogButtonClickListener
+    public InputDialog setCancelButton(CharSequence cancelButton, OnInputDialogButtonClickListener
             onCancelButtonClickListener) {
         this.cancelButton = cancelButton;
         this.onCancelButtonClickListener = onCancelButtonClickListener;
@@ -522,11 +522,11 @@ public class InputDialog extends MessageDialog {
         return this;
     }
     
-    public String getOtherButton() {
+    public CharSequence getOtherButton() {
         return otherButton;
     }
     
-    public InputDialog setOtherButton(String otherButton) {
+    public InputDialog setOtherButton(CharSequence otherButton) {
         this.otherButton = otherButton;
         refreshView();
         return this;
@@ -538,7 +538,7 @@ public class InputDialog extends MessageDialog {
         return this;
     }
     
-    public InputDialog setOtherButton(String otherButton, OnInputDialogButtonClickListener
+    public InputDialog setOtherButton(CharSequence otherButton, OnInputDialogButtonClickListener
             onOtherButtonClickListener) {
         this.otherButton = otherButton;
         this.onOtherButtonClickListener = onOtherButtonClickListener;
@@ -803,11 +803,11 @@ public class InputDialog extends MessageDialog {
         return this;
     }
     
-    public String getHintText() {
+    public CharSequence getHintText() {
         return hintText;
     }
     
-    public InputDialog setHintText(String hintText) {
+    public InputDialog setHintText(CharSequence hintText) {
         this.hintText = hintText;
         refreshView();
         return this;
@@ -897,3 +897,4 @@ public class InputDialog extends MessageDialog {
         return this;
     }
 }
+

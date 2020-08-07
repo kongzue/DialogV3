@@ -50,9 +50,9 @@ public class BottomMenu extends BaseDialog {
     
     private BaseAdapter customAdapter;      //允许用户自定义 Menu 的 Adapter
     
-    private List<String> menuTextList;
-    private String title;
-    private String cancelButtonText = DialogSettings.defaultCancelButtonText;
+    private List<CharSequence> menuTextList;
+    private CharSequence title;
+    private CharSequence cancelButtonText = DialogSettings.defaultCancelButtonText;
     private boolean showCancelButton = true;
     protected OnMenuItemClickListener onMenuItemClickListener;
     protected OnDialogButtonClickListener onCancelButtonClickListener;
@@ -100,7 +100,7 @@ public class BottomMenu extends BaseDialog {
         }
     }
     
-    public static BottomMenu show(@NonNull AppCompatActivity context, List<String> menuTextList, OnMenuItemClickListener onMenuItemClickListener) {
+    public static BottomMenu show(@NonNull AppCompatActivity context, List<CharSequence> menuTextList, OnMenuItemClickListener onMenuItemClickListener) {
         BottomMenu bottomMenu = build(context);
         bottomMenu.menuTextList = menuTextList;
         bottomMenu.onMenuItemClickListener = onMenuItemClickListener;
@@ -116,7 +116,7 @@ public class BottomMenu extends BaseDialog {
         return bottomMenu;
     }
     
-    public static BottomMenu show(@NonNull AppCompatActivity context, String title, List<String> menuTextList, OnMenuItemClickListener onMenuItemClickListener) {
+    public static BottomMenu show(@NonNull AppCompatActivity context, CharSequence title, List<CharSequence> menuTextList, OnMenuItemClickListener onMenuItemClickListener) {
         BottomMenu bottomMenu = build(context);
         bottomMenu.menuTextList = menuTextList;
         bottomMenu.title = title;
@@ -125,7 +125,7 @@ public class BottomMenu extends BaseDialog {
         return bottomMenu;
     }
     
-    public static BottomMenu show(@NonNull AppCompatActivity context, String title, BaseAdapter customAdapter, OnMenuItemClickListener onMenuItemClickListener) {
+    public static BottomMenu show(@NonNull AppCompatActivity context, CharSequence title, BaseAdapter customAdapter, OnMenuItemClickListener onMenuItemClickListener) {
         BottomMenu bottomMenu = build(context);
         bottomMenu.customAdapter = customAdapter;
         bottomMenu.title = title;
@@ -134,10 +134,10 @@ public class BottomMenu extends BaseDialog {
         return bottomMenu;
     }
     
-    public static BottomMenu show(@NonNull AppCompatActivity context, String[] menuTexts, OnMenuItemClickListener onMenuItemClickListener) {
+    public static BottomMenu show(@NonNull AppCompatActivity context, CharSequence[] menuTexts, OnMenuItemClickListener onMenuItemClickListener) {
         BottomMenu bottomMenu = build(context);
-        List<String> list = new ArrayList<>();
-        for (String s : menuTexts) {
+        List<CharSequence> list = new ArrayList<>();
+        for (CharSequence s : menuTexts) {
             list.add(s);
         }
         bottomMenu.menuTextList = list;
@@ -146,10 +146,10 @@ public class BottomMenu extends BaseDialog {
         return bottomMenu;
     }
     
-    public static BottomMenu show(@NonNull AppCompatActivity context, String title, String[] menuTexts, OnMenuItemClickListener onMenuItemClickListener) {
+    public static BottomMenu show(@NonNull AppCompatActivity context, CharSequence title, CharSequence[] menuTexts, OnMenuItemClickListener onMenuItemClickListener) {
         BottomMenu bottomMenu = build(context);
-        List<String> list = new ArrayList<>();
-        for (String s : menuTexts) {
+        List<CharSequence> list = new ArrayList<>();
+        for (CharSequence s : menuTexts) {
             list.add(s);
         }
         bottomMenu.menuTextList = list;
@@ -388,7 +388,7 @@ public class BottomMenu extends BaseDialog {
                         if (customAdapter != null) {
                             onMenuItemClickListener.onClick(customAdapter.getItem(position).toString(), position);
                         } else {
-                            onMenuItemClickListener.onClick(menuTextList.get(position), position);
+                            onMenuItemClickListener.onClick(menuTextList.get(position).toString(), position);
                         }
                     }
                     doDismiss();
@@ -422,7 +422,7 @@ public class BottomMenu extends BaseDialog {
     
     public class IOSMenuArrayAdapter extends NormalMenuArrayAdapter {
         
-        public IOSMenuArrayAdapter(Context context, int resourceId, List<String> objects) {
+        public IOSMenuArrayAdapter(Context context, int resourceId, List<CharSequence> objects) {
             super(context, resourceId, objects);
         }
         
@@ -438,7 +438,7 @@ public class BottomMenu extends BaseDialog {
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-            String text = objects.get(position);
+            CharSequence text = objects.get(position);
             if (null != text) {
                 viewHolder.textView.setText(text);
                 
@@ -446,7 +446,7 @@ public class BottomMenu extends BaseDialog {
                 
                 if (objects.size() == 1) {
                     if (theme == DialogSettings.THEME.LIGHT) {
-                        if (title != null && !title.trim().isEmpty()) {
+                        if (!isNull(title)) {
                             viewHolder.textView.setBackgroundResource(R.drawable.button_menu_ios_bottom_light);
                         } else {
                             if (boxCustom.getVisibility() == View.VISIBLE) {
@@ -456,7 +456,7 @@ public class BottomMenu extends BaseDialog {
                             }
                         }
                     } else {
-                        if (title != null && !title.trim().isEmpty()) {
+                        if (!isNull(title)) {
                             viewHolder.textView.setBackgroundResource(R.drawable.button_menu_ios_bottom_dark);
                         } else {
                             if (boxCustom.getVisibility() == View.VISIBLE) {
@@ -469,7 +469,7 @@ public class BottomMenu extends BaseDialog {
                 } else {
                     if (theme == DialogSettings.THEME.LIGHT) {
                         if (position == 0) {
-                            if (title != null && !title.trim().isEmpty()) {
+                            if (!isNull(title)) {
                                 viewHolder.textView.setBackgroundResource(R.drawable.button_menu_ios_center_light);
                             } else {
                                 if (boxCustom.getVisibility() == View.VISIBLE) {
@@ -485,7 +485,7 @@ public class BottomMenu extends BaseDialog {
                         }
                     } else {
                         if (position == 0) {
-                            if (title != null && !title.trim().isEmpty()) {
+                            if (!isNull(title)) {
                                 viewHolder.textView.setBackgroundResource(R.drawable.button_menu_ios_center_dark);
                             } else {
                                 if (boxCustom.getVisibility() == View.VISIBLE) {
@@ -509,10 +509,10 @@ public class BottomMenu extends BaseDialog {
     
     public class NormalMenuArrayAdapter extends ArrayAdapter {
         public int resoureId;
-        public List<String> objects;
+        public List<CharSequence> objects;
         public Context context;
         
-        public NormalMenuArrayAdapter(Context context, int resourceId, List<String> objects) {
+        public NormalMenuArrayAdapter(Context context, int resourceId, List<CharSequence> objects) {
             super(context, resourceId, objects);
             this.objects = objects;
             this.resoureId = resourceId;
@@ -529,7 +529,7 @@ public class BottomMenu extends BaseDialog {
         }
         
         @Override
-        public String getItem(int position) {
+        public CharSequence getItem(int position) {
             return objects.get(position);
         }
         
@@ -550,7 +550,7 @@ public class BottomMenu extends BaseDialog {
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-            String text = objects.get(position);
+            CharSequence text = objects.get(position);
             if (null != text) {
                 viewHolder.textView.setText(text);
                 
@@ -586,19 +586,19 @@ public class BottomMenu extends BaseDialog {
     }
     
     //其他设置
-    public List<String> getMenuTextList() {
+    public List<CharSequence> getMenuTextList() {
         return menuTextList;
     }
     
-    public BottomMenu setMenuTextList(List<String> menuTextList) {
+    public BottomMenu setMenuTextList(List<CharSequence> menuTextList) {
         this.menuTextList = menuTextList;
         refreshView();
         return this;
     }
     
-    public BottomMenu setMenuTextList(String[] menuTexts) {
-        List<String> list = new ArrayList<>();
-        for (String s : menuTexts) {
+    public BottomMenu setMenuTextList(CharSequence[] menuTexts) {
+        List<CharSequence> list = new ArrayList<>();
+        for (CharSequence s : menuTexts) {
             list.add(s);
         }
         this.menuTextList = list;
@@ -606,11 +606,11 @@ public class BottomMenu extends BaseDialog {
         return this;
     }
     
-    public String getTitle() {
+    public CharSequence getTitle() {
         return title;
     }
     
-    public BottomMenu setTitle(String title) {
+    public BottomMenu setTitle(CharSequence title) {
         this.title = title;
         refreshView();
         return this;
@@ -622,11 +622,11 @@ public class BottomMenu extends BaseDialog {
         return this;
     }
     
-    public String getCancelButtonText() {
+    public CharSequence getCancelButtonText() {
         return cancelButtonText;
     }
     
-    public BottomMenu setCancelButtonText(String cancelButtonText) {
+    public BottomMenu setCancelButtonText(CharSequence cancelButtonText) {
         this.cancelButtonText = cancelButtonText;
         refreshView();
         return this;

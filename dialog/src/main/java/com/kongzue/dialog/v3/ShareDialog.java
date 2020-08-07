@@ -53,9 +53,9 @@ public class ShareDialog extends BaseDialog {
     
     private OnItemClickListener onItemClickListener;
     
-    private String title = "分享";
+    private CharSequence title = "分享";
     private List<Item> items;
-    private String cancelButtonText = DialogSettings.defaultCancelButtonText;
+    private CharSequence cancelButtonText = DialogSettings.defaultCancelButtonText;
     
     private TextInfo titleTextInfo;
     private TextInfo itemTextInfo;
@@ -540,14 +540,14 @@ public class ShareDialog extends BaseDialog {
     
     public static class Item {
         private Bitmap icon;
-        private String text;
+        private CharSequence text;
         
-        public Item(Bitmap icon, String text) {
+        public Item(Bitmap icon, CharSequence text) {
             this.icon = icon;
             this.text = text;
         }
         
-        public Item(Context context, int iconResId, String text) {
+        public Item(Context context, int iconResId, CharSequence text) {
             this.icon = BitmapFactory.decodeResource(context.getResources(), iconResId);
             this.text = text;
         }
@@ -561,11 +561,11 @@ public class ShareDialog extends BaseDialog {
             return this;
         }
         
-        public String getText() {
+        public CharSequence getText() {
             return text;
         }
         
-        public Item setText(String text) {
+        public Item setText(CharSequence text) {
             this.text = text;
             return this;
         }
@@ -633,11 +633,11 @@ public class ShareDialog extends BaseDialog {
         return this;
     }
     
-    public String getTitle() {
+    public CharSequence getTitle() {
         return title;
     }
     
-    public ShareDialog setTitle(String title) {
+    public ShareDialog setTitle(CharSequence title) {
         this.title = title;
         refreshView();
         return this;
@@ -649,11 +649,11 @@ public class ShareDialog extends BaseDialog {
         return this;
     }
     
-    public String getCancelButtonText() {
+    public CharSequence getCancelButtonText() {
         return cancelButtonText;
     }
     
-    public ShareDialog setCancelButtonText(String cancelButtonText) {
+    public ShareDialog setCancelButtonText(CharSequence cancelButtonText) {
         this.cancelButtonText = cancelButtonText;
         refreshView();
         return this;

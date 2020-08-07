@@ -49,7 +49,7 @@ public class TipDialog extends BaseDialog {
     private OnDismissListener dismissListener;
     
     public static TipDialog waitDialogTemp;
-    protected String message;
+    protected CharSequence message;
     private TYPE type;
     private Drawable tipImage;
     
@@ -88,7 +88,7 @@ public class TipDialog extends BaseDialog {
         }
     }
     
-    public static TipDialog showWait(AppCompatActivity context, String message) {
+    public static TipDialog showWait(AppCompatActivity context, CharSequence message) {
         synchronized (TipDialog.class) {
             TipDialog waitDialog = build(context);
             
@@ -146,7 +146,7 @@ public class TipDialog extends BaseDialog {
         }
     }
     
-    public static TipDialog show(AppCompatActivity context, String message, TYPE type) {
+    public static TipDialog show(AppCompatActivity context, CharSequence message, TYPE type) {
         synchronized (TipDialog.class) {
             TipDialog waitDialog = build(context);
             
@@ -178,7 +178,7 @@ public class TipDialog extends BaseDialog {
         return show(context, context.getString(messageResId), type);
     }
     
-    public static TipDialog show(AppCompatActivity context, String message, int icoResId) {
+    public static TipDialog show(AppCompatActivity context, CharSequence message, int icoResId) {
         synchronized (TipDialog.class) {
             TipDialog waitDialog = build(context);
             
@@ -444,11 +444,11 @@ public class TipDialog extends BaseDialog {
         }, millisecond);
     }
     
-    public String getMessage() {
+    public CharSequence getMessage() {
         return message;
     }
     
-    public TipDialog setMessage(String message) {
+    public TipDialog setMessage(CharSequence message) {
         this.message = message;
         log("启动提示/等待框 -> " + toString());
         if (txtInfo != null) txtInfo.setText(message);
