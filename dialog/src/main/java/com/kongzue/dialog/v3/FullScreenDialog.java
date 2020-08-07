@@ -51,10 +51,10 @@ public class FullScreenDialog extends BaseDialog {
     
     protected OnDialogButtonClickListener onOkButtonClickListener;
     protected OnDialogButtonClickListener onCancelButtonClickListener;
-    protected String okButton;
-    protected String cancelButton;
+    protected CharSequence okButton;
+    protected CharSequence cancelButton;
     
-    private String title;
+    private CharSequence title;
     
     private TextInfo titleTextInfo;
     private TextInfo cancelButtonTextInfo;
@@ -403,11 +403,11 @@ public class FullScreenDialog extends BaseDialog {
         return this;
     }
     
-    public String getTitle() {
+    public CharSequence getTitle() {
         return title;
     }
     
-    public FullScreenDialog setTitle(String title) {
+    public FullScreenDialog setTitle(CharSequence title) {
         this.title = title;
         refreshView();
         return this;
@@ -419,11 +419,11 @@ public class FullScreenDialog extends BaseDialog {
         return this;
     }
     
-    public String getOkButton() {
+    public CharSequence getOkButton() {
         return okButton;
     }
     
-    public FullScreenDialog setOkButton(String okButton) {
+    public FullScreenDialog setOkButton(CharSequence okButton) {
         this.okButton = okButton;
         refreshView();
         return this;
@@ -434,7 +434,7 @@ public class FullScreenDialog extends BaseDialog {
         return this;
     }
     
-    public FullScreenDialog setOkButton(String okButton, OnDialogButtonClickListener onOkButtonClickListener) {
+    public FullScreenDialog setOkButton(CharSequence okButton, OnDialogButtonClickListener onOkButtonClickListener) {
         this.okButton = okButton;
         this.onOkButtonClickListener = onOkButtonClickListener;
         refreshView();
@@ -452,11 +452,11 @@ public class FullScreenDialog extends BaseDialog {
         return this;
     }
     
-    public String getCancelButton() {
+    public CharSequence getCancelButton() {
         return cancelButton;
     }
     
-    public FullScreenDialog setCancelButton(String cancelButton) {
+    public FullScreenDialog setCancelButton(CharSequence cancelButton) {
         this.cancelButton = cancelButton;
         refreshView();
         return this;
@@ -467,7 +467,7 @@ public class FullScreenDialog extends BaseDialog {
         return this;
     }
     
-    public FullScreenDialog setCancelButton(String cancelButton, OnDialogButtonClickListener onCancelButtonClickListener) {
+    public FullScreenDialog setCancelButton(CharSequence cancelButton, OnDialogButtonClickListener onCancelButtonClickListener) {
         this.cancelButton = cancelButton;
         this.onCancelButtonClickListener = onCancelButtonClickListener;
         refreshView();

@@ -1,12 +1,18 @@
 package com.kongzue.dialog.v3;
 
 import android.app.Activity;
+import android.app.AppOpsManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.PixelFormat;
 import android.graphics.Typeface;
+import android.net.Uri;
+import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
+import android.provider.Settings;
 import android.text.TextPaint;
 import android.util.Log;
 import android.util.TypedValue;
@@ -28,6 +34,7 @@ import com.kongzue.dialog.R;
 import com.kongzue.dialog.interfaces.OnDismissListener;
 import com.kongzue.dialog.interfaces.OnNotificationClickListener;
 import com.kongzue.dialog.util.DialogSettings;
+import com.kongzue.dialog.util.kToast;
 import com.kongzue.dialog.util.view.NotifyToastShadowView;
 import com.kongzue.dialog.util.SafelyHandlerWrapper;
 import com.kongzue.dialog.util.TextInfo;
@@ -49,28 +56,35 @@ public class Notification {
         SHORT, LONG
     }
     
+    public enum Mode {
+        FLOATING_WINDOW,
+        TOAST
+    }
+    
+    public static Mode mode = Mode.TOAST;
+    
+    protected kToast toast;
     private OnNotificationClickListener onNotificationClickListener;
     private OnDismissListener onDismissListener;
     
     private DialogSettings.STYLE style;
-    private DURATION_TIME durationTime = DURATION_TIME.LONG;
     private int backgroundColor;
-    
-    private Toast toast;
+    private Notification.DURATION_TIME durationTime = Notification.DURATION_TIME.LONG;
     private WeakReference<Context> context;
-    private String title;
-    private String message;
+    private CharSequence title;
+    private CharSequence message;
     private int iconResId;
     
     private View customView;
     private NotifyToastShadowView rootView;
     
     private RelativeLayout boxBody;
-    private LinearLayout btnNotic;
     private LinearLayout boxTitle;
-    private ImageView imgIcon;
+    private LinearLayout boxNotic;
+    private LinearLayout btnNotic;
     private TextView txtTitle;
     private TextView txtMessage;
+    private ImageView imgIcon;
     private RelativeLayout boxCustom;
     
     private TextInfo titleTextInfo;
@@ -79,7 +93,7 @@ public class Notification {
     private Notification() {
     }
     
-    public static Notification build(Context context, String message) {
+    public static Notification build(Context context, CharSequence message) {
         synchronized (Notification.class) {
             Notification notification = new Notification();
             notification.log("装载消息通知: " + notification.toString());
@@ -98,7 +112,7 @@ public class Notification {
         }
     }
     
-    public static Notification show(Context context, String message) {
+    public static Notification show(Context context, CharSequence message) {
         Notification notification = build(context, message);
         notification.showNotification();
         return notification;
@@ -108,7 +122,7 @@ public class Notification {
         return show(context, context.getString(messageResId));
     }
     
-    public static Notification show(Context context, String message, DURATION_TIME durationTime) {
+    public static Notification show(Context context, CharSequence message, DURATION_TIME durationTime) {
         Notification notification = build(context, message);
         notification.durationTime = durationTime;
         notification.showNotification();
@@ -119,7 +133,7 @@ public class Notification {
         return show(context, context.getString(messageResId), durationTime);
     }
     
-    public static Notification show(Context context, String message, DialogSettings.STYLE style) {
+    public static Notification show(Context context, CharSequence message, DialogSettings.STYLE style) {
         Notification notification = build(context, message);
         notification.style = style;
         notification.showNotification();
@@ -130,7 +144,7 @@ public class Notification {
         return show(context, context.getString(messageResId), style);
     }
     
-    public static Notification show(Context context, String message, DialogSettings.STYLE style, DURATION_TIME durationTime) {
+    public static Notification show(Context context, CharSequence message, DialogSettings.STYLE style, DURATION_TIME durationTime) {
         Notification notification = build(context, message);
         notification.durationTime = durationTime;
         notification.style = style;
@@ -142,7 +156,7 @@ public class Notification {
         return show(context, context.getString(messageResId), style, durationTime);
     }
     
-    public static Notification show(Context context, String title, String message) {
+    public static Notification show(Context context, CharSequence title, CharSequence message) {
         Notification notification = build(context, message);
         notification.title = title;
         notification.showNotification();
@@ -153,7 +167,7 @@ public class Notification {
         return show(context, context.getString(titleResId), context.getString(messageResId));
     }
     
-    public static Notification show(Context context, String title, String message, DURATION_TIME durationTime) {
+    public static Notification show(Context context, CharSequence title, CharSequence message, DURATION_TIME durationTime) {
         Notification notification = build(context, message);
         notification.title = title;
         notification.durationTime = durationTime;
@@ -165,7 +179,7 @@ public class Notification {
         return show(context, context.getString(titleResId), context.getString(messageResId), durationTime);
     }
     
-    public static Notification show(Context context, String title, String message, DialogSettings.STYLE style) {
+    public static Notification show(Context context, CharSequence title, CharSequence message, DialogSettings.STYLE style) {
         Notification notification = build(context, message);
         notification.title = title;
         notification.style = style;
@@ -177,7 +191,7 @@ public class Notification {
         return show(context, context.getString(titleResId), context.getString(messageResId), style);
     }
     
-    public static Notification show(Context context, String title, String message, DialogSettings.STYLE style, DURATION_TIME durationTime) {
+    public static Notification show(Context context, CharSequence title, CharSequence message, DialogSettings.STYLE style, DURATION_TIME durationTime) {
         Notification notification = build(context, message);
         notification.title = title;
         notification.durationTime = durationTime;
@@ -190,7 +204,7 @@ public class Notification {
         return show(context, context.getString(titleResId), context.getString(messageResId), style, durationTime);
     }
     
-    public static Notification show(Context context, String title, String message, int iconResId) {
+    public static Notification show(Context context, CharSequence title, CharSequence message, int iconResId) {
         Notification notification = build(context, message);
         notification.title = title;
         notification.iconResId = iconResId;
@@ -202,7 +216,7 @@ public class Notification {
         return show(context, context.getString(titleResId), context.getString(messageResId), iconResId);
     }
     
-    public static Notification show(Context context, String title, String message, int iconResId, DURATION_TIME durationTime) {
+    public static Notification show(Context context, CharSequence title, CharSequence message, int iconResId, DURATION_TIME durationTime) {
         Notification notification = build(context, message);
         notification.title = title;
         notification.iconResId = iconResId;
@@ -215,7 +229,7 @@ public class Notification {
         return show(context, context.getString(titleResId), context.getString(messageResId), iconResId, durationTime);
     }
     
-    public static Notification show(Context context, String title, String message, int iconResId, DialogSettings.STYLE style) {
+    public static Notification show(Context context, CharSequence title, CharSequence message, int iconResId, DialogSettings.STYLE style) {
         Notification notification = build(context, message);
         notification.title = title;
         notification.iconResId = iconResId;
@@ -228,7 +242,7 @@ public class Notification {
         return show(context, context.getString(titleResId), context.getString(messageResId), iconResId, style);
     }
     
-    public static Notification show(Context context, String title, String message, int iconResId, DialogSettings.STYLE style, DURATION_TIME durationTime) {
+    public static Notification show(Context context, CharSequence title, CharSequence message, int iconResId, DialogSettings.STYLE style, DURATION_TIME durationTime) {
         Notification notification = build(context, message);
         notification.title = title;
         notification.iconResId = iconResId;
@@ -267,14 +281,13 @@ public class Notification {
         rootView = (NotifyToastShadowView) inflater.inflate(R.layout.notification_material, null);
         
         boxBody = rootView.findViewById(R.id.box_body);
+        boxNotic = rootView.findViewById(R.id.box_notic);
         btnNotic = rootView.findViewById(R.id.btn_notic);
-        boxTitle = rootView.findViewById(R.id.box_title);
-        imgIcon = rootView.findViewById(R.id.img_icon);
         txtTitle = rootView.findViewById(R.id.txt_title);
         txtMessage = rootView.findViewById(R.id.txt_message);
+        imgIcon = rootView.findViewById(R.id.img_icon);
         boxCustom = rootView.findViewById(R.id.box_custom);
         
-        rootView.setParent(context.get());
         rootView.setOnNotificationClickListener(new OnNotificationClickListener() {
             @Override
             public void onClick() {
@@ -285,17 +298,11 @@ public class Notification {
             }
         });
         
-        boxBody.post(new Runnable() {
+        boxNotic.post(new Runnable() {
             @Override
             public void run() {
-                boxBody.setY(-boxBody.getHeight());
-                boxBody.animate().setInterpolator(new DecelerateInterpolator()).translationY(0).setDuration(500);
-            }
-        });
-        btnNotic.post(new Runnable() {
-            @Override
-            public void run() {
-                rootView.setNotifyHeight(btnNotic.getHeight() + getStatusBarHeight());  //可触控区域高度
+                boxNotic.setY(-boxBody.getHeight());
+                boxNotic.animate().setInterpolator(new DecelerateInterpolator(2.5f)).translationY(0).setDuration(800);
             }
         });
         
@@ -336,15 +343,7 @@ public class Notification {
             tp.setFakeBoldText(false);
         }
         
-        boxBody.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (customView == null) toast.cancel();
-                return false;
-            }
-        });
-        
-        new kToast().show(context.get(), rootView);
+        toast = new kToast(durationTime, onDismissListener).show(context.get(), rootView);
     }
     
     private void showIOSNotification() {
@@ -359,7 +358,6 @@ public class Notification {
         txtMessage = rootView.findViewById(R.id.txt_message);
         boxCustom = rootView.findViewById(R.id.box_custom);
         
-        rootView.setParent(context.get());
         rootView.setOnNotificationClickListener(new OnNotificationClickListener() {
             @Override
             public void onClick() {
@@ -370,17 +368,11 @@ public class Notification {
             }
         });
         
-        boxBody.post(new Runnable() {
-            @Override
-            public void run() {
-                boxBody.setY(-boxBody.getHeight());
-                boxBody.animate().setInterpolator(new DecelerateInterpolator()).translationY(-dip2px(5)).setDuration(500);
-            }
-        });
         btnNotic.post(new Runnable() {
             @Override
             public void run() {
-                rootView.setNotifyHeight(btnNotic.getHeight() + getStatusBarHeight());  //可触控区域高度
+                btnNotic.setY(-boxBody.getHeight());
+                btnNotic.animate().setInterpolator(new DecelerateInterpolator(2.5f)).translationY(getStatusBarHeight()-dip2px(10)).setDuration(800);
             }
         });
         
@@ -393,8 +385,6 @@ public class Notification {
         
         useTextInfo(txtTitle, titleTextInfo);
         useTextInfo(txtMessage, messageTextInfo);
-        
-        boxBody.setPadding(0, getStatusBarHeight(), 0, 0);
         
         if (isNull(title)) {
             txtTitle.setVisibility(View.GONE);
@@ -423,15 +413,7 @@ public class Notification {
             tp.setFakeBoldText(false);
         }
         
-        boxBody.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (customView == null) toast.cancel();
-                return false;
-            }
-        });
-        
-        new kToast().show(context.get(), rootView);
+        toast = new kToast(durationTime, onDismissListener).show(context.get(), rootView);
     }
     
     private void showKongzueNotification() {
@@ -439,14 +421,13 @@ public class Notification {
         rootView = (NotifyToastShadowView) inflater.inflate(R.layout.notification_kongzue, null);
         
         boxBody = rootView.findViewById(R.id.box_body);
+        boxNotic = rootView.findViewById(R.id.box_notic);
         btnNotic = rootView.findViewById(R.id.btn_notic);
-        imgIcon = rootView.findViewById(R.id.img_icon);
         txtTitle = rootView.findViewById(R.id.txt_title);
         txtMessage = rootView.findViewById(R.id.txt_message);
+        imgIcon = rootView.findViewById(R.id.img_icon);
         boxCustom = rootView.findViewById(R.id.box_custom);
         
-        rootView.setParent(context.get());
-        rootView.setNotifyHeight(dip2px(50) + getStatusBarHeight());  //可触控区域高度
         rootView.setOnNotificationClickListener(new OnNotificationClickListener() {
             @Override
             public void onClick() {
@@ -457,17 +438,11 @@ public class Notification {
             }
         });
         
-        boxBody.post(new Runnable() {
+        boxNotic.post(new Runnable() {
             @Override
             public void run() {
-                boxBody.setY(-boxBody.getHeight());
-                boxBody.animate().setInterpolator(new DecelerateInterpolator()).translationY(0).setDuration(500);
-            }
-        });
-        btnNotic.post(new Runnable() {
-            @Override
-            public void run() {
-                rootView.setNotifyHeight(btnNotic.getHeight() + getStatusBarHeight());  //可触控区域高度
+                boxNotic.setY(-boxBody.getHeight());
+                boxNotic.animate().setInterpolator(new DecelerateInterpolator(2.5f)).translationY(0).setDuration(800);
             }
         });
         
@@ -482,7 +457,7 @@ public class Notification {
         
         refreshView();
         
-        new kToast().show(context.get(), rootView);
+        toast = new kToast(durationTime, onDismissListener).show(context.get(), rootView);
     }
     
     private void refreshView() {
@@ -544,11 +519,11 @@ public class Notification {
         useTextInfo(txtMessage, messageTextInfo);
     }
     
-    public void log(Object o) {
+    public static void log(Object o) {
         if (DialogSettings.DEBUGMODE) Log.i(">>>", o.toString());
     }
     
-    public void error(Object o) {
+    public static void error(Object o) {
         if (DialogSettings.DEBUGMODE) Log.e(">>>", o.toString());
     }
     
@@ -565,114 +540,16 @@ public class Notification {
         return 0;
     }
     
-    private Method show;
-    
-    public class kToast {
-        private LinearLayout btn;
-        
-        public void show(final Context context, final View view) {
-            if (toast != null) toast.cancel();
-            toast = null;
-            
-            toast = new Toast(context.getApplicationContext());
-            toast.setGravity(Gravity.FILL_HORIZONTAL | Gravity.TOP, 0, 0);
-            toast.setDuration(durationTime.ordinal());
-            toast.setView(view);
-            toast.getView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-            
-            view.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
-                @Override
-                public void onViewAttachedToWindow(View v) {
-                
-                }
-                
-                @Override
-                public void onViewDetachedFromWindow(View v) {
-                    isShow = false;
-                    if (onDismissListener != null) onDismissListener.onDismiss();
-                }
-            });
-            
-            hookHandler(toast);
-            try {
-                Object mTN;
-                mTN = getField(toast, "mTN");
-                if (mTN != null) {
-                    Field tnParamsField = mTN.getClass().getDeclaredField("mParams");
-                    if (tnParamsField != null) {
-                        tnParamsField.setAccessible(true);
-                        WindowManager.LayoutParams params = (WindowManager.LayoutParams) tnParamsField.get(mTN);
-                        
-                        //params.windowAnimations = R.style.toastAnim;
-                        params.flags = WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-                        params.width = WindowManager.LayoutParams.MATCH_PARENT;
-                        params.height = WindowManager.LayoutParams.WRAP_CONTENT;
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                            params.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
-                        }
-                        
-                        Field tnNextViewField = mTN.getClass().getDeclaredField("mNextView");
-                        tnNextViewField.setAccessible(true);
-                        tnNextViewField.set(mTN, toast.getView());
-                    }
-                    
-                    try {
-                        //目前是没办法了，新版本Android Toast 的TN要show必须有IBinder，IBinder必须取得TN中mWM实例化对象WindowManagerImpl，这几乎没辙了
-                        Object mWM = getField(mTN, "mWM");
-                        Field tnField = mWM.getClass().getDeclaredField("mDefaultToken");
-                        tnField.setAccessible(true);
-                        IBinder token = (IBinder) tnField.get(mWM);
-                        
-                        if (Build.VERSION.SDK_INT >= 25) {
-                            show = mTN.getClass().getDeclaredMethod("show", IBinder.class);
-                        } else {
-                            show = mTN.getClass().getMethod("show");
-                        }
-                        
-                        show.invoke(mTN, token);
-                    } catch (Exception e) {
-                        //e.printStackTrace();
-                        toast.show();
-                    }
-                }
-                
-                //if (durationTime > DURATION_TIME.ALWAYS) {
-                //    handler.postDelayed(hideRunnable, mDuration * 1000);
-                //}
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        
-        private Object getField(Object object, String fieldName) throws NoSuchFieldException, IllegalAccessException {
-            Field field = object.getClass().getDeclaredField(fieldName);
-            if (field != null) {
-                field.setAccessible(true);
-                return field.get(object);
-            }
-            return null;
-        }
-    }
-    
-    //捕获8.0之前Toast的BadTokenException，Google在Android 8.0的代码提交中修复了这个问题(By @Dovar66[https://github.com/Dovar66/DToast])
-    private static void hookHandler(Toast toast) {
-        if (toast == null || Build.VERSION.SDK_INT >= 26) return;
-        try {
-            Field sField_TN = Toast.class.getDeclaredField("mTN");
-            sField_TN.setAccessible(true);
-            Field sField_TN_Handler = sField_TN.getType().getDeclaredField("mHandler");
-            sField_TN_Handler.setAccessible(true);
-            
-            Object tn = sField_TN.get(toast);
-            Handler preHandler = (Handler) sField_TN_Handler.get(tn);
-            sField_TN_Handler.set(tn, new SafelyHandlerWrapper(preHandler));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
     
     protected boolean isNull(String s) {
-        if (s == null || s.trim().isEmpty() || s.equals("null") || s.equals("(null)")) {
+        if (s == null || s.length() == 0 || s.trim().isEmpty() || s.equals("null") || s.equals("(null)")) {
+            return true;
+        }
+        return false;
+    }
+    
+    protected boolean isNull(CharSequence s) {
+        if (s == null || s.length() == 0 || s.toString().trim().isEmpty() || s.toString().equals("null") || s.toString().equals("(null)")) {
             return true;
         }
         return false;
@@ -743,11 +620,11 @@ public class Notification {
         return this;
     }
     
-    public String getTitle() {
+    public CharSequence getTitle() {
         return title;
     }
     
-    public Notification setTitle(String title) {
+    public Notification setTitle(CharSequence title) {
         this.title = title;
         refreshView();
         return this;
@@ -759,11 +636,11 @@ public class Notification {
         return this;
     }
     
-    public String getMessage() {
+    public CharSequence getMessage() {
         return message;
     }
     
-    public Notification setMessage(String message) {
+    public Notification setMessage(CharSequence message) {
         this.message = message;
         refreshView();
         return this;
@@ -843,5 +720,43 @@ public class Notification {
     
     public String toString() {
         return getClass().getSimpleName() + "@" + Integer.toHexString(hashCode());
+    }
+    
+    public static boolean hasFloatingWindowPermission(Context context) {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M && Settings.canDrawOverlays(context))
+            return true;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {//USING APP OPS MANAGER
+            AppOpsManager manager = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
+            if (manager != null) {
+                try {
+                    int result = manager.checkOp(AppOpsManager.OPSTR_SYSTEM_ALERT_WINDOW, Binder.getCallingUid(), context.getPackageName());
+                    return result == AppOpsManager.MODE_ALLOWED;
+                } catch (Exception ignore) {
+                }
+            }
+        }
+        
+        try {
+            WindowManager mgr = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+            if (mgr == null) return false;
+            View viewToAdd = new View(context);
+            WindowManager.LayoutParams params = new WindowManager.LayoutParams(0, 0, android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O ?
+                    WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY : WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, PixelFormat.TRANSPARENT);
+            viewToAdd.setLayoutParams(params);
+            mgr.addView(viewToAdd, params);
+            mgr.removeView(viewToAdd);
+            return true;
+        } catch (Exception ignore) {
+        }
+        return false;
+    }
+    
+    public static void requestFloatingWindowPermission(Activity context) {
+        try {
+            context.startActivityForResult(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + context.getPackageName())), 1);
+        } catch (Exception e) {
+            error("无法开启悬浮窗权限，请检查是否已在 AndroidManifest.xml 声明：<uses-permission android:name=\"android.permission.SYSTEM_ALERT_WINDOW\" />");
+        }
     }
 }

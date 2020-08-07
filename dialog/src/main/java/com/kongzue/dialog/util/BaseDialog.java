@@ -294,7 +294,14 @@ public abstract class BaseDialog {
     
     //网络传输文本判空规则
     protected boolean isNull(String s) {
-        if (s == null || s.trim().isEmpty() || s.equals("null") || s.equals("(null)")) {
+        if (s == null || s.length() == 0  || s.trim().isEmpty() || s.equals("null") || s.equals("(null)")) {
+            return true;
+        }
+        return false;
+    }
+    
+    protected boolean isNull(CharSequence s) {
+        if (s == null || s.length() == 0 || s.toString().trim().isEmpty() || s.toString().equals("null") || s.toString().equals("(null)")) {
             return true;
         }
         return false;

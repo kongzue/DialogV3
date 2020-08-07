@@ -19,6 +19,7 @@ import android.util.Log;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.widget.TextViewCompat;
 
 import com.kongzue.dialog.util.DialogSettings;
@@ -31,7 +32,7 @@ import java.util.List;
  * @author: androiddevelop
  * @github: https://github.com/androiddevelop/AlignTextView (CBAlignTextView 部分修改)
  */
-public class ContentTextView extends TextView {
+public class ContentTextView extends AppCompatTextView {
     
     private final static String TAG = ">>>";
     private final static char SPACE = ' '; //空格;
@@ -311,7 +312,6 @@ public class ContentTextView extends TextView {
         }
         if (!inProcess && getVisibility() == VISIBLE) {
             addCharPosition.clear();
-            
             if (getWidth() == 0) {
                 //没有测量完毕，等待测量完毕后处理
                 post(new Runnable() {

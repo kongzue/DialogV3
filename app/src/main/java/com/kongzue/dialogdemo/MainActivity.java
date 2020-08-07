@@ -144,6 +144,7 @@ public class MainActivity extends BaseActivity {
         //DialogSettings.buttonPositiveTextInfo = new TextInfo().setFontColor(Color.GREEN);
         DialogSettings.style = DialogSettings.STYLE.STYLE_IOS;
         DialogSettings.theme = DialogSettings.THEME.LIGHT;
+        Notification.mode= Notification.Mode.FLOATING_WINDOW;
         
         refreshLayout.setEnableLoadMore(false).setEnableRefresh(false).setEnableOverScrollDrag(true);
         boxBody.setPadding(dip2px(15), dip2px(50), dip2px(15), dip2px(20));

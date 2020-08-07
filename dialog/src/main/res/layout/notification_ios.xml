@@ -21,9 +21,9 @@
             android:gravity="center_vertical"
             android:orientation="vertical"
             android:paddingLeft="22dp"
-            android:paddingTop="17dp"
+            android:paddingTop="25dp"
             android:paddingRight="22dp"
-            android:paddingBottom="27dp">
+            android:paddingBottom="32dp">
 
             <LinearLayout
                 android:id="@+id/box_title"

@@ -60,11 +60,11 @@ public class MessageDialog extends BaseDialog {
     protected Drawable cancelButtonDrawable;
     protected Drawable otherButtonDrawable;
     
-    protected String title = "提示";
-    protected String message = "提示信息";
-    protected String okButton = "确定";
-    protected String cancelButton;
-    protected String otherButton;
+    protected CharSequence title = "提示";
+    protected CharSequence message = "提示信息";
+    protected CharSequence okButton = "确定";
+    protected CharSequence cancelButton;
+    protected CharSequence otherButton;
     
     private BlurView blurView;
     
@@ -114,7 +114,7 @@ public class MessageDialog extends BaseDialog {
         }
     }
     
-    public static MessageDialog show(@NonNull AppCompatActivity context, String title, String message) {
+    public static MessageDialog show(@NonNull AppCompatActivity context, CharSequence title, CharSequence message) {
         synchronized (MessageDialog.class) {
             MessageDialog messageDialog = show(context, title, message, null, null, null);
             return messageDialog;
@@ -132,7 +132,7 @@ public class MessageDialog extends BaseDialog {
         }
     }
     
-    public static MessageDialog show(@NonNull AppCompatActivity context, String title, String message, String okButton) {
+    public static MessageDialog show(@NonNull AppCompatActivity context, CharSequence title, CharSequence message, CharSequence okButton) {
         synchronized (MessageDialog.class) {
             MessageDialog messageDialog = show(context, title, message, okButton, null, null);
             return messageDialog;
@@ -151,7 +151,7 @@ public class MessageDialog extends BaseDialog {
         }
     }
     
-    public static MessageDialog show(@NonNull AppCompatActivity context, String title, String message, String okButton, String cancelButton) {
+    public static MessageDialog show(@NonNull AppCompatActivity context, CharSequence title, CharSequence message, CharSequence okButton, CharSequence cancelButton) {
         synchronized (MessageDialog.class) {
             MessageDialog messageDialog = show(context, title, message, okButton, cancelButton, null);
             return messageDialog;
@@ -172,7 +172,7 @@ public class MessageDialog extends BaseDialog {
         }
     }
     
-    public static MessageDialog show(@NonNull AppCompatActivity context, String title, String message, String okButton, String cancelButton, String otherButton) {
+    public static MessageDialog show(@NonNull AppCompatActivity context, CharSequence title, CharSequence message, CharSequence okButton, CharSequence cancelButton, CharSequence otherButton) {
         synchronized (MessageDialog.class) {
             MessageDialog messageDialog = build(context);
             
@@ -690,11 +690,11 @@ public class MessageDialog extends BaseDialog {
         }
     }
     
-    public String getTitle() {
+    public CharSequence getTitle() {
         return title;
     }
     
-    public MessageDialog setTitle(String title) {
+    public MessageDialog setTitle(CharSequence title) {
         this.title = title;
         return this;
     }
@@ -704,11 +704,11 @@ public class MessageDialog extends BaseDialog {
         return this;
     }
     
-    public String getMessage() {
+    public CharSequence getMessage() {
         return message;
     }
     
-    public MessageDialog setMessage(String content) {
+    public MessageDialog setMessage(CharSequence content) {
         this.message = content;
         return this;
     }
@@ -718,7 +718,7 @@ public class MessageDialog extends BaseDialog {
         return this;
     }
     
-    public String getOkButton() {
+    public CharSequence getOkButton() {
         return okButton;
     }
     
@@ -733,7 +733,7 @@ public class MessageDialog extends BaseDialog {
         return this;
     }
     
-    public MessageDialog setOkButton(String okButton, OnDialogButtonClickListener onOkButtonClickListener) {
+    public MessageDialog setOkButton(CharSequence okButton, OnDialogButtonClickListener onOkButtonClickListener) {
         this.okButton = okButton;
         this.onOkButtonClickListener = onOkButtonClickListener;
         refreshView();
@@ -751,11 +751,11 @@ public class MessageDialog extends BaseDialog {
         return this;
     }
     
-    public String getCancelButton() {
+    public CharSequence getCancelButton() {
         return cancelButton;
     }
     
-    public MessageDialog setCancelButton(String cancelButton) {
+    public MessageDialog setCancelButton(CharSequence cancelButton) {
         this.cancelButton = cancelButton;
         refreshView();
         return this;
@@ -766,7 +766,7 @@ public class MessageDialog extends BaseDialog {
         return this;
     }
     
-    public MessageDialog setCancelButton(String cancelButton, OnDialogButtonClickListener onCancelButtonClickListener) {
+    public MessageDialog setCancelButton(CharSequence cancelButton, OnDialogButtonClickListener onCancelButtonClickListener) {
         this.cancelButton = cancelButton;
         this.onCancelButtonClickListener = onCancelButtonClickListener;
         refreshView();
@@ -784,11 +784,11 @@ public class MessageDialog extends BaseDialog {
         return this;
     }
     
-    public String getOtherButton() {
+    public CharSequence getOtherButton() {
         return otherButton;
     }
     
-    public MessageDialog setOtherButton(String otherButton) {
+    public MessageDialog setOtherButton(CharSequence otherButton) {
         this.otherButton = otherButton;
         refreshView();
         return this;
@@ -799,7 +799,7 @@ public class MessageDialog extends BaseDialog {
         return this;
     }
     
-    public MessageDialog setOtherButton(String otherButton, OnDialogButtonClickListener onOtherButtonClickListener) {
+    public MessageDialog setOtherButton(CharSequence otherButton, OnDialogButtonClickListener onOtherButtonClickListener) {
         this.otherButton = otherButton;
         this.onOtherButtonClickListener = onOtherButtonClickListener;
         refreshView();

@@ -109,13 +109,15 @@ public class CustomDialog extends BaseDialog {
             if (onBindView != null) onBindView.onBind(this, rootView);
         } else {
             boxCustom.removeAllViews();
-            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            RelativeLayout.LayoutParams lp = customLayoutParams != null ? customLayoutParams : new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             boxCustom.addView(customView, lp);
             if (onBindView != null) onBindView.onBind(this, customView);
         }
         
         if (onShowListener != null) onShowListener.onShow(this);
     }
+    
+    private RelativeLayout.LayoutParams customLayoutParams;
     
     @Override
     public void refreshView() {
@@ -218,6 +220,15 @@ public class CustomDialog extends BaseDialog {
     
     public CustomDialog setOnBackClickListener(OnBackClickListener onBackClickListener) {
         this.onBackClickListener = onBackClickListener;
+        return this;
+    }
+    
+    public RelativeLayout.LayoutParams getCustomLayoutParams() {
+        return customLayoutParams;
+    }
+    
+    public CustomDialog setCustomLayoutParams(RelativeLayout.LayoutParams customLayoutParams) {
+        this.customLayoutParams = customLayoutParams;
         return this;
     }
 }

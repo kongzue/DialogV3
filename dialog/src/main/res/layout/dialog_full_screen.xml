@@ -90,7 +90,7 @@
             <RelativeLayout
                 android:id="@+id/box_custom"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginTop="15dp" />
 
         </com.kongzue.dialog.util.view.InterceptYLinearLayout>
