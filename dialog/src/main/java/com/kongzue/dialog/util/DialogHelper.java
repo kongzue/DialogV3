@@ -1,8 +1,10 @@
 package com.kongzue.dialog.util;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,6 +14,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -106,8 +109,7 @@ public class DialogHelper extends DialogFragment {
                 dialogWindow.addFlags(FLAG_TRANSLUCENT_STATUS);
                 dialogWindow.getDecorView().setPadding(0, 0, 0, 0);
                 WindowManager windowManager = getActivity().getWindowManager();
-                Display display = windowManager.getDefaultDisplay();
-                lp.width = display.getWidth();
+                lp.width = getRootWidth();
                 lp.windowAnimations = R.style.dialogNoAnim;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                     lp.layoutInDisplayCutoutMode = LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
@@ -157,16 +159,45 @@ public class DialogHelper extends DialogFragment {
                     dialogWindow.addFlags(FLAG_TRANSLUCENT_STATUS);
                     dialogWindow.getDecorView().setPadding(0, 0, 0, 0);
                     WindowManager windowManager = getActivity().getWindowManager();
-                    Display display = windowManager.getDefaultDisplay();
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                         lp.layoutInDisplayCutoutMode = LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
                     }
-                    lp.width = display.getWidth();
-                    lp.height = display.getHeight();
+                    lp.width = getRootWidth();
+                    lp.height = getRootHeight();
                     dialogWindow.setAttributes(lp);
                 }
             }
         }
+    }
+    
+    protected int getRootWidth() {
+        int displayWidth = 0;
+        Display display =getActivity().getWindowManager().getDefaultDisplay();
+        Point point = new Point();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            display.getRealSize(point);
+            displayWidth = point.x;
+        } else {
+            DisplayMetrics dm = new DisplayMetrics();
+            getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+            displayWidth = dm.widthPixels;
+        }
+        return displayWidth;
+    }
+    
+    protected int getRootHeight() {
+        int displayHeight = 0;
+        Display display =  getActivity().getWindowManager().getDefaultDisplay();
+        Point point = new Point();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            display.getRealSize(point);
+            displayHeight = point.y;
+        } else {
+            DisplayMetrics dm = new DisplayMetrics();
+            getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+            displayHeight = dm.heightPixels;
+        }
+        return displayHeight;
     }
     
     @Override

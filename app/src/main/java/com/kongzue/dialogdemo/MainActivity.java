@@ -300,9 +300,10 @@ public class MainActivity extends BaseActivity {
                         });
                     }
                 })
-                        .setCustomLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
-                        .setAlign(CustomDialog.ALIGN.DEFAULT)
-                        .setCancelable(false)
+//                        .setCustomLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
+//                        .setAlign(CustomDialog.ALIGN.DEFAULT)
+//                        .setCancelable(false)
+                        .setFullScreen(true)
                         .show();
             }
         });

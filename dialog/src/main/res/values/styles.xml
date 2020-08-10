@@ -11,6 +11,7 @@
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:backgroundDimAmount">0.4</item>
+
     </style>
 
     <style name="LightDialogWithShadow" parent="Theme.AppCompat.Light.Dialog.Alert">
