@@ -3,6 +3,7 @@ package com.kongzue.dialog.v3;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -19,8 +20,10 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.kongzue.dialog.R;
 import com.kongzue.dialog.interfaces.OnBackClickListener;
@@ -60,6 +63,7 @@ public class BottomMenu extends BaseDialog {
     
     private TextInfo menuTitleTextInfo;
     private TextInfo cancelButtonTextInfo;
+    private Drawable cancelButtonDrawable;
     
     private LinearLayout boxRoot;
     private LinearLayout boxBody;
@@ -319,12 +323,14 @@ public class BottomMenu extends BaseDialog {
             
             switch (style) {
                 case STYLE_MATERIAL:
-                    if (customAdapter != null) {
-                        menuArrayAdapter = customAdapter;
-                    } else {
-                        menuArrayAdapter = new NormalMenuArrayAdapter(context.get(), R.layout.item_bottom_menu_material, menuTextList);
+                    if (menuTextList!=null){
+                        if (customAdapter != null) {
+                            menuArrayAdapter = customAdapter;
+                        } else {
+                            menuArrayAdapter = new NormalMenuArrayAdapter(context.get(), R.layout.item_bottom_menu_material, menuTextList);
+                        }
+                        listMenu.setAdapter(menuArrayAdapter);
                     }
-                    listMenu.setAdapter(menuArrayAdapter);
                     break;
                 case STYLE_KONGZUE:
                     if (showCancelButton) {
@@ -332,12 +338,14 @@ public class BottomMenu extends BaseDialog {
                     } else {
                         if (boxCancel != null) boxCancel.setVisibility(View.GONE);
                     }
-                    if (customAdapter != null) {
-                        menuArrayAdapter = customAdapter;
-                    } else {
-                        menuArrayAdapter = new NormalMenuArrayAdapter(context.get(), R.layout.item_bottom_menu_kongzue, menuTextList);
+                    if (menuTextList!=null){
+                        if (customAdapter != null) {
+                            menuArrayAdapter = customAdapter;
+                        } else {
+                            menuArrayAdapter = new NormalMenuArrayAdapter(context.get(), R.layout.item_bottom_menu_kongzue, menuTextList);
+                        }
+                        listMenu.setAdapter(menuArrayAdapter);
                     }
-                    listMenu.setAdapter(menuArrayAdapter);
                     break;
                 case STYLE_IOS:
                     if (showCancelButton) {
@@ -345,12 +353,14 @@ public class BottomMenu extends BaseDialog {
                     } else {
                         if (boxCancel != null) boxCancel.setVisibility(View.GONE);
                     }
-                    if (customAdapter != null) {
-                        menuArrayAdapter = customAdapter;
-                    } else {
-                        menuArrayAdapter = new IOSMenuArrayAdapter(context.get(), R.layout.item_bottom_menu_ios, menuTextList);
+                    if (menuTextList!=null){
+                        if (customAdapter != null) {
+                            menuArrayAdapter = customAdapter;
+                        } else {
+                            menuArrayAdapter = new IOSMenuArrayAdapter(context.get(), R.layout.item_bottom_menu_ios, menuTextList);
+                        }
+                        listMenu.setAdapter(menuArrayAdapter);
                     }
-                    listMenu.setAdapter(menuArrayAdapter);
                     break;
                 case STYLE_MIUI:
                     if (showCancelButton) {
@@ -358,12 +368,14 @@ public class BottomMenu extends BaseDialog {
                     } else {
                         if (boxCancel != null) boxCancel.setVisibility(View.GONE);
                     }
-                    if (customAdapter != null) {
-                        menuArrayAdapter = customAdapter;
-                    } else {
-                        menuArrayAdapter = new NormalMenuArrayAdapter(context.get(), R.layout.item_bottom_menu_miui, menuTextList);
+                    if (menuTextList!=null){
+                        if (customAdapter != null) {
+                            menuArrayAdapter = customAdapter;
+                        } else {
+                            menuArrayAdapter = new NormalMenuArrayAdapter(context.get(), R.layout.item_bottom_menu_miui, menuTextList);
+                        }
+                        listMenu.setAdapter(menuArrayAdapter);
                     }
-                    listMenu.setAdapter(menuArrayAdapter);
                     break;
             }
             if (customView != null) {
@@ -408,6 +420,14 @@ public class BottomMenu extends BaseDialog {
                     }
                 }
             });
+            
+            if (btnCancel != null && cancelButtonDrawable != null) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    btnCancel.setBackground(cancelButtonDrawable);
+                } else {
+                    btnCancel.setBackgroundDrawable(cancelButtonDrawable);
+                }
+            }
         }
         
         useTextInfo(txtTitle, menuTitleTextInfo);
@@ -942,6 +962,18 @@ public class BottomMenu extends BaseDialog {
     
     public BottomMenu setAlign(ALIGN align) {
         this.align = align;
+        return this;
+    }
+    
+    public BottomMenu setCancelButtonDrawable(@DrawableRes int okButtonDrawableResId) {
+        this.cancelButtonDrawable = ContextCompat.getDrawable(context.get(), okButtonDrawableResId);
+        refreshView();
+        return this;
+    }
+    
+    public BottomMenu setCancelButtonDrawable(Drawable cancelButtonDrawable) {
+        this.cancelButtonDrawable = cancelButtonDrawable;
+        refreshView();
         return this;
     }
 }

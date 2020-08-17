@@ -1,10 +1,15 @@
 package com.kongzue.dialog.util;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -44,9 +49,7 @@ import static android.view.WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_M
 public class DialogHelper extends DialogFragment {
     
     private Dialog rootDialog;
-    
     private PreviewOnShowListener onShowListener;
-    private AlertDialog materialDialog;
     
     private WeakReference<BaseDialog> parent;
     
@@ -62,7 +65,6 @@ public class DialogHelper extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (layoutId == -1) {
-            if (onShowListener != null) onShowListener.onShow(getDialog());
             findMyParentAndBindView(null);
             return super.onCreateView(inflater, container, savedInstanceState);
         }
@@ -77,7 +79,7 @@ public class DialogHelper extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         if (layoutId == -1) {
-            materialDialog = new AlertDialog.Builder(getActivity(), styleId)
+            AlertDialog materialDialog = new AlertDialog.Builder(getActivity(), styleId)
                     .setTitle("")
                     .setMessage("")
                     .setPositiveButton("", new DialogInterface.OnClickListener() {
@@ -88,11 +90,63 @@ public class DialogHelper extends DialogFragment {
                         }
                     })
                     .create();
+            beforeShow(materialDialog);
             return materialDialog;
         }
         Dialog dialog = super.onCreateDialog(savedInstanceState);
         refreshDialogPosition(dialog);
+        beforeShow(dialog);
         return dialog;
+    }
+    
+    private boolean isWaitAddFocusFlag = false;
+    
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        beforeShow(getDialog());
+        super.onViewCreated(view, savedInstanceState);
+    }
+    
+    protected void beforeShow(Dialog dialog) {
+        rootDialog = dialog;
+        isWaitAddFocusFlag = false;
+        if (isShowNavBar(getActivity())) {
+            if (dialog != null) {
+                Window dialogWindow = dialog.getWindow();
+                if (dialogWindow != null) {
+                    dialogWindow.setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+                    isWaitAddFocusFlag = true;
+                }
+            }
+        }
+    
+        setOnShowEvent(dialog);
+    }
+    
+    protected void setOnShowEvent(Dialog dialog) {
+        if (dialog != null) {
+            dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                @Override
+                public void onShow(DialogInterface d) {
+                    Dialog dialog = getDialog();
+                    if (onShowListener != null) onShowListener.onShow(dialog);
+                    if (dialog != null) {
+                        Window dialogWindow = dialog.getWindow();
+                        if (dialogWindow != null) {
+                            if (isWaitAddFocusFlag) {
+                                dialogWindow.clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+                                dialogWindow.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                                int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                                        | View.SYSTEM_UI_FLAG_IMMERSIVE
+                                        | View.SYSTEM_UI_FLAG_FULLSCREEN;
+                                dialogWindow.getDecorView().setSystemUiVisibility(uiOptions);
+                            }
+                        }
+                    }
+                }
+            });
+        }
     }
     
     private void refreshDialogPosition(final Dialog dialog) {
@@ -103,9 +157,7 @@ public class DialogHelper extends DialogFragment {
             if (parent.get() instanceof FullScreenDialog) {
                 dialogWindow.addFlags(FLAG_TRANSLUCENT_STATUS);
                 dialogWindow.getDecorView().setPadding(0, 0, 0, 0);
-                WindowManager windowManager = getActivity().getWindowManager();
-                Display display = windowManager.getDefaultDisplay();
-                lp.width = display.getWidth();
+                lp.width = getRootWidth();
                 lp.windowAnimations = R.style.dialogNoAnim;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                     lp.layoutInDisplayCutoutMode = LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
@@ -154,18 +206,47 @@ public class DialogHelper extends DialogFragment {
                 if (customDialog.isFullScreen()) {
                     dialogWindow.addFlags(FLAG_TRANSLUCENT_STATUS);
                     dialogWindow.getDecorView().setPadding(0, 0, 0, 0);
-                    WindowManager windowManager = getActivity().getWindowManager();
-                    Display display = windowManager.getDefaultDisplay();
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                         lp.layoutInDisplayCutoutMode = LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
                     }
-                    lp.width = display.getWidth();
-                    lp.height = display.getHeight();
+                    lp.width = getRootWidth();
+                    lp.height = getRootHeight();
                     dialogWindow.setAttributes(lp);
                 }
             }
         }
     }
+    
+    protected int getRootWidth() {
+        int displayWidth = 0;
+        Display display = getActivity().getWindowManager().getDefaultDisplay();
+        Point point = new Point();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            display.getRealSize(point);
+            displayWidth = point.x;
+        } else {
+            DisplayMetrics dm = new DisplayMetrics();
+            getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+            displayWidth = dm.widthPixels;
+        }
+        return displayWidth;
+    }
+    
+    protected int getRootHeight() {
+        int displayHeight = 0;
+        Display display = getActivity().getWindowManager().getDefaultDisplay();
+        Point point = new Point();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            display.getRealSize(point);
+            displayHeight = point.y;
+        } else {
+            DisplayMetrics dm = new DisplayMetrics();
+            getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+            displayHeight = dm.heightPixels;
+        }
+        return displayHeight;
+    }
+    
     
     @Override
     public void show(FragmentManager manager, String tag) {
@@ -324,5 +405,12 @@ public class DialogHelper extends DialogFragment {
     
     public interface PreviewOnShowListener {
         void onShow(Dialog dialog);
+    }
+    
+    private boolean isShowNavBar(Context context) {
+        if ((((Activity) context).getWindow().getDecorView().getSystemUiVisibility() & View.SYSTEM_UI_FLAG_FULLSCREEN) == View.SYSTEM_UI_FLAG_FULLSCREEN) {
+            return true;
+        }
+        return false;
     }
 }

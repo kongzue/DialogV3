@@ -1,6 +1,7 @@
 package com.kongzue.dialog.v3;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -28,6 +29,7 @@ import com.kongzue.dialog.interfaces.OnDialogButtonClickListener;
 import com.kongzue.dialog.interfaces.OnShowListener;
 import com.kongzue.dialog.interfaces.OnDismissListener;
 import com.kongzue.dialog.util.BaseDialog;
+import com.kongzue.dialog.util.DialogHelper;
 import com.kongzue.dialog.util.DialogSettings;
 import com.kongzue.dialog.util.TextInfo;
 import com.kongzue.dialog.util.view.BlurView;
@@ -377,78 +379,6 @@ public class MessageDialog extends BaseDialog {
                             }
                         });
                     }
-                    materialAlertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-                        @Override
-                        public void onShow(DialogInterface dialog) {
-                            Button positiveButton = materialAlertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-                            positiveButton.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    if (onOkButtonClickListener != null) {
-                                        if (!onOkButtonClickListener.onClick(MessageDialog.this, v))
-                                            materialAlertDialog.dismiss();
-                                    } else {
-                                        materialAlertDialog.dismiss();
-                                    }
-                                }
-                            });
-                            useTextInfo(positiveButton, buttonPositiveTextInfo);
-                            
-                            if (cancelButton != null) {
-                                Button negativeButton = materialAlertDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
-                                negativeButton.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        if (onCancelButtonClickListener != null) {
-                                            if (!onCancelButtonClickListener.onClick(MessageDialog.this, v))
-                                                materialAlertDialog.dismiss();
-                                        } else {
-                                            materialAlertDialog.dismiss();
-                                        }
-                                    }
-                                });
-                                useTextInfo(negativeButton, buttonTextInfo);
-                            }
-                            
-                            if (otherButton != null) {
-                                Button otherButton = materialAlertDialog.getButton(AlertDialog.BUTTON_NEUTRAL);
-                                otherButton.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        if (onOtherButtonClickListener != null) {
-                                            if (!onOtherButtonClickListener.onClick(MessageDialog.this, v))
-                                                materialAlertDialog.dismiss();
-                                        } else {
-                                            materialAlertDialog.dismiss();
-                                        }
-                                    }
-                                });
-                                useTextInfo(otherButton, buttonTextInfo);
-                            }
-                            try {
-                                Field mAlert = AlertDialog.class.getDeclaredField("mAlert");
-                                mAlert.setAccessible(true);
-                                Object mAlertController = mAlert.get(dialog);
-                                
-                                if (titleTextInfo != null) {
-                                    Field mTitle = mAlertController.getClass().getDeclaredField("mTitleView");
-                                    mTitle.setAccessible(true);
-                                    TextView titleTextView = (TextView) mTitle.get(mAlertController);
-                                    useTextInfo(titleTextView, titleTextInfo);
-                                }
-                                
-                                if (messageTextInfo != null) {
-                                    Field mMessage = mAlertController.getClass().getDeclaredField("mMessageView");
-                                    mMessage.setAccessible(true);
-                                    TextView messageTextView = (TextView) mMessage.get(mAlertController);
-                                    useTextInfo(messageTextView, messageTextInfo);
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            
-                        }
-                    });
                     break;
                 case STYLE_MIUI:
                     if (theme == DialogSettings.THEME.LIGHT) {
@@ -641,6 +571,79 @@ public class MessageDialog extends BaseDialog {
                     }
                 }
                 
+            }
+        }
+    }
+    
+    @Override
+    protected void showEvent() {
+        super.showEvent();
+        if (style== DialogSettings.STYLE.STYLE_MATERIAL){
+            Button positiveButton = materialAlertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+            positiveButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (onOkButtonClickListener != null) {
+                        if (!onOkButtonClickListener.onClick(MessageDialog.this, v))
+                            materialAlertDialog.dismiss();
+                    } else {
+                        materialAlertDialog.dismiss();
+                    }
+                }
+            });
+            useTextInfo(positiveButton, buttonPositiveTextInfo);
+    
+            if (cancelButton != null) {
+                Button negativeButton = materialAlertDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+                negativeButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (onCancelButtonClickListener != null) {
+                            if (!onCancelButtonClickListener.onClick(MessageDialog.this, v))
+                                materialAlertDialog.dismiss();
+                        } else {
+                            materialAlertDialog.dismiss();
+                        }
+                    }
+                });
+                useTextInfo(negativeButton, buttonTextInfo);
+            }
+    
+            if (otherButton != null) {
+                Button otherButton = materialAlertDialog.getButton(AlertDialog.BUTTON_NEUTRAL);
+                otherButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (onOtherButtonClickListener != null) {
+                            if (!onOtherButtonClickListener.onClick(MessageDialog.this, v))
+                                materialAlertDialog.dismiss();
+                        } else {
+                            materialAlertDialog.dismiss();
+                        }
+                    }
+                });
+                useTextInfo(otherButton, buttonTextInfo);
+            }
+            try {
+                Field mAlert = AlertDialog.class.getDeclaredField("mAlert");
+                mAlert.setAccessible(true);
+                Object mAlertController = mAlert.get(dialog);
+        
+                if (titleTextInfo != null) {
+                    Field mTitle = mAlertController.getClass().getDeclaredField("mTitleView");
+                    mTitle.setAccessible(true);
+                    TextView titleTextView = (TextView) mTitle.get(mAlertController);
+                    useTextInfo(titleTextView, titleTextInfo);
+                }
+        
+                if (messageTextInfo != null) {
+                    Field mMessage = mAlertController.getClass().getDeclaredField("mMessageView");
+                    mMessage.setAccessible(true);
+                    TextView messageTextView = (TextView) mMessage.get(mAlertController);
+                    useTextInfo(messageTextView, messageTextInfo);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
