@@ -2,10 +2,10 @@
 献给要求安卓照着苹果设计稿做开发的产品们（手动滑稽
 
 <a href="https://github.com/kongzue/dialogV3/">
-<img src="https://img.shields.io/badge/Kongzue%20Dialog-3.2.2-green.svg" alt="Kongzue Dialog">
+<img src="https://img.shields.io/badge/Kongzue%20Dialog-3.2.3-green.svg" alt="Kongzue Dialog">
 </a> 
-<a href="https://bintray.com/myzchh/maven/dialogV3/3.2.2/link">
-<img src="https://img.shields.io/badge/Maven-3.2.2-blue.svg" alt="Maven">
+<a href="https://bintray.com/myzchh/maven/dialogV3/3.2.3/link">
+<img src="https://img.shields.io/badge/Maven-3.2.3-blue.svg" alt="Maven">
 </a> 
 <a href="http://www.apache.org/licenses/LICENSE-2.0">
 <img src="https://img.shields.io/badge/License-Apache%202.0-red.svg" alt="License">
@@ -92,14 +92,14 @@ Maven仓库：
 <dependency>
   <groupId>com.kongzue.dialog_v3</groupId>
   <artifactId>dialog</artifactId>
-  <version>3.2.2</version>
+  <version>3.2.3</version>
   <type>pom</type>
 </dependency>
 ```
 Gradle：
 在dependencies{}中添加引用：
 ```
-implementation 'com.kongzue.dialog_v3:dialog:3.2.2'
+implementation 'com.kongzue.dialog_v3:dialog:3.2.3'
 ```
 
 从 Kongzue Dialog V2 升级至 Kongzue Dialog V3，请参考 [Kongzue Dialog V2升级注意事项](kongzue_dialog_v2_upto_v3.md)
@@ -110,7 +110,7 @@ implementation 'com.kongzue.dialog_v3:dialog:3.2.2'
 
 在dependencies{}中添加引用：
 ```
-implementation 'com.kongzue.dialog_v3x:dialog:3.2.2'       
+implementation 'com.kongzue.dialog_v3x:dialog:3.2.3'       
 ```
 
 ## 全局配置
@@ -827,6 +827,13 @@ limitations under the License.
 ```
 
 ## 更新日志：
+v3.2.3:
+- 优化对话框在全屏 Activity 上启动时保持隐藏状态栏、导航栏的显示方式；
+- 修复 CustomDialog 全屏模式在挖孔屏设备上无法完全全屏的问题；
+- 修复 FullscreenDialog 自定义布局无法滑动操作的问题；
+- 修复 BottomMenu 在处于 MIUI 主题时的点击穿透问题；
+- 新增 BottomMenu setCancelButtonDrawable(...) 方法可设置取消按钮样式；
+
 v3.2.2:
 - 新增 Notification.mode 通知实现方式修改，具体请参照章节 <a href="#通知">通知</a>；
 - 所有组件的文本入参方式由 String 修改为 CharSequence，以支持更多的文本形式；
