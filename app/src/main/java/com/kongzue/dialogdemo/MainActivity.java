@@ -149,7 +149,7 @@ public class MainActivity extends BaseActivity {
         refreshLayout.setEnableLoadMore(false).setEnableRefresh(false).setEnableOverScrollDrag(true);
         boxBody.setPadding(dip2px(15), dip2px(50), dip2px(15), dip2px(20));
     }
-    
+
 //    //全屏测试
 //    @Override
 //    public void onWindowFocusChanged(boolean hasFocus) {
