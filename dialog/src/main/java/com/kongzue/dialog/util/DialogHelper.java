@@ -130,8 +130,8 @@ public class DialogHelper extends DialogFragment {
                 @Override
                 public void onShow(DialogInterface d) {
                     Dialog dialog = getDialog();
-                    if (onShowListener != null) onShowListener.onShow(dialog);
                     if (dialog != null) {
+                        if (onShowListener != null) onShowListener.onShow(dialog);
                         Window dialogWindow = dialog.getWindow();
                         if (dialogWindow != null) {
                             if (isWaitAddFocusFlag) {

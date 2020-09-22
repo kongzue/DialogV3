@@ -37,6 +37,7 @@ import com.kongzue.dialog.util.view.BlurView;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.kongzue.dialog.util.DialogSettings.blurAlpha;
@@ -112,6 +113,15 @@ public class BottomMenu extends BaseDialog {
         return bottomMenu;
     }
     
+    public static BottomMenu showAsStringList(@NonNull AppCompatActivity context, List<String> menuTextList, OnMenuItemClickListener onMenuItemClickListener) {
+        BottomMenu bottomMenu = build(context);
+        bottomMenu.menuTextList = new ArrayList<>();
+        bottomMenu.menuTextList.addAll(menuTextList);
+        bottomMenu.onMenuItemClickListener = onMenuItemClickListener;
+        bottomMenu.showDialog();
+        return bottomMenu;
+    }
+    
     public static BottomMenu show(@NonNull AppCompatActivity context, BaseAdapter customAdapter, OnMenuItemClickListener onMenuItemClickListener) {
         BottomMenu bottomMenu = build(context);
         bottomMenu.customAdapter = customAdapter;
@@ -129,6 +139,16 @@ public class BottomMenu extends BaseDialog {
         return bottomMenu;
     }
     
+    public static BottomMenu showAsStringList(@NonNull AppCompatActivity context, CharSequence title, List<String> menuTextList, OnMenuItemClickListener onMenuItemClickListener) {
+        BottomMenu bottomMenu = build(context);
+        bottomMenu.menuTextList = new ArrayList<>();
+        bottomMenu.menuTextList.addAll(menuTextList);
+        bottomMenu.title = title;
+        bottomMenu.onMenuItemClickListener = onMenuItemClickListener;
+        bottomMenu.showDialog();
+        return bottomMenu;
+    }
+    
     public static BottomMenu show(@NonNull AppCompatActivity context, CharSequence title, BaseAdapter customAdapter, OnMenuItemClickListener onMenuItemClickListener) {
         BottomMenu bottomMenu = build(context);
         bottomMenu.customAdapter = customAdapter;
@@ -138,13 +158,31 @@ public class BottomMenu extends BaseDialog {
         return bottomMenu;
     }
     
-    public static BottomMenu show(@NonNull AppCompatActivity context, CharSequence[] menuTexts, OnMenuItemClickListener onMenuItemClickListener) {
+    public static BottomMenu show(@NonNull AppCompatActivity context, String[] menuTexts, OnMenuItemClickListener onMenuItemClickListener) {
         BottomMenu bottomMenu = build(context);
         List<CharSequence> list = new ArrayList<>();
-        for (CharSequence s : menuTexts) {
-            list.add(s);
-        }
+        list.addAll(Arrays.asList(menuTexts));
         bottomMenu.menuTextList = list;
+        bottomMenu.onMenuItemClickListener = onMenuItemClickListener;
+        bottomMenu.showDialog();
+        return bottomMenu;
+    }
+    
+    public static BottomMenu show(@NonNull AppCompatActivity context, CharSequence[] menuTexts, OnMenuItemClickListener onMenuItemClickListener) {
+        BottomMenu bottomMenu = build(context);
+        List<CharSequence> list = new ArrayList<>(Arrays.asList(menuTexts));
+        bottomMenu.menuTextList = list;
+        bottomMenu.onMenuItemClickListener = onMenuItemClickListener;
+        bottomMenu.showDialog();
+        return bottomMenu;
+    }
+    
+    public static BottomMenu show(@NonNull AppCompatActivity context, CharSequence title, String[] menuTexts, OnMenuItemClickListener onMenuItemClickListener) {
+        BottomMenu bottomMenu = build(context);
+        List<CharSequence> list = new ArrayList<>();
+        list.addAll(Arrays.asList(menuTexts));
+        bottomMenu.menuTextList = list;
+        bottomMenu.title = title;
         bottomMenu.onMenuItemClickListener = onMenuItemClickListener;
         bottomMenu.showDialog();
         return bottomMenu;
@@ -152,10 +190,7 @@ public class BottomMenu extends BaseDialog {
     
     public static BottomMenu show(@NonNull AppCompatActivity context, CharSequence title, CharSequence[] menuTexts, OnMenuItemClickListener onMenuItemClickListener) {
         BottomMenu bottomMenu = build(context);
-        List<CharSequence> list = new ArrayList<>();
-        for (CharSequence s : menuTexts) {
-            list.add(s);
-        }
+        List<CharSequence> list = new ArrayList<>(Arrays.asList(menuTexts));
         bottomMenu.menuTextList = list;
         bottomMenu.title = title;
         bottomMenu.onMenuItemClickListener = onMenuItemClickListener;
@@ -320,16 +355,17 @@ public class BottomMenu extends BaseDialog {
                 }
             });
             
+            if (menuTextList == null) {
+                menuTextList = new ArrayList<>();
+            }
             switch (style) {
                 case STYLE_MATERIAL:
-                    if (menuTextList!=null){
-                        if (customAdapter != null) {
-                            menuArrayAdapter = customAdapter;
-                        } else {
-                            menuArrayAdapter = new NormalMenuArrayAdapter(context.get(), R.layout.item_bottom_menu_material, menuTextList);
-                        }
-                        listMenu.setAdapter(menuArrayAdapter);
+                    if (customAdapter != null) {
+                        menuArrayAdapter = customAdapter;
+                    } else {
+                        menuArrayAdapter = new NormalMenuArrayAdapter(context.get(), R.layout.item_bottom_menu_material, menuTextList);
                     }
+                    listMenu.setAdapter(menuArrayAdapter);
                     break;
                 case STYLE_KONGZUE:
                     if (showCancelButton) {
@@ -337,14 +373,12 @@ public class BottomMenu extends BaseDialog {
                     } else {
                         if (boxCancel != null) boxCancel.setVisibility(View.GONE);
                     }
-                    if (menuTextList!=null){
-                        if (customAdapter != null) {
-                            menuArrayAdapter = customAdapter;
-                        } else {
-                            menuArrayAdapter = new NormalMenuArrayAdapter(context.get(), R.layout.item_bottom_menu_kongzue, menuTextList);
-                        }
-                        listMenu.setAdapter(menuArrayAdapter);
+                    if (customAdapter != null) {
+                        menuArrayAdapter = customAdapter;
+                    } else {
+                        menuArrayAdapter = new NormalMenuArrayAdapter(context.get(), R.layout.item_bottom_menu_kongzue, menuTextList);
                     }
+                    listMenu.setAdapter(menuArrayAdapter);
                     break;
                 case STYLE_IOS:
                     if (showCancelButton) {
@@ -352,14 +386,13 @@ public class BottomMenu extends BaseDialog {
                     } else {
                         if (boxCancel != null) boxCancel.setVisibility(View.GONE);
                     }
-                    if (menuTextList!=null){
-                        if (customAdapter != null) {
-                            menuArrayAdapter = customAdapter;
-                        } else {
-                            menuArrayAdapter = new IOSMenuArrayAdapter(context.get(), R.layout.item_bottom_menu_ios, menuTextList);
-                        }
-                        listMenu.setAdapter(menuArrayAdapter);
+                    if (customAdapter != null) {
+                        menuArrayAdapter = customAdapter;
+                    } else {
+                        menuArrayAdapter = new IOSMenuArrayAdapter(context.get(), R.layout.item_bottom_menu_ios, menuTextList);
                     }
+                    listMenu.setAdapter(menuArrayAdapter);
+                    
                     break;
                 case STYLE_MIUI:
                     if (showCancelButton) {
@@ -367,14 +400,13 @@ public class BottomMenu extends BaseDialog {
                     } else {
                         if (boxCancel != null) boxCancel.setVisibility(View.GONE);
                     }
-                    if (menuTextList!=null){
-                        if (customAdapter != null) {
-                            menuArrayAdapter = customAdapter;
-                        } else {
-                            menuArrayAdapter = new NormalMenuArrayAdapter(context.get(), R.layout.item_bottom_menu_miui, menuTextList);
-                        }
-                        listMenu.setAdapter(menuArrayAdapter);
+                    if (customAdapter != null) {
+                        menuArrayAdapter = customAdapter;
+                    } else {
+                        menuArrayAdapter = new NormalMenuArrayAdapter(context.get(), R.layout.item_bottom_menu_miui, menuTextList);
                     }
+                    listMenu.setAdapter(menuArrayAdapter);
+                    
                     break;
             }
             if (customView != null) {
@@ -616,11 +648,22 @@ public class BottomMenu extends BaseDialog {
         return this;
     }
     
+    public BottomMenu setMenuTextStringList(List<String> menuTextList) {
+        this.menuTextList = new ArrayList<>();
+        this.menuTextList.addAll(menuTextList);
+        refreshView();
+        return this;
+    }
+    
     public BottomMenu setMenuTextList(CharSequence[] menuTexts) {
-        List<CharSequence> list = new ArrayList<>();
-        for (CharSequence s : menuTexts) {
-            list.add(s);
-        }
+        List<CharSequence> list = new ArrayList<>(menuTextList);
+        this.menuTextList = list;
+        refreshView();
+        return this;
+    }
+    
+    public BottomMenu setMenuTextList(String[] menuTexts) {
+        List<CharSequence> list = new ArrayList<>(menuTextList);
         this.menuTextList = list;
         refreshView();
         return this;
