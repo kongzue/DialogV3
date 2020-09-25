@@ -657,15 +657,14 @@ public class BottomMenu extends BaseDialog {
     }
     
     public BottomMenu setMenuTextList(CharSequence[] menuTexts) {
-        List<CharSequence> list = new ArrayList<>(menuTextList);
-        this.menuTextList = list;
+        this.menuTextList = Arrays.asList(menuTexts);
         refreshView();
         return this;
     }
     
     public BottomMenu setMenuTextList(String[] menuTexts) {
-        List<CharSequence> list = new ArrayList<>(menuTextList);
-        this.menuTextList = list;
+        this.menuTextList = new ArrayList<>();
+        this.menuTextList.addAll(Arrays.asList(menuTexts));
         refreshView();
         return this;
     }
