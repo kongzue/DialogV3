@@ -827,6 +827,9 @@ limitations under the License.
 ```
 
 ## 更新日志：
+v3.2.4.1(beta):
+- 修复BottomMenu设置setMenuTextList(...)时出错的问题；
+
 v3.2.4:
 - BottomMenu 新增 List<String> 构造方法；
 - BottomMenu 新增 setMenuTextStringList(...) 设置菜单的方法；
