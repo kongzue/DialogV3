@@ -1,20 +1,15 @@
 package com.kongzue.dialogdemo;
 
 import android.app.ActivityManager;
-import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Handler;
+import android.support.v4.view.ViewPager;
 import android.text.InputType;
-import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -24,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,7 +35,6 @@ import com.kongzue.dialog.interfaces.OnDismissListener;
 import com.kongzue.dialog.interfaces.OnInputDialogButtonClickListener;
 import com.kongzue.dialog.interfaces.OnMenuItemClickListener;
 import com.kongzue.dialog.interfaces.OnNotificationClickListener;
-import com.kongzue.dialog.interfaces.OnShowListener;
 import com.kongzue.dialog.util.BaseDialog;
 import com.kongzue.dialog.util.DialogSettings;
 import com.kongzue.dialog.util.InputInfo;
@@ -132,6 +127,11 @@ public class MainActivity extends BaseActivity {
         btnBack = findViewById(R.id.btn_back);
         btnShare = findViewById(R.id.btn_share);
     }
+    
+    private TableLayout tableLayout;
+    private ViewPager viewpager;
+    
+    
     
     @Override
     public void initDatas(JumpParameter parameter) {

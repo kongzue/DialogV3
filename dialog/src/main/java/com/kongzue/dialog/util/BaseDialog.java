@@ -212,6 +212,7 @@ public abstract class BaseDialog {
         dialog.get().setOnShowListener(new DialogHelper.PreviewOnShowListener() {
             @Override
             public void onShow(Dialog dialog) {
+                if (dialog == null) return;
                 showEvent();
                 if (DialogSettings.dialogLifeCycleListener != null)
                     DialogSettings.dialogLifeCycleListener.onShow(BaseDialog.this);
@@ -294,7 +295,7 @@ public abstract class BaseDialog {
     
     //网络传输文本判空规则
     protected boolean isNull(String s) {
-        if (s == null || s.length() == 0  || s.trim().isEmpty() || s.equals("null") || s.equals("(null)")) {
+        if (s == null || s.length() == 0 || s.trim().isEmpty() || s.equals("null") || s.equals("(null)")) {
             return true;
         }
         return false;
