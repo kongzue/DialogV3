@@ -899,6 +899,12 @@ public class BottomMenu extends BaseDialog {
                     if (isTouchDown) {
                         float deltaY = boxBody.getY() - boxBodyOldY;
                         
+                        if (cancelable==BOOLEAN.FALSE){
+                            boxBody.animate().setDuration(300).translationY(boxBodyOldY);
+                            step = 0;
+                            return true;
+                        }
+                        
                         if (deltaY >= -dip2px(50) && deltaY <= dip2px(50)) {
                             //几乎没动，回到原来位置
                             boxBody.animate().setDuration(300).translationY(boxBodyOldY);

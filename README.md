@@ -830,6 +830,7 @@ limitations under the License.
 v3.2.4.2(beta):
 - 修复BottomMenu设置setMenuTextList(...)时出错的问题；
 - 修复BaseDialog中存在的偶发性启动空指针问题（219行）；
+- 修复BottomMenu在Material主题时，设置cancelable = false时依然可以下划关闭的问题；
 
 v3.2.4:
 - BottomMenu 新增 List<String> 构造方法；
