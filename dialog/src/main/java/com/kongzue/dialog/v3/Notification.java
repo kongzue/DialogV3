@@ -505,6 +505,9 @@ public class Notification {
         if (boxCustom != null) {
             if (customView != null) {
                 boxCustom.removeAllViews();
+                if (customView.getParent() != null && customView.getParent() instanceof ViewGroup) {
+                    ((ViewGroup) customView.getParent()).removeView(customView);
+                }
                 boxCustom.setVisibility(View.VISIBLE);
                 boxCustom.addView(customView);
                 rootView.setDispatchTouchEvent(false);
