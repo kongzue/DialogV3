@@ -296,6 +296,9 @@ public class MessageDialog extends BaseDialog {
                     if (customView != null) {
                         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                         boxCustom.removeAllViews();
+                        if (customView.getParent() != null && customView.getParent() instanceof ViewGroup) {
+                            ((ViewGroup) customView.getParent()).removeView(customView);
+                        }
                         boxCustom.addView(customView, lp);
                         if (onBindView != null) onBindView.onBind(this, customView);
                         boxCustom.setVisibility(View.VISIBLE);
@@ -327,6 +330,9 @@ public class MessageDialog extends BaseDialog {
                     if (customView != null) {
                         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                         boxCustom.removeAllViews();
+                        if (customView.getParent() != null && customView.getParent() instanceof ViewGroup) {
+                            ((ViewGroup) customView.getParent()).removeView(customView);
+                        }
                         boxCustom.addView(customView, lp);
                         if (onBindView != null) onBindView.onBind(this, customView);
                         boxCustom.setVisibility(View.VISIBLE);
@@ -346,6 +352,9 @@ public class MessageDialog extends BaseDialog {
                         ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                         boxCustom.setLayoutParams(lp);
                         customView.setLayoutParams(lp);
+                        if (customView.getParent() != null && customView.getParent() instanceof ViewGroup) {
+                            ((ViewGroup) customView.getParent()).removeView(customView);
+                        }
                         boxCustom.addView(customView, lp);
                         boxCustom.requestLayout();
                         
@@ -399,6 +408,9 @@ public class MessageDialog extends BaseDialog {
                     if (customView != null) {
                         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                         boxCustom.removeAllViews();
+                        if (customView.getParent() != null && customView.getParent() instanceof ViewGroup) {
+                            ((ViewGroup) customView.getParent()).removeView(customView);
+                        }
                         boxCustom.addView(customView, lp);
                         if (onBindView != null) onBindView.onBind(this, customView);
                         boxCustom.setVisibility(View.VISIBLE);

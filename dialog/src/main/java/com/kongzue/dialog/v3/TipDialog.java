@@ -367,6 +367,9 @@ public class TipDialog extends BaseDialog {
                 boxProgress.setVisibility(View.GONE);
                 boxTip.setBackground(null);
                 boxTip.setVisibility(View.VISIBLE);
+                if (customView.getParent() != null && customView.getParent() instanceof ViewGroup) {
+                    ((ViewGroup) customView.getParent()).removeView(customView);
+                }
                 boxTip.addView(customView);
                 if (onBindView != null) onBindView.onBind(this, customView);
             }

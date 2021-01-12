@@ -108,6 +108,9 @@ public class CustomDialog extends BaseDialog {
             if (onBindView != null) onBindView.onBind(this, rootView);
         } else {
             boxCustom.removeAllViews();
+            if (customView.getParent() != null && customView.getParent() instanceof ViewGroup) {
+                ((ViewGroup) customView.getParent()).removeView(customView);
+            }
             RelativeLayout.LayoutParams lp = customLayoutParams != null ? customLayoutParams : new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             boxCustom.addView(customView, lp);
             if (onBindView != null) onBindView.onBind(this, customView);

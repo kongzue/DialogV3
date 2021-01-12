@@ -427,6 +427,9 @@ public class ShareDialog extends BaseDialog {
             }
             if (customView != null) {
                 boxCustom.removeAllViews();
+                if (customView.getParent() != null && customView.getParent() instanceof ViewGroup) {
+                    ((ViewGroup) customView.getParent()).removeView(customView);
+                }
                 boxCustom.addView(customView);
                 if (onBindView != null) onBindView.onBind(this, customView);
                 boxCustom.setVisibility(View.VISIBLE);

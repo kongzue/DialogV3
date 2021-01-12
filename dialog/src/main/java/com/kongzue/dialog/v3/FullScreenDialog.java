@@ -185,6 +185,9 @@ public class FullScreenDialog extends BaseDialog {
         
         if (customView != null) {
             boxCustom.removeAllViews();
+            if (customView.getParent() != null && customView.getParent() instanceof ViewGroup) {
+                ((ViewGroup) customView.getParent()).removeView(customView);
+            }
             RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             boxCustom.addView(customView, rlp);
             if (onBindView != null) onBindView.onBind(this, customView);

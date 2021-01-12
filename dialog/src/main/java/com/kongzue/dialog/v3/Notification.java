@@ -19,6 +19,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.AnticipateOvershootInterpolator;
 import android.view.animation.DecelerateInterpolator;
@@ -504,6 +505,9 @@ public class Notification {
             if (customView != null) {
                 boxCustom.removeAllViews();
                 boxCustom.setVisibility(View.VISIBLE);
+                if (customView.getParent() != null && customView.getParent() instanceof ViewGroup) {
+                    ((ViewGroup) customView.getParent()).removeView(customView);
+                }
                 boxCustom.addView(customView);
                 rootView.setDispatchTouchEvent(false);
                 if (onBindView != null) onBindView.onBind(this, customView);

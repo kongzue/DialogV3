@@ -218,6 +218,9 @@ public class InputDialog extends MessageDialog {
                         if (materialCustomViewBox != null) materialCustomViewBox.removeAllViews();
                         materialCustomViewBox = new LinearLayout(context.get());
                         materialCustomViewBox.setOrientation(LinearLayout.VERTICAL);
+                        if (customView.getParent() != null && customView.getParent() instanceof ViewGroup) {
+                            ((ViewGroup) customView.getParent()).removeView(customView);
+                        }
                         materialCustomViewBox.addView(customView);
                         materialCustomViewBox.addView(txtInput);
                         
