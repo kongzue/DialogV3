@@ -1,4 +1,13 @@
 # Kongzue Dialog V3
+
+### 公告
+
+🚫 请注意，此框架已停止更新，建议尽快切换至 [DialogX](https://github.com/kongzue/DialogX)
+
+迁移文档请参考：[从 DialogV3 迁移至 DialogX](https://github.com/kongzue/DialogX/wiki/%E4%BB%8E-DialogV3-%E8%BF%81%E7%A7%BB%E8%87%B3-DialogX)
+
+### 简介
+
 献给要求安卓照着苹果设计稿做开发的产品们（手动滑稽
 
 <a href="https://github.com/kongzue/dialogV3/">
